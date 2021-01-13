@@ -4,10 +4,8 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.AppWidgetTarget
-
 
 /**
  * Implementation of App Widget functionality.
@@ -45,11 +43,12 @@ internal fun updateAppWidget(
 
     // Load image from url
     val imgUrl = "https://tiendung.github.io/quotes/650x/0.png"
-     val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
-
+    val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
+//    val providerInfo = AppWidgetManager.getInstance(context).getAppWidgetInfo(appWidgetId)
     Glide.with(context)
         .asBitmap()
         .load(imgUrl)
+        .override(800)
         .into(appWidgetTarget)
 
     // Instruct the widget manager to update the widget

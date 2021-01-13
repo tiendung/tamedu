@@ -30,3 +30,10 @@ Click Sync Now to rebuild the project with the new dependency.
 import com.bumptech.glide.Glide  
 ...
 ```
+
+## How to show Glide image autoscale to target width?
+```
+Glide
+    .override(size) // width size
+```
+now need to find widget width to override the image
