@@ -41,5 +41,8 @@ LATER: need to find widget width to override the image
 ## How to click button to play audio from an url?
 https://developer.android.com/guide/topics/media/media-formats
 Opus		Android 5.0+		• Ogg (.ogg), • Matroska (.mkv)
-
 https://developer.android.com/guide/topics/media/mediaplayer
+
+## How to refresh a widget after a fixed period of time?
+https://developer.android.com/reference/android/appwidget/AppWidgetProviderInfo.html#updatePeriodMillis
+Change field android:updatePeriodMillis attribute in the AppWidget meta-data file. (/app/src/main/res/xml/app_widget_info.xml)
