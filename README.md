@@ -36,4 +36,10 @@ import com.bumptech.glide.Glide
 Glide
     .override(size) // width size
 ```
-now need to find widget width to override the image
+LATER: need to find widget width to override the image
+
+## How to click button to play audio from an url?
+https://developer.android.com/guide/topics/media/media-formats
+Opus		Android 5.0+		• Ogg (.ogg), • Matroska (.mkv)
+
+https://developer.android.com/guide/topics/media/mediaplayer

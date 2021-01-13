@@ -4,8 +4,13 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
+
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.AppWidgetTarget
+
+import android.media.MediaPlayer
+import android.media.AudioAttributes
+import android.net.Uri
 
 /**
  * Implementation of App Widget functionality.
@@ -51,6 +56,18 @@ internal fun updateAppWidget(
         .override(800)
         .into(appWidgetTarget)
 
+    val myUri: Uri = Uri.parse("https://tiendung.github.io/quotes/opus/0.ogg")
+    val mediaPlayer: MediaPlayer? = MediaPlayer().apply {
+        setAudioAttributes(
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .build()
+        )
+        setDataSource(context, myUri)
+        prepare()
+        start()
+    }
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
