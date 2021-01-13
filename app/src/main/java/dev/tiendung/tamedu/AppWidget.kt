@@ -5,6 +5,10 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
 
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.AppWidgetTarget
+
+
 /**
  * Implementation of App Widget functionality.
  */
@@ -38,6 +42,15 @@ internal fun updateAppWidget(
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.app_widget)
     views.setTextViewText(R.id.appwidget_text, widgetText)
+
+    // Load image from url
+    val imgUrl = "https://tiendung.github.io/quotes/650x/0.png"
+     val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
+
+    Glide.with(context)
+        .asBitmap()
+        .load(imgUrl)
+        .into(appWidgetTarget)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
