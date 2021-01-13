@@ -46,8 +46,11 @@ internal fun updateAppWidget(
     val views = RemoteViews(context.packageName, R.layout.app_widget)
     views.setTextViewText(R.id.appwidget_text, widgetText)
 
+    // Show random quote
+    val quoteIndex = (0..1673).random()
+
     // Load image from url
-    val imgUrl = "https://tiendung.github.io/quotes/650x/0.png"
+    val imgUrl = "https://tiendung.github.io/quotes/650x/${quoteIndex}.png"
     val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
 //    val providerInfo = AppWidgetManager.getInstance(context).getAppWidgetInfo(appWidgetId)
     Glide.with(context)
@@ -56,7 +59,8 @@ internal fun updateAppWidget(
         .override(800)
         .into(appWidgetTarget)
 
-    val myUri: Uri = Uri.parse("https://tiendung.github.io/quotes/opus/0.ogg")
+    val audioUrl = "https://tiendung.github.io/quotes/opus/${quoteIndex}.ogg"
+    val myUri: Uri = Uri.parse(audioUrl)
     val mediaPlayer: MediaPlayer? = MediaPlayer().apply {
         setAudioAttributes(
             AudioAttributes.Builder()
