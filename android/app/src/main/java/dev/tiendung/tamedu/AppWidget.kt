@@ -43,10 +43,16 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     
     showRandomQuote(context, appWidgetTarget)
 
-    // https://developer.android.com/guide/topics/appwidgets/index.html#java
-    val intent = Intent(context, MainActivity::class.java)
-    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+    val intent = Intent(context, AppWidget::class.java)
+    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+    // intent.setAction("${System.currentTimeMillis()}") // set an dummy uniq action
+    val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
+
+    // val intent = Intent(context, MainActivity::class.java)
+    // val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+    // views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
+
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }

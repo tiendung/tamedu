@@ -46,7 +46,8 @@ https://developer.android.com/guide/topics/media/mediaplayer
 LATER: load remote audio in a separate thread/worker/routine so it don't block the main app
 
 ## How to handle (click) events on widget?
-KEYWORDS: android remoteview widget 
+KEYWORDS: android remoteview widget ACTION_APPWIDGET_UPDATE
+https://developer.android.com/codelabs/advanced-android-training-widgets#4
 
 ## How to refresh a widget after a fixed period of time?
 https://developer.android.com/reference/android/appwidget/AppWidgetProviderInfo.html#updatePeriodMillis
