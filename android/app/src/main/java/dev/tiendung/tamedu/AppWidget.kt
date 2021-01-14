@@ -84,6 +84,8 @@ fun playQuoteById(quoteId: Int, context: Context) {
     val myUri: Uri = Uri.parse(audioUrl)
 
     _mediaPlayer.stop()
+    _mediaPlayer.release()
+
     _mediaPlayer = MediaPlayer().apply {
         setAudioAttributes(
                 AudioAttributes.Builder()
