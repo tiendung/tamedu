@@ -12,6 +12,9 @@ import android.media.MediaPlayer
 import android.media.AudioAttributes
 import android.net.Uri
 
+import android.content.Intent
+import android.app.PendingIntent
+
 /**
  * Implementation of App Widget functionality.
  */
@@ -33,26 +36,38 @@ class AppWidget : AppWidgetProvider() {
 }
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-    val widgetText = context.getString(R.string.appwidget_text)
     // Construct the RemoteViews object
-    val views = RemoteViews(context.packageName, R.layout.app_widget)
-    views.setTextViewText(R.id.appwidget_text, widgetText)
+    val views = RemoteViews(context.packageName, R.layout.app_widget)     
 
-    // Show random quote
-    val quoteIndex = (0..1673).random()
-    // val quoteIndex = 119 // a long quote
-
-    // Load image from url
-    val imgUrl = "https://tiendung.github.io/quotes/650x/${quoteIndex}.png"
     val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
-//    val providerInfo = AppWidgetManager.getInstance(context).getAppWidgetInfo(appWidgetId)
+    
+    showRandomQuote(context, appWidgetTarget)
+
+    // https://developer.android.com/guide/topics/appwidgets/index.html#java
+    val intent = Intent(context, MainActivity::class.java)
+    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+    views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
+    // Instruct the widget manager to update the widget
+    appWidgetManager.updateAppWidget(appWidgetId, views)
+}
+
+
+fun showRandomQuote(context: Context, appWidgetTarget: AppWidgetTarget) {
+    val randomQuoteId = (0..1673).random()
+    showQuoteById(randomQuoteId, context, appWidgetTarget)
+}
+
+fun showQuoteById(quoteId: Int, context: Context, appWidgetTarget: AppWidgetTarget) {
+    // Load image and audio from url
+    val imgUrl = "https://tiendung.github.io/quotes/650x/$quoteId.png"
+    val audioUrl = "https://tiendung.github.io/quotes/opus/$quoteId.ogg"
+
     Glide.with(context)
             .asBitmap()
             .load(imgUrl)
             .override(1200)
             .into(appWidgetTarget)
 
-    val audioUrl = "https://tiendung.github.io/quotes/opus/${quoteIndex}.ogg"
     val myUri: Uri = Uri.parse(audioUrl)
     val mediaPlayer: MediaPlayer? = MediaPlayer().apply {
         setAudioAttributes(
@@ -65,7 +80,4 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
         prepare()
         start()
     }
-
-    // Instruct the widget manager to update the widget
-    appWidgetManager.updateAppWidget(appWidgetId, views)
 }
