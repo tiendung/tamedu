@@ -61,7 +61,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
 fun showRandomQuote(context: Context, appWidgetTarget: AppWidgetTarget) {
     val randomQuoteId = (0..1673).random()
-    showQuoteById(randomQuoteId, context, appWidgetTarget)
+    showQuoteById(randomQuoteId, context, appWidgetTarget) // 348 -> long quote
 }
 
 fun showQuoteById(quoteId: Int, context: Context, appWidgetTarget: AppWidgetTarget) {
@@ -72,7 +72,7 @@ fun showQuoteById(quoteId: Int, context: Context, appWidgetTarget: AppWidgetTarg
     Glide.with(context)
             .asBitmap()
             .load(imgUrl)
-            .override(1200)
+            .override(1500)
             .into(appWidgetTarget)
 
     val myUri: Uri = Uri.parse(audioUrl)
