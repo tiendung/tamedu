@@ -12,6 +12,8 @@
 
 From Android 5.0 you can add widgets only to the Home screen. The previous Android versions allow you to place widgets on the lock screen as well.
 
+Right mouse button click on the main source set (where you can find the MainAcitvity.kt file as well). Then, from the quick menu select New, then the Widget option. From the submenu choose the App Widget option.
+
 ## How to add image from an url to android homesreen widget using glide kotlin?
 * https://bumptech.github.io/glide/doc/download-setup.html#gradle
 * https://futurestud.io/tutorials/glide-loading-images-into-notifications-and-appwidgets !!
@@ -34,7 +36,7 @@ import com.bumptech.glide.Glide
 ## How to show Glide image autoscale to target width?
 ```
 Glide
-    .override(size) // width size
+    .override(size) // width or height?
 ```
 LATER: need to find widget width to override the image
 
@@ -42,7 +44,25 @@ LATER: need to find widget width to override the image
 https://developer.android.com/guide/topics/media/media-formats
 Opus		Android 5.0+		• Ogg (.ogg), • Matroska (.mkv)
 https://developer.android.com/guide/topics/media/mediaplayer
+LATER: load remote audio in a separate thread/worker/routine so it don't block the main app
 
 ## How to refresh a widget after a fixed period of time?
 https://developer.android.com/reference/android/appwidget/AppWidgetProviderInfo.html#updatePeriodMillis
 Change field android:updatePeriodMillis attribute in the AppWidget meta-data file. (/app/src/main/res/xml/app_widget_info.xml)
+
+## where is APK file?
+`ls app/build/outputs/apk/debug/app-debug.apk`
+
+# Use Flutter for main app UI
+https://viblo.asia/p/cross-platform-showdown-2020-react-native-vs-flutter-1VgZv0GR5Aw
+https://github.com/Solido/awesome-flutter
+
+`flutter doctor --android-licenses`
+`flutter devices`
+`flutter emulators`
+`flutter emulators --launch Pixel_3a_API_30_x86`
+`flutter run`
+
+## Run on real device
+https://developer.android.com/studio/debug/dev-options
+Tap 'Build Number' 7 times 'Settings > About Phone > Software Information > Build Number' to enable developer options
