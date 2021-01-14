@@ -1,19 +1,16 @@
 package dev.tiendung.tamedu
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.net.Uri
 import android.widget.RemoteViews
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.AppWidgetTarget
-
-import android.media.MediaPlayer
-import android.media.AudioAttributes
-import android.net.Uri
-
-import android.content.Intent
-import android.app.PendingIntent
 
 /**
  * Implementation of App Widget functionality.
@@ -43,12 +40,16 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     
     showRandomQuote(context, appWidgetTarget)
 
+    // Click on the quote image to update the widget
     val intent = Intent(context, AppWidget::class.java)
     intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-    // intent.setAction("${System.currentTimeMillis()}") // set an dummy uniq action
-    val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
+    val pendingIntent = PendingIntent.getBroadcast(
+            context, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT)
     views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
 
+    // Click on the quote image to open the main app
     // val intent = Intent(context, MainActivity::class.java)
     // val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
     // views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)

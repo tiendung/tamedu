@@ -48,6 +48,17 @@ LATER: load remote audio in a separate thread/worker/routine so it don't block t
 ## How to handle (click) events on widget?
 KEYWORDS: android remoteview widget ACTION_APPWIDGET_UPDATE
 https://developer.android.com/codelabs/advanced-android-training-widgets#4
+```
+internal fun updateAppWidget
+... // ADD
+    val intent = Intent(context, AppWidget::class.java)
+    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
+    val pendingIntent = PendingIntent.getBroadcast(
+            context, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT)
+    views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
+```
 
 ## How to refresh a widget after a fixed period of time?
 https://developer.android.com/reference/android/appwidget/AppWidgetProviderInfo.html#updatePeriodMillis
@@ -55,7 +66,7 @@ Change field android:updatePeriodMillis attribute in the AppWidget meta-data fil
 
 Note: If the device is asleep when it is time for an update (as defined by updatePeriodMillis), then the device will wake up in order to perform the update. If you don't update more than once per hour, this probably won't cause significant problems for the battery life. If, however, you need to update more frequently and/or you do not need to update while the device is asleep, then you can instead perform updates based on an alarm that will not wake the device. To do so, set an alarm with an Intent that your AppWidgetProvider receives, using the AlarmManager. Set the alarm type to either ELAPSED_REALTIME or RTC, which will only deliver the alarm when the device is awake. Then set updatePeriodMillis to zero ("0").
 
-### Using AlarmManager to update quote every 5 minutes
+### LATER: Using AlarmManager to update quote every 5 minutes
 https://yalantis.com/blog/implement-app-widgets-android/
 
 ## Refine widget UI
