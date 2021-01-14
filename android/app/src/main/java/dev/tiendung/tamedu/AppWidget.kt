@@ -35,14 +35,14 @@ class AppWidget : AppWidgetProvider() {
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.app_widget)     
-    val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
     
     // Show and play random quote on widget view
-    showAndPlayRandomQuote(context, appWidgetTarget)
+    showAndPlayRandomQuote(context, views, appWidgetId)
 
     // Click on the quote image to update the widget
     val intent = Intent(context, AppWidget::class.java)
     intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+    // AppWidgetManager.EXTRA_APPWIDGET_IDS, contains an array of app widget IDs to update
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
     val pendingIntent = PendingIntent.getBroadcast(
             context, 0, intent,
@@ -59,15 +59,16 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 }
 
 
-fun showAndPlayRandomQuote(context: Context, appWidgetTarget: AppWidgetTarget) {
-    val randomQuoteId = (0..1673).random()
-    showQuoteById(randomQuoteId, context, appWidgetTarget) // 1314 -> longest quote
+fun showAndPlayRandomQuote(context: Context, views: RemoteViews, appWidgetId: Int) {
+    val randomQuoteId = (0..1673).random() // 1314 -> longest quote
+    showQuoteById(randomQuoteId, context, views, appWidgetId)
     playQuoteById(randomQuoteId, context)
 }
 
-fun showQuoteById(quoteId: Int, context: Context, appWidgetTarget: AppWidgetTarget) {
+fun showQuoteById(quoteId: Int, context: Context, views: RemoteViews, appWidgetId: Int) {
     // Load image from url
     val imgUrl = "https://tiendung.github.io/quotes/650x/$quoteId.png"
+    val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
     Glide.with(context)
             .asBitmap()
             .load(imgUrl)

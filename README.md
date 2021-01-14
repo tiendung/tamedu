@@ -70,6 +70,16 @@ Note: If the device is asleep when it is time for an update (as defined by updat
 https://yalantis.com/blog/implement-app-widgets-android/
 
 ## Refine widget UI
+### Set widget minWidth and minHeight
+https://developer.android.com/codelabs/advanced-android-training-widgets#7
+| # of cols or rows   | minWidth or minHeight |
+| ------------------- |:---------------------:|
+| 1                   |  40 dp                |
+| 2                   | 110 dp                |
+| 3                   | 180 dp                |
+| 4                   | 250 dp                |
+
+Set app_widget_info.xml: minWidth to 4 rows (250dp) and 3 cols (180dp)
 
 ### Remove default textview
     <TextView
