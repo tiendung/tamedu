@@ -6,7 +6,8 @@
 * audio at https://tiendung.github.io/quotes/opus/i.ogg (30mb total, 18k avg)
 
 ## How to create an android app with homescreen widget?
-* https://inspirecoding.app/android-widgets-basics/
+* https://inspirecoding.app/android-widgets-advanced/#elementor-toc__heading-anchor-8
+* https://inspirecoding.app/android-widgets-update-using-kotlin-flow-room-and-hilt/
 * https://developer.android.com/reference/android/widget/RemoteViews
 
 From Android 5.0 you can add widgets only to the Home screen. The previous Android versions allow you to place widgets on the lock screen as well.
@@ -46,7 +47,7 @@ https://developer.android.com/guide/topics/media/mediaplayer
 LATER: load remote audio in a separate thread/worker/routine so it don't block the main app
 
 ## How to handle (click) events on widget?
-KEYWORDS: android remoteview widget ACTION_APPWIDGET_UPDATE
+android remoteview widget only support press (click) and scroll event
 https://developer.android.com/codelabs/advanced-android-training-widgets#4
 ```
 internal fun updateAppWidget

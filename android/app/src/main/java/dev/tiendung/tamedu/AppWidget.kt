@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.content.ComponentName
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
@@ -19,8 +20,23 @@ class AppWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+            updateAppWidget(context, appWidgetManager, appWidgetId, false)
         }
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        val newQuoteClicked = intent.action == "newQuote"
+        val views = RemoteViews(context.packageName, R.layout.app_widget)
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val man = AppWidgetManager.getInstance(context)
+        val ids = man.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
+        for (appWidgetId in ids)
+        {
+            updateAppWidget(context, appWidgetManager, appWidgetId, newQuoteClicked)
+        }
+        val appWidget = ComponentName(context, AppWidget::class.java)
+        appWidgetManager.updateAppWidget(appWidget, views)
     }
 
     override fun onEnabled(context: Context) {
@@ -32,46 +48,52 @@ class AppWidget : AppWidgetProvider() {
     }
 }
 
+private fun getPendingIntentWidget(context: Context, action: String): PendingIntent
+{
+    // Construct an Intent which is pointing this class.
+    val intent = Intent(context, AppWidget::class.java)
+    intent.action = action
+    // And this time we are sending a broadcast with getBroadcast
+    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+}
+
 // Init a mediaPlayer to play quote audio
-private var _mediaPlayer: MediaPlayer = MediaPlayer()
-private var _playsCount = 0
+var _mediaPlayer: MediaPlayer = MediaPlayer()
 
-internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-    // Stop and release mediaPlayer before doing anything to stop previous audio if playing
-    _mediaPlayer.stop()
-    _mediaPlayer.release()
-
+internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newQuoteClicked: Boolean) {
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.app_widget)     
+    
+    // Handle events
+    views.setOnClickPendingIntent(R.id.new_quote_button,
+    getPendingIntentWidget(context, "newQuote"))
 
-    if (_playsCount == 0) {
-        handleEvents(context, views, appWidgetId)
+    // Click on the quote image to update the widget
+    // val intent = Intent(context, AppWidget::class.java)
+    // intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+    // intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
+    // val pendingIntent = PendingIntent.getBroadcast(
+    //         context, 0, intent,
+    //         PendingIntent.FLAG_UPDATE_CURRENT)
+    // views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
+
+    // Click on the quote image to open the main app
+    val intent = Intent(context, MainActivity::class.java)
+    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+    views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
+   
+    if (newQuoteClicked) {
+    // Stop and release mediaPlayer before doing anything to stop previous audio if playing
+        _mediaPlayer.stop()
+        _mediaPlayer.release()
     }
 
-    // Show and play random quote on widget view
     val randomQuoteId = (0..1673).random() // 1314 -> longest quote
     showQuoteById(randomQuoteId, context, views, appWidgetId)
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
     // Play quote after update quote image to views
     playQuoteById(randomQuoteId, context)
-}
-
-fun handleEvents(context: Context, views: RemoteViews, appWidgetId: Int) {
-    // Click on the quote image to update the widget
-    val intent = Intent(context, AppWidget::class.java)
-    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-    // AppWidgetManager.EXTRA_APPWIDGET_IDS, contains an array of app widget IDs to update
-    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
-    val pendingIntent = PendingIntent.getBroadcast(
-            context, 0, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT)
-    views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
-
-    // Click on the quote image to open the main app
-    // val intent = Intent(context, MainActivity::class.java)
-    // val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-    // views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
 }
 
 fun showQuoteById(quoteId: Int, context: Context, views: RemoteViews, appWidgetId: Int) {
@@ -89,7 +111,6 @@ fun playQuoteById(quoteId: Int, context: Context) {
     // Load audio from url
     val audioUrl = "https://tiendung.github.io/quotes/opus/$quoteId.ogg"
     val myUri: Uri = Uri.parse(audioUrl)
-    _playsCount = _playsCount + 1
     _mediaPlayer = MediaPlayer().apply {
         setAudioAttributes(
                 AudioAttributes.Builder()
