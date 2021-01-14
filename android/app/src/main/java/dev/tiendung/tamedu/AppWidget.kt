@@ -3,11 +3,12 @@ package dev.tiendung.tamedu
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ComponentName
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.media.MediaPlayer.OnPreparedListener
 import android.net.Uri
 import android.widget.RemoteViews
 import com.bumptech.glide.Glide
@@ -62,32 +63,23 @@ var _mediaPlayer: MediaPlayer = MediaPlayer()
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newQuoteClicked: Boolean) {
     // Construct the RemoteViews object
-    val views = RemoteViews(context.packageName, R.layout.app_widget)     
-    
-    // Handle events
-    views.setOnClickPendingIntent(R.id.new_quote_button,
-    getPendingIntentWidget(context, "newQuote"))
-
-    // Click on the quote image to update the widget
-    // val intent = Intent(context, AppWidget::class.java)
-    // intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-    // intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
-    // val pendingIntent = PendingIntent.getBroadcast(
-    //         context, 0, intent,
-    //         PendingIntent.FLAG_UPDATE_CURRENT)
-    // views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
-
-    // Click on the quote image to open the main app
-    val intent = Intent(context, MainActivity::class.java)
-    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-    views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
+    val views = RemoteViews(context.packageName, R.layout.app_widget)
    
     if (newQuoteClicked) {
-    // Stop and release mediaPlayer before doing anything to stop previous audio if playing
+      // Stop and release mediaPlayer before doing anything to stop previous audio if playing
         _mediaPlayer.stop()
         _mediaPlayer.release()
+    } else {
+        // Handle events only one
+        views.setOnClickPendingIntent(R.id.new_quote_button, getPendingIntentWidget(context, "newQuote"))
+
+        // Click on the quote image to open the main app
+        val intent = Intent(context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
     }
 
+    // Show then play random quote
     val randomQuoteId = (0..1673).random() // 1314 -> longest quote
     showQuoteById(randomQuoteId, context, views, appWidgetId)
     // Instruct the widget manager to update the widget
@@ -119,7 +111,7 @@ fun playQuoteById(quoteId: Int, context: Context) {
                         .build()
         )
         setDataSource(context, myUri)
-        prepare()
-        start()
-    }    
+        setOnPreparedListener(OnPreparedListener { mp -> mp.start() })
+        prepareAsync()
+    }
 }

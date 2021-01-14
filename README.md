@@ -44,7 +44,9 @@ LATER: need to find widget width to override the image
 https://developer.android.com/guide/topics/media/media-formats
 Opus		Android 5.0+		• Ogg (.ogg), • Matroska (.mkv)
 https://developer.android.com/guide/topics/media/mediaplayer
-LATER: load remote audio in a separate thread/worker/routine so it don't block the main app
+
+## How to prepareAsync so that mediaPlayer don't block main UI?
+https://developer.android.com/reference/android/media/MediaPlayer.OnPreparedListener
 
 ## How to handle (click) events on widget?
 android remoteview widget only support press (click) and scroll event
@@ -52,6 +54,7 @@ https://developer.android.com/codelabs/advanced-android-training-widgets#4
 ```
 internal fun updateAppWidget
 ... // ADD
+    // Click on the quote image to update the widget
     val intent = Intent(context, AppWidget::class.java)
     intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
@@ -60,7 +63,6 @@ internal fun updateAppWidget
             PendingIntent.FLAG_UPDATE_CURRENT)
     views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
 ```
-
 ## How to refresh a widget after a fixed period of time?
 https://developer.android.com/reference/android/appwidget/AppWidgetProviderInfo.html#updatePeriodMillis
 Change field android:updatePeriodMillis attribute in the AppWidget meta-data file. (/app/src/main/res/xml/app_widget_info.xml)
