@@ -7,7 +7,7 @@
 
 ## How to create an android app with homescreen widget?
 * https://inspirecoding.app/android-widgets-basics/
-* https://inspirecoding.app/android-widgets-update-using-kotlin-flow-room-and-hilt/
+* https://developer.android.com/reference/android/widget/RemoteViews
 
 From Android 5.0 you can add widgets only to the Home screen. The previous Android versions allow you to place widgets on the lock screen as well.
 
@@ -39,11 +39,14 @@ Glide
 ```
 LATER: need to find widget width to override the image
 
-## How to click button to play audio from an url?
+## How to play audio from an url?
 https://developer.android.com/guide/topics/media/media-formats
 Opus		Android 5.0+		• Ogg (.ogg), • Matroska (.mkv)
 https://developer.android.com/guide/topics/media/mediaplayer
 LATER: load remote audio in a separate thread/worker/routine so it don't block the main app
+
+## How to handle (click) events on widget?
+KEYWORDS: android remoteview widget 
 
 ## How to refresh a widget after a fixed period of time?
 https://developer.android.com/reference/android/appwidget/AppWidgetProviderInfo.html#updatePeriodMillis
@@ -51,9 +54,25 @@ Change field android:updatePeriodMillis attribute in the AppWidget meta-data fil
 
 Note: If the device is asleep when it is time for an update (as defined by updatePeriodMillis), then the device will wake up in order to perform the update. If you don't update more than once per hour, this probably won't cause significant problems for the battery life. If, however, you need to update more frequently and/or you do not need to update while the device is asleep, then you can instead perform updates based on an alarm that will not wake the device. To do so, set an alarm with an Intent that your AppWidgetProvider receives, using the AlarmManager. Set the alarm type to either ELAPSED_REALTIME or RTC, which will only deliver the alarm when the device is awake. Then set updatePeriodMillis to zero ("0").
 
-### Using AlarmManager
+### Using AlarmManager to update quote every 5 minutes
 https://yalantis.com/blog/implement-app-widgets-android/
 
+## Refine widget UI
+
+### Remove default textview
+    <TextView
+        android:id="@+id/appwidget_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:background="?attr/appWidgetBackgroundColor"
+        android:contentDescription="@string/appwidget_text"
+        android:text="@string/appwidget_text"
+        android:textColor="?attr/appWidgetTextColor"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
 
 ## where is APK file?
 `ls app/build/outputs/apk/debug/app-debug.apk`
