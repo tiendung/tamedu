@@ -40,6 +40,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     // Show random quote
     val quoteIndex = (0..1673).random()
+    // val quoteIndex = 119 // a long quote
 
     // Load image from url
     val imgUrl = "https://tiendung.github.io/quotes/650x/${quoteIndex}.png"
@@ -48,7 +49,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     Glide.with(context)
             .asBitmap()
             .load(imgUrl)
-            .override(800)
+            .override(1200)
             .into(appWidgetTarget)
 
     val audioUrl = "https://tiendung.github.io/quotes/opus/${quoteIndex}.ogg"
