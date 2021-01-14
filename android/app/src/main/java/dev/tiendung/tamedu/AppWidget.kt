@@ -35,10 +35,10 @@ class AppWidget : AppWidgetProvider() {
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.app_widget)     
-
     val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
     
-    showRandomQuote(context, appWidgetTarget)
+    // Show and play random quote on widget view
+    showAndPlayRandomQuote(context, appWidgetTarget)
 
     // Click on the quote image to update the widget
     val intent = Intent(context, AppWidget::class.java)
@@ -59,24 +59,31 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 }
 
 
-fun showRandomQuote(context: Context, appWidgetTarget: AppWidgetTarget) {
+fun showAndPlayRandomQuote(context: Context, appWidgetTarget: AppWidgetTarget) {
     val randomQuoteId = (0..1673).random()
-    showQuoteById(randomQuoteId, context, appWidgetTarget) // 348 -> long quote
+    showQuoteById(randomQuoteId, context, appWidgetTarget) // 1314 -> longest quote
+    playQuoteById(randomQuoteId, context)
 }
 
 fun showQuoteById(quoteId: Int, context: Context, appWidgetTarget: AppWidgetTarget) {
-    // Load image and audio from url
+    // Load image from url
     val imgUrl = "https://tiendung.github.io/quotes/650x/$quoteId.png"
-    val audioUrl = "https://tiendung.github.io/quotes/opus/$quoteId.ogg"
-
     Glide.with(context)
             .asBitmap()
             .load(imgUrl)
             .override(1500)
             .into(appWidgetTarget)
+}
 
+//private var _mediaPlayer: MediaPlayer? = null
+private var _mediaPlayer: MediaPlayer = MediaPlayer()
+fun playQuoteById(quoteId: Int, context: Context) {
+    // Load audio from url
+    val audioUrl = "https://tiendung.github.io/quotes/opus/$quoteId.ogg"
     val myUri: Uri = Uri.parse(audioUrl)
-    val mediaPlayer: MediaPlayer? = MediaPlayer().apply {
+
+    _mediaPlayer.stop()
+    _mediaPlayer = MediaPlayer().apply {
         setAudioAttributes(
                 AudioAttributes.Builder()
                         .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -86,5 +93,5 @@ fun showQuoteById(quoteId: Int, context: Context, appWidgetTarget: AppWidgetTarg
         setDataSource(context, myUri)
         prepare()
         start()
-    }
+    }    
 }
