@@ -18,7 +18,10 @@
     - [Run on real device](#run-on-real-device)
     - [Run on web (for fast prototying)](#run-on-web-for-fast-prototying)
     - [Add navigation to main screen](#add-navigation-to-main-screen)
-    - [Present vuot-qua-de-duoi in cards that swipable](#present-vuot-qua-de-duoi-in-cards-that-swipable)
+    - [TODO: Present vuot-qua-de-duoi in cards that swipable](#todo-present-vuot-qua-de-duoi-in-cards-that-swipable)
+    - [TODO: List phaps as a list of item on main screen](#todo-list-phaps-as-a-list-of-item-on-main-screen)
+  - [3. How to use Android notifications to remind nghe-phap every day at 6am?](#3-how-to-use-android-notifications-to-remind-nghe-phap-every-day-at-6am)
+    - [TODO: Show a notification on both lock screen and notification bar. Click on it will lead to tiendung.github.io to nghe-phap](#todo-show-a-notification-on-both-lock-screen-and-notification-bar-click-on-it-will-lead-to-tiendunggithubio-to-nghe-phap)
 
 ## 1. Diplay random quote on homescreen widget and talk it outloud
 
@@ -99,9 +102,28 @@ Change field android:updatePeriodMillis attribute in the AppWidget meta-data fil
 
 Note: If the device is asleep when it is time for an update (as defined by updatePeriodMillis), then the device will wake up in order to perform the update. If you don't update more than once per hour, this probably won't cause significant problems for the battery life. If, however, you need to update more frequently and/or you do not need to update while the device is asleep, then you can instead perform updates based on an alarm that will not wake the device. To do so, set an alarm with an Intent that your AppWidgetProvider receives, using the AlarmManager. Set the alarm type to either ELAPSED_REALTIME or RTC, which will only deliver the alarm when the device is awake. Then set updatePeriodMillis to zero ("0").
 
-LATER: Using AlarmManager to update quote every 5 minutes
+TODO: Using AlarmManager to update quote every 5 minutes
 https://code.tutsplus.com/tutorials/code-a-widget-for-your-android-app-updating-the-widget-continued--cms-30669
 https://www.appsrox.com/android/tutorials/dailyvocab/2/
+
+```Kotlin
+class AppWidget : AppWidgetProvider() {
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+
+        val intent = Intent(context, AppWidget::class.java)
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+
+        val service = PendingIntent.getService(context, 0,
+                // intent, PendingIntent.FLAG_CANCEL_CURRENT)
+                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        // Set your update interval to 300000 milliseconds (5 mins).
+        // 60000 milliseconds (1 min) is the minimum interval you can use
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME,
+                 SystemClock.elapsedRealtime(), 60000, service)
+```
 
 ### Refine widget UI
 
@@ -166,6 +188,14 @@ https://gallery.flutter.dev/#/demo/nav_rail
 
 Các ứng dụng di động thường được hiển thị dưới dạng Full-screen thường được gọi là "screens" hoặc "pages". Trong Flutter, chúng được gọi là các routes và được quản lý bởi Navigator widget. Navigator giữ stack các route và cung cấp các method để quản lý stack đó như: Navigator.push và Navigator.pop
 
-### Present vuot-qua-de-duoi in cards that swipable
+### TODO: Present vuot-qua-de-duoi in cards that swipable
 
 https://pub.dev/packages/flutter_swiper/install
+
+### TODO: List phaps as a list of item on main screen
+
+Data at https://tiendung.github.io/phaps.json
+
+## 3. How to use Android notifications to remind nghe-phap every day at 6am?
+
+### TODO: Show a notification on both lock screen and notification bar. Click on it will lead to tiendung.github.io to nghe-phap

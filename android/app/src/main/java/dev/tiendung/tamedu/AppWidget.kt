@@ -22,34 +22,22 @@ import com.bumptech.glide.request.target.AppWidgetTarget
  */
 class AppWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AppWidget::class.java)
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
-        val service = PendingIntent.getService(context, 0,
-            intent, PendingIntent.FLAG_CANCEL_CURRENT)
-
-        // Set your update interval to 300000 milliseconds (5 mins).
-        // 60000 milliseconds (1 min) is the minimum interval you can use
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME,
-                 SystemClock.elapsedRealtime(), 60000, service)
 
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId, false)
+            updateAppWidget(context, appWidgetManager, appWidgetId)
         }
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        val newQuoteClicked = intent.action == "newQuote"
+        // val newQuoteClicked = intent.action == "newQuote"
         val views = RemoteViews(context.packageName, R.layout.app_widget)
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val man = AppWidgetManager.getInstance(context)
         val ids = man.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
-        for (appWidgetId in ids)
-        {
-            updateAppWidget(context, appWidgetManager, appWidgetId, newQuoteClicked)
+        for (appWidgetId in ids) {
+            updateAppWidget(context, appWidgetManager, appWidgetId)
         }
         val appWidget = ComponentName(context, AppWidget::class.java)
         appWidgetManager.updateAppWidget(appWidget, views)
@@ -75,12 +63,12 @@ private fun getPendingIntentWidget(context: Context, action: String): PendingInt
 
 // Init a mediaPlayer to play quote audio
 var _mediaPlayer: MediaPlayer = MediaPlayer()
-
-internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newQuoteClicked: Boolean) {
+var  _count: Int = 0
+internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.app_widget)
    
-    if (newQuoteClicked) {
+    if (_count > 0) {
       // Stop and release mediaPlayer before doing anything to stop previous audio if playing
         _mediaPlayer.stop()
         _mediaPlayer.release()
@@ -102,12 +90,13 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     appWidgetManager.updateAppWidget(appWidgetId, views)
 
     // Play quote after update quote image to views
-    if (newQuoteClicked) {
+    if (_count > 0) {
         playQuoteById(randomQuoteId, context)
     } else {
         // play a bell
         playQuoteById(-1, context)
     }
+    _count += 1
 }
 
 fun showQuoteById(quoteId: Int, context: Context, views: RemoteViews, appWidgetId: Int) {
