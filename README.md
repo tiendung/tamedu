@@ -17,7 +17,8 @@
   - [2. Use Flutter for main app UI](#2-use-flutter-for-main-app-ui)
     - [Run on real device](#run-on-real-device)
     - [Run on web (for fast prototying)](#run-on-web-for-fast-prototying)
-    - [Add menu to main screen](#add-menu-to-main-screen)
+    - [Add navigation to main screen](#add-navigation-to-main-screen)
+    - [Present vuot-qua-de-duoi in cards that swipable](#present-vuot-qua-de-duoi-in-cards-that-swipable)
 
 ## 1. Diplay random quote on homescreen widget and talk it outloud
 
@@ -99,7 +100,8 @@ Change field android:updatePeriodMillis attribute in the AppWidget meta-data fil
 Note: If the device is asleep when it is time for an update (as defined by updatePeriodMillis), then the device will wake up in order to perform the update. If you don't update more than once per hour, this probably won't cause significant problems for the battery life. If, however, you need to update more frequently and/or you do not need to update while the device is asleep, then you can instead perform updates based on an alarm that will not wake the device. To do so, set an alarm with an Intent that your AppWidgetProvider receives, using the AlarmManager. Set the alarm type to either ELAPSED_REALTIME or RTC, which will only deliver the alarm when the device is awake. Then set updatePeriodMillis to zero ("0").
 
 LATER: Using AlarmManager to update quote every 5 minutes
-https://yalantis.com/blog/implement-app-widgets-android/
+https://code.tutsplus.com/tutorials/code-a-widget-for-your-android-app-updating-the-widget-continued--cms-30669
+https://www.appsrox.com/android/tutorials/dailyvocab/2/
 
 ### Refine widget UI
 
@@ -157,6 +159,13 @@ Tap 'Build Number' 7 times 'Settings > About Phone > Software Information > Buil
 
 https://flutter.dev/docs/get-started/web
 
-### Add menu to main screen
+### Add navigation to main screen
 
 https://flutter.dev/docs/cookbook/design/drawer
+https://gallery.flutter.dev/#/demo/nav_rail
+
+Các ứng dụng di động thường được hiển thị dưới dạng Full-screen thường được gọi là "screens" hoặc "pages". Trong Flutter, chúng được gọi là các routes và được quản lý bởi Navigator widget. Navigator giữ stack các route và cung cấp các method để quản lý stack đó như: Navigator.push và Navigator.pop
+
+### Present vuot-qua-de-duoi in cards that swipable
+
+https://pub.dev/packages/flutter_swiper/install
