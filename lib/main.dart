@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_page_indicator/flutter_page_indicator.dart';
 
 void main() {
   runApp(MyApp());
@@ -85,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Bấm mấy lần rồi nhỉ?:',
+              'Bấm mấy lần rồi nhỉ?',
             ),
             Text(
               '$_counter',
@@ -103,13 +105,13 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Drawer Header'),
+              child: Text('Thực hành'),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.black12,
               ),
             ),
             ListTile(
-              title: Text('Item 1'),
+              title: Text('Thư giãn (30 phút)'),
               onTap: () {
                 // Update the state of the app
                 // ...
@@ -118,7 +120,16 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: Text('Item 2'),
+              title: Text('Thiền tâm từ (15 phút)'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Niệm chết (20 phút)'),
               onTap: () {
                 // Update the state of the app
                 // ...
