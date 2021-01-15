@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Thoải mái - Thư giãn - Biết mình'),
+      home: MyHomePage(title: 'Thoải mái - Tích cực - Hết mình'),
     );
   }
 }

@@ -16,6 +16,7 @@
     - [where is APK file?](#where-is-apk-file)
   - [2. Use Flutter for main app UI](#2-use-flutter-for-main-app-ui)
     - [Run on real device](#run-on-real-device)
+    - [Run on web (for fast prototying)](#run-on-web-for-fast-prototying)
     - [Add menu to main screen](#add-menu-to-main-screen)
 
 ## 1. Diplay random quote on homescreen widget and talk it outloud
@@ -151,6 +152,10 @@ https://github.com/Solido/awesome-flutter
 
 https://developer.android.com/studio/debug/dev-options
 Tap 'Build Number' 7 times 'Settings > About Phone > Software Information > Build Number' to enable developer options
+
+### Run on web (for fast prototying)
+
+https://flutter.dev/docs/get-started/web
 
 ### Add menu to main screen
 
