@@ -115,3 +115,6 @@ https://github.com/Solido/awesome-flutter
 ## Run on real device
 https://developer.android.com/studio/debug/dev-options
 Tap 'Build Number' 7 times 'Settings > About Phone > Software Information > Build Number' to enable developer options
+
+## Add menu to main screen
+https://flutter.dev/docs/cookbook/design/drawer
