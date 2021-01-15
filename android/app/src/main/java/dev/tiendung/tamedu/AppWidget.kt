@@ -82,10 +82,17 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     // Show then play random quote
     val randomQuoteId = (0..1673).random() // 1314 -> longest quote
     showQuoteById(randomQuoteId, context, views, appWidgetId)
+
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
+
     // Play quote after update quote image to views
-    playQuoteById(randomQuoteId, context)
+    if (newQuoteClicked) {
+        playQuoteById(randomQuoteId, context)
+    } else {
+        // play a bell
+        playQuoteById(-1, context)
+    }
 }
 
 fun showQuoteById(quoteId: Int, context: Context, views: RemoteViews, appWidgetId: Int) {
@@ -101,8 +108,14 @@ fun showQuoteById(quoteId: Int, context: Context, views: RemoteViews, appWidgetI
 
 fun playQuoteById(quoteId: Int, context: Context) {
     // Load audio from url
-    val audioUrl = "https://tiendung.github.io/quotes/opus/$quoteId.ogg"
-    val myUri: Uri = Uri.parse(audioUrl)
+    val audioUrl: String
+    if (quoteId == -1) {
+        // Play a bell
+        audioUrl = "https://raw.githubusercontent.com/tiendung/tiendung.github.io/main/_save/bell.ogg"
+    } else {
+        audioUrl = "https://tiendung.github.io/quotes/opus/$quoteId.ogg"
+    }
+
     _mediaPlayer = MediaPlayer().apply {
         setAudioAttributes(
                 AudioAttributes.Builder()
@@ -110,7 +123,7 @@ fun playQuoteById(quoteId: Int, context: Context) {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
-        setDataSource(context, myUri)
+        setDataSource(context, Uri.parse(audioUrl))
         setOnPreparedListener(OnPreparedListener { mp -> mp.start() })
         prepareAsync()
     }
