@@ -31,7 +31,15 @@ class AppWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        // val newQuoteClicked = intent.action == "newQuote"
+
+        _speakQuoteToggleClicked = intent.action == "speakQuoteToggle"
+        _newQuoteClicked = intent.action == "newQuote"
+        _isInitOrAutoUpdate = !(_newQuoteClicked || _speakQuoteToggleClicked)
+
+        if (_speakQuoteToggleClicked) {
+            _allowToSpeakQuote = !_allowToSpeakQuote
+        }
+
         val views = RemoteViews(context.packageName, R.layout.app_widget)
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val man = AppWidgetManager.getInstance(context)
@@ -63,40 +71,59 @@ private fun getPendingIntentWidget(context: Context, action: String): PendingInt
 
 // Init a mediaPlayer to play quote audio
 var _mediaPlayer: MediaPlayer = MediaPlayer()
-var  _count: Int = 0
+var  _newQuoteClicked: Boolean = false
+var _speakQuoteToggleClicked = false
+var _allowToSpeakQuote: Boolean = false
+var _isInitOrAutoUpdate: Boolean = true
+var _randomQuoteId: Int = 0
+var _isFirstTime = true
+
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.app_widget)
    
-    if (_count > 0) {
-      // Stop and release mediaPlayer before doing anything to stop previous audio if playing
-        _mediaPlayer.stop()
-        _mediaPlayer.release()
-    } else {
-        // Handle events only one
-        views.setOnClickPendingIntent(R.id.new_quote_button, getPendingIntentWidget(context, "newQuote"))
+    // Stop mediaPlayer before doing anything to stop previous audio if playing
+    _mediaPlayer.stop()
+
+    // Handle events only one
+    if (_isFirstTime) {
+        views.setOnClickPendingIntent(R.id.new_quote_button,
+                getPendingIntentWidget(context, "newQuote"))
+
+        views.setOnClickPendingIntent(R.id.speak_quote_toggle_button,
+                getPendingIntentWidget(context, "speakQuoteToggle"))
 
         // Click on the quote image to open the main app
         val intent = Intent(context, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
         views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
     }
+    _isFirstTime = false
 
-    // Show then play random quote
-    val randomQuoteId = quoteIdsSortedByLen[(0..1500).random()] // show only fitable quote
-    showQuoteById(randomQuoteId, context, views, appWidgetId)
+    // Show and play random quote
+    if (_isInitOrAutoUpdate || _newQuoteClicked) {
+        // _randomQuoteId = quoteIdsSortedByLen[(0..1500).random()] // show only fitable quotes
+        _randomQuoteId = quoteIdsSortedByLen[(0..900).random()] // show only short quotes
+    }
+    
+    showQuoteById(_randomQuoteId, context, views, appWidgetId)
+
+    // Update speak_quote_toggle_button text
+    val txt = if (_allowToSpeakQuote) "Tắt tiếng" else "Đọc to"
+    views.setTextViewText(R.id.speak_quote_toggle_button, txt)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
 
     // Play quote after update quote image to views
-    if (_count > 0) {
-        playQuoteById(randomQuoteId, context)
-    } else {
+    if (_isInitOrAutoUpdate) {
         // play a bell
-        playQuoteById(-1, context)
+        playQuoteById(-1, context)        
+    } else if ((_newQuoteClicked || _speakQuoteToggleClicked) 
+                    && _allowToSpeakQuote) {
+        playQuoteById(_randomQuoteId, context)
     }
-    _count += 1
+    _isInitOrAutoUpdate = true
 }
 
 fun showQuoteById(quoteId: Int, context: Context, views: RemoteViews, appWidgetId: Int) {
