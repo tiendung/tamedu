@@ -5,7 +5,7 @@
     - [Resources](#resources)
     - [How to create an android app with homescreen widget?](#how-to-create-an-android-app-with-homescreen-widget)
     - [How to add image from an url to android homesreen widget using glide kotlin?](#how-to-add-image-from-an-url-to-android-homesreen-widget-using-glide-kotlin)
-  - [How to show Glide image autoscale to target width?](#how-to-show-glide-image-autoscale-to-target-width)
+    - [How to show Glide image autoscale to target width?](#how-to-show-glide-image-autoscale-to-target-width)
     - [How to play audio from an url?](#how-to-play-audio-from-an-url)
     - [How to prepareAsync so that mediaPlayer don't block main UI?](#how-to-prepareasync-so-that-mediaplayer-dont-block-main-ui)
     - [How to handle (click) events on widget?](#how-to-handle-click-events-on-widget)
@@ -23,7 +23,7 @@
     - [Add navigation to main screen](#add-navigation-to-main-screen)
     - [TODO: Present vuot-qua-de-duoi in cards that swipable](#todo-present-vuot-qua-de-duoi-in-cards-that-swipable)
     - [TODO: List phaps as a list of item on main screen](#todo-list-phaps-as-a-list-of-item-on-main-screen)
-  - [3. How to use Android notifications to remind nghe-phap every day at 6am?](#3-how-to-use-android-notifications-to-remind-nghe-phap-every-day-at-6am)
+  - [3. Use Android notifications to remind nghe-phap every day at 6am](#3-use-android-notifications-to-remind-nghe-phap-every-day-at-6am)
     - [TODO: Show a notification on both lock screen and notification bar. Click on it will lead to tiendung.github.io to nghe-phap](#todo-show-a-notification-on-both-lock-screen-and-notification-bar-click-on-it-will-lead-to-tiendunggithubio-to-nghe-phap)
 
 ## 1. Diplay random quote on homescreen widget and talk it outloud
@@ -69,7 +69,7 @@ import com.bumptech.glide.Glide
 ...
 ```
 
-## How to show Glide image autoscale to target width?
+### How to show Glide image autoscale to target width?
 
 NOW: Set override(1200) to scale image to fit widescreen phone screen
 
@@ -269,6 +269,6 @@ https://pub.dev/packages/flutter_swiper/install
 
 Data at https://tiendung.github.io/phaps.json
 
-## 3. How to use Android notifications to remind nghe-phap every day at 6am?
+## 3. Use Android notifications to remind nghe-phap every day at 6am
 
 ### TODO: Show a notification on both lock screen and notification bar. Click on it will lead to tiendung.github.io to nghe-phap
