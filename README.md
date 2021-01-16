@@ -13,6 +13,7 @@
     - [Refine widget UI](#refine-widget-ui)
       - [Set widget minWidth and minHeight](#set-widget-minwidth-and-minheight)
       - [Remove default textview](#remove-default-textview)
+    - [How to load image and audio from local resources (within the app)?](#how-to-load-image-and-audio-from-local-resources-within-the-app)
     - [where is APK file?](#where-is-apk-file)
   - [2. Use Flutter for main app UI](#2-use-flutter-for-main-app-ui)
     - [Run on real device](#run-on-real-device)
@@ -27,9 +28,13 @@
 
 ### Resources
 
-1675 quotes https://tiendung.github.io/quotes.js
+1675 quotes https://tiendung.github.io/quotes.js (50mb images + audios)
 * image at https://tiendung.github.io/quotes/650x/i.png (20mb total, 12k avg)
 * audio at https://tiendung.github.io/quotes/opus/i.ogg (30mb total, 18k avg)
+
+999 shortest quotes (21mb images + audios)
+* image at ./quotes/650x/i.png ( 9mb, total,  9k avg)
+* audio at ./quotes/opus/i.ogg (12mb, total  12k avg)
 
 ### How to create an android app with homescreen widget?
 
@@ -64,6 +69,7 @@ import com.bumptech.glide.Glide
 
 ## How to show Glide image autoscale to target width?
 
+Set override(1200) to scale image to fit widescreen phone screen
 LATER: need to find widget width to override(size) the image
 
 ### How to play audio from an url?
@@ -156,6 +162,12 @@ Set app_widget_info.xml: minWidth to 4 rows (250dp) and 3 cols (180dp)
         android:textSize="24sp"
         android:textStyle="bold|italic" />
 ```
+
+### How to load image and audio from local resources (within the app)?
+
+https://developer.android.com/guide/topics/resources/providing-resources
+https://developer.android.com/reference/kotlin/android/content/Context.html#getResources()
+https://developer.android.com/reference/kotlin/android/content/res/Resources#getAssets()
 
 ### where is APK file?
 
