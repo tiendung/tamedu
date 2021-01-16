@@ -15,7 +15,7 @@ import android.os.SystemClock
 import android.widget.RemoteViews
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.AppWidgetTarget
-
+import android.content.res.AssetManager
 
 /**
  * Implementation of App Widget functionality.
@@ -98,7 +98,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     // Show and play random quote
     if (_isInitOrAutoUpdate || _newQuoteClicked) {
-        _randomQuoteId = quoteIdsSortedByLen[(0..1300).random()] // show only fitable quotes
+        _randomQuoteId = quoteIdsSortedByLen[(0..998).random()] // show only fitable quotes
         showQuoteById(_randomQuoteId, context, views, appWidgetId)
     }
 
@@ -122,20 +122,29 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
 fun showQuoteById(quoteId: Int, context: Context, views: RemoteViews, appWidgetId: Int) {
     // Load image from url
-    val imgUrl = "https://tiendung.github.io/quotes/650x/$quoteId.png"
+    // val imageUri = Uri.parse("https://tiendung.github.io/quotes/650x/$quoteId.png")
+    // Load image from local resources
+    val imageUri = Uri.parse("file:///android_asset/quotes/$quoteId.png")
+
     val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
     Glide.with(context)
             .asBitmap()
-            .load(imgUrl)
+            .load(imageUri)
             .override(1200)
             .into(appWidgetTarget)
 }
 
 fun playQuoteById(quoteId: Int, context: Context) {
     // Load audio from url
-    val audioUrl: String = if (quoteId == -1) // Play a bell
-             "https://raw.githubusercontent.com/tiendung/tiendung.github.io/main/_save/bell.ogg"
-        else "https://tiendung.github.io/quotes/opus/$quoteId.ogg" // Play a quote
+    // val audioUrl: String = if (quoteId == -1)
+    //          "https://raw.githubusercontent.com/tiendung/tiendung.github.io/main/_save/bell.ogg" // Play a bell
+    //     else "https://tiendung.github.io/quotes/opus/$quoteId.ogg" // Play a quote
+
+    // https://stackoverflow.com/questions/5747060/how-do-you-play-android-inputstream-on-mediaplayer
+    val fileName = if (quoteId == -1) "bell.ogg" else "quotes/$quoteId.ogg"
+    val assetManager = context.getAssets()
+    // val inputStream = assetManager.open(fileName)
+    val fd = assetManager.openFd(fileName) // descriptor
 
     _mediaPlayer = MediaPlayer().apply {
         setAudioAttributes(
@@ -144,7 +153,8 @@ fun playQuoteById(quoteId: Int, context: Context) {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
-        setDataSource(context, Uri.parse(audioUrl))
+        setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength())
+        // setDataSource(context, Uri.parse(audioUrl))
         setOnPreparedListener(OnPreparedListener { mp -> mp.start() })
         prepareAsync()
     }

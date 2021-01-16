@@ -166,8 +166,31 @@ Set app_widget_info.xml: minWidth to 4 rows (250dp) and 3 cols (180dp)
 ### How to load image and audio from local resources (within the app)?
 
 https://developer.android.com/guide/topics/resources/providing-resources
-https://developer.android.com/reference/kotlin/android/content/Context.html#getResources()
-https://developer.android.com/reference/kotlin/android/content/res/Resources#getAssets()
+If you need access to original file names and file hierarchy, you might consider 
+saving some resources in the assets/ directory (instead of res/raw/). 
+Files in assets/ aren't given a resource ID, so you can read them only using AssetManager.
+
+https://developer.android.com/reference/kotlin/android/content/res/AssetManager
+https://medium.com/mobile-app-development-publication/assets-or-resource-raw-folder-of-android-5bdc042570e0
+https://stackoverflow.com/questions/16715003/simple-mediaplayer-play-mp3-from-file-path
+
+```Kotlin
+    val assetManager = context.getAssets()
+    val inputStream = assetManager.open("quotes/$quoteId.png")
+    context.getAssets().list("quotes/$quoteId.ogg")
+
+    // Load audio from local resources
+    // val audioUrl = if (quoteId == -1)  // Play a bell
+    //         // context.getAssets().list("bell.ogg")?.first()
+    //         "file:///android_asset/bell.ogg"
+    //     else  // Play a quote
+    //         // context.getAssets().list("quotes/$quoteId.ogg")?.first()
+    //         "file:///android_asset/quotes/$quoteId.ogg"
+```
+The URI "file:///android_asset/" points to YourProject/app/src/main/assets/.
+Caused by: java.io.FileNotFoundException: /android_asset/quotes/1159.ogg: open failed: ENOENT (No such file or directory)
+
+Calling setDataSource(java.io.FileDescriptor), or setDataSource(java.lang.String), or setDataSource(android.content.Context,android.net.Uri), or setDataSource(java.io.FileDescriptor,long,long), or setDataSource(android.media.MediaDataSource) transfers a MediaPlayer object in the Idle state to the
 
 ### where is APK file?
 
