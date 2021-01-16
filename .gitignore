@@ -16,3 +16,4 @@ local.properties
 .dart_tool
 .idea
 .vscode
+*.log

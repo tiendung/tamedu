@@ -76,34 +76,30 @@ var _speakQuoteToggleClicked = false
 var _allowToSpeakQuote: Boolean = false
 var _isInitOrAutoUpdate: Boolean = true
 var _randomQuoteId: Int = 0
-var _isFirstTime = true
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.app_widget)
    
-    // Stop mediaPlayer before doing anything to stop previous audio if playing
+    // Stop previous audio if playing
     _mediaPlayer.stop()
 
-    // Handle events only one
-    if (_isFirstTime) {
-        views.setOnClickPendingIntent(R.id.new_quote_button,
-                getPendingIntentWidget(context, "newQuote"))
+    // Handle events
+    views.setOnClickPendingIntent(R.id.new_quote_button,
+            getPendingIntentWidget(context, "newQuote"))
 
-        views.setOnClickPendingIntent(R.id.speak_quote_toggle_button,
-                getPendingIntentWidget(context, "speakQuoteToggle"))
+    views.setOnClickPendingIntent(R.id.speak_quote_toggle_button,
+            getPendingIntentWidget(context, "speakQuoteToggle"))
 
-        // Click on the quote image to open the main app
-        val intent = Intent(context, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-        views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
-    }
-    _isFirstTime = false
+    // Click on the quote image to open the main app
+    val intent = Intent(context, MainActivity::class.java)
+    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+    views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
 
     // Show and play random quote
     if (_isInitOrAutoUpdate || _newQuoteClicked) {
         // _randomQuoteId = quoteIdsSortedByLen[(0..1500).random()] // show only fitable quotes
-        _randomQuoteId = quoteIdsSortedByLen[(0..900).random()] // show only short quotes
+        _randomQuoteId = quoteIdsSortedByLen[(0..1300).random()] // show only short quotes
     }
     
     showQuoteById(_randomQuoteId, context, views, appWidgetId)
@@ -139,13 +135,9 @@ fun showQuoteById(quoteId: Int, context: Context, views: RemoteViews, appWidgetI
 
 fun playQuoteById(quoteId: Int, context: Context) {
     // Load audio from url
-    val audioUrl: String
-    if (quoteId == -1) {
-        // Play a bell
-        audioUrl = "https://raw.githubusercontent.com/tiendung/tiendung.github.io/main/_save/bell.ogg"
-    } else {
-        audioUrl = "https://tiendung.github.io/quotes/opus/$quoteId.ogg"
-    }
+    val audioUrl: String = if (quoteId == -1) // Play a bell
+             "https://raw.githubusercontent.com/tiendung/tiendung.github.io/main/_save/bell.ogg"
+        else "https://tiendung.github.io/quotes/opus/$quoteId.ogg" // Play a quote
 
     _mediaPlayer = MediaPlayer().apply {
         setAudioAttributes(
