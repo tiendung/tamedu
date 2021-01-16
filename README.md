@@ -14,6 +14,7 @@
       - [Set widget minWidth and minHeight](#set-widget-minwidth-and-minheight)
       - [Remove default textview](#remove-default-textview)
     - [How to load image and audio from local resources (within the app)?](#how-to-load-image-and-audio-from-local-resources-within-the-app)
+    - [TODO: How to save phap image to album?](#todo-how-to-save-phap-image-to-album)
     - [where is APK file?](#where-is-apk-file)
   - [2. Use Flutter for main app UI](#2-use-flutter-for-main-app-ui)
     - [Run on real device](#run-on-real-device)
@@ -191,6 +192,26 @@ The URI "file:///android_asset/" points to YourProject/app/src/main/assets/.
 Caused by: java.io.FileNotFoundException: /android_asset/quotes/1159.ogg: open failed: ENOENT (No such file or directory)
 
 Calling setDataSource(java.io.FileDescriptor), or setDataSource(java.lang.String), or setDataSource(android.content.Context,android.net.Uri), or setDataSource(java.io.FileDescriptor,long,long), or setDataSource(android.media.MediaDataSource) transfers a MediaPlayer object in the Idle state to the
+
+### TODO: How to save phap image to album?
+
+https://developer.android.com/reference/android/content/Context#getExternalFilesDir(java.lang.String)
+
+Click on imageview to save it to album
+Removed code
+
+```Kotlin
+internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+  ...
+    // Click on the quote image to open the main app
+    val intent = Intent(context, MainActivity::class.java)
+    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+    views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
+```
+NOW: save to ... 'Android/data/dev.tiendung.tamedu/files'
+LATER: request access to storage permission to save to public `Pictures` folder
+https://stackoverflow.com/questions/8854359/exception-open-failed-eacces-permission-denied-on-android
+https://developer.android.com/training/permissions/requesting.html
 
 ### where is APK file?
 
