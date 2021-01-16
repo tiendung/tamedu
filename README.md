@@ -1,5 +1,12 @@
 # Tamedu: The Mind Education App
 
+Add a widget to android homescreen that show sutamphap.com's quotes:
++ [LƯU] button to save quote image (quote$id.png) to disk
++ [ĐỌC TO/DỪNG ĐỌC] button to turn on/off speaking quote outloud
++ [NGHE PHÁP] Play random seleted phaps
++ Change quote every 30 mins with a mindfulness bell
++ Click on quote image to change to the new one
+
 - [Tamedu: The Mind Education App](#tamedu-the-mind-education-app)
   - [1. Diplay random quote on homescreen widget and talk it outloud](#1-diplay-random-quote-on-homescreen-widget-and-talk-it-outloud)
     - [Resources](#resources)
