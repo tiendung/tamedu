@@ -12,7 +12,6 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnPreparedListener
 import android.net.Uri
-import android.os.Environment
 import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
@@ -109,17 +108,17 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     _mediaPlayer.stop()
 
     // Handle events
-    views.setOnClickPendingIntent(R.id.new_quote_button,
-            getPendingIntentWidget(context, "newQuote"))
+    views.setOnClickPendingIntent(R.id.nghe_phap_button,
+            getPendingIntentWidget(context, "nghePhap"))
 
     views.setOnClickPendingIntent(R.id.speak_quote_toggle_button,
             getPendingIntentWidget(context, "speakQuoteToggle"))
 
-    views.setOnClickPendingIntent(R.id.nghe_phap_button,
-            getPendingIntentWidget(context, "nghePhap"))
+    views.setOnClickPendingIntent(R.id.save_quote_button,
+            getPendingIntentWidget(context, "saveQuoteImage"))
 
     views.setOnClickPendingIntent(R.id.appwidget_image,
-            getPendingIntentWidget(context, "saveQuoteImage"))
+            getPendingIntentWidget(context, "newQuote"))
 
     // Show and play random quote
     if (_isInitOrAutoUpdate || _newQuoteClicked) {
