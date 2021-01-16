@@ -156,7 +156,8 @@ fun copyQuoteFromAssets(context: Context, quoteId: Int) {
     // storage.
     
     // val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/quote$quoteId.png")
-    val file = File(context.getExternalFilesDir(null), "quote$quoteId.png")
+    File(context.getExternalFilesDir(null), "/quotes").mkdir()
+    val file = File(context.getExternalFilesDir(null), "/quotes/quote$quoteId.png")
     Toast.makeText(context, "Lưu lời dạy tại $file",
             Toast.LENGTH_LONG).show()
     try {

@@ -208,7 +208,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
     views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
 ```
-NOW: save to ... 'Android/data/dev.tiendung.tamedu/files'
+NOW: save to ... 'Android/data/dev.tiendung.tamedu/files/quotes'
 LATER: request access to storage permission to save to public `Pictures` folder
 https://stackoverflow.com/questions/8854359/exception-open-failed-eacces-permission-denied-on-android
 https://developer.android.com/training/permissions/requesting.html
