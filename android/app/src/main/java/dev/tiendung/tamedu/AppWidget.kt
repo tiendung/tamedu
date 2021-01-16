@@ -215,8 +215,11 @@ var _phapIsPlaying : Boolean = false
 fun playRandomPhap(context: Context) {
     _phapIsPlaying = true
     val phap = seletedPhaps.random()
-    val audioUrl =  "https://tiendung.github.io/phaps/${phap}.ogg"
-    Toast.makeText(context, "Chuẩn bị nghe ${phap}, Ấn 'NGHE PHÁP' lần nữa để dừng",
+    val randomIndex = (0..phapIds2Titles.size).random()
+    val phapId2Title = phapIds2Titles.entries.elementAt(randomIndex)
+
+    val audioUrl =  "https://tiendung.github.io/${phapId2Title.key}"
+    Toast.makeText(context, "Chuẩn bị nghe '${phapId2Title.value}'.\n Ấn 'NGHE PHÁP' lần nữa để dừng",
             Toast.LENGTH_LONG).show()
 
     _phapPlayer = MediaPlayer().apply {
@@ -231,6 +234,39 @@ fun playRandomPhap(context: Context) {
         prepareAsync()
     }
 }
+val phapIds2Titles: HashMap<String, String> = hashMapOf(
+"phaps/Vo-Mong.ogg" to "Vỡ mộng",
+"phaps/Tinh-Tan-fix.ogg" to "Tinh tấn",
+"phaps/Tran-Trong.ogg" to "Trân trọng",
+"phaps/suy-nghi-tich-cuc.ogg" to "Suy nghĩ tích cực",
+"phaps/cai-nay-chi-ton-tai-trong-suy-nghi.ogg" to "Cái này chỉ tồn tại trong suy nghĩ",
+"phaps/thuyetphap-ODoiMoiLaMatTran.ogg" to "Ở đời mới là mặt trận",
+"phaps/thuyetphap-chilacamgiac.ogg" to "Chỉ là một cảm giác",
+"phaps/thuyetPhap_goiYDinhHuong.ogg" to "Gợi ý định hướng",
+"phaps/thuyetphap_giaTriGiaTang.ogg" to "Giá trị gia tăng",
+"phaps/thuyetphap_songTichCuc.ogg" to "Sống tích cực",
+"phaps/cacchudetutaptrongcuocsong_dinhHinhTuongLai.ogg" to "Định hình tương lai",
+"phaps/thuyetPhap_cuocSongLaDeSuDung.ogg" to "Cuộc sống là để sử dụng",
+"phaps/tutaptrongCS_BuonChan.ogg" to "Buồn chán",
+"phaps/tutaptrongCS_luaChon.ogg" to "Lựa chọn",
+"phaps/tutaptrongCS_tamNhinCuocDoi.ogg" to "Tầm nhìn cuộc đời",
+"phaps/tutaptrongCS_camXuc.ogg" to "Cảm xúc",
+"phaps/tutaptrongCS_tuPhanBien.ogg" to "Tự phản biện",
+"phaps/tutaptrongCS_ViecQuanTrong.ogg" to "Việc quan trọng",
+"phaps/tutaptrongCS_TheNaoLaQuyetDinhDung.ogg" to "Thế nào là quyết định đúng",
+"phaps/tutaptrongCS_ChuYVaoSuKhacBiet.ogg" to "Chú ý vào sự khác biệt",
+"phaps/tutaptrongCS_PhatTrienTinhGiacVaTue.ogg" to "Phát triển tỉnh giác và tuệ",
+"phaps/tutaptrongCS_TimHungThuThucHanh.ogg" to "Tìm hứng thú thực hành",
+"phaps/tutaptrongCS_DauTuChoTuongLai.ogg" to "Đầu tư cho tương lai",
+"phaps/tutaptrongCS_XungDangCuocSongLamNguoi.ogg" to "Xứng đáng cuộc sống làm người",
+"phaps/tutaptrongCS_NguoiChanhNiemLamGi.ogg" to "Người chánh niệm làm gì",
+"phaps/tutaptrongCS_NguoiThuongLuu.ogg" to "Người thượng lưu",
+"phaps/tutaptrongCS_DayCon.ogg" to "Dạy con",
+"phaps/tutaptrongCS_ChetKhongHoiTiec.ogg" to "Chết không hối tiếc",
+"phaps/tutaptrongCS_TuKyLuat.ogg" to "Tự kỷ luật",
+"phaps/tutaptrongCS_DeDuoi.ogg" to "Dễ duôi",
+"phaps/tutaptrongCS_LaoDongGiupChanhNiemRaSao.ogg" to "Lao động giúp chánh niệm ra sao"
+)
 
 val seletedPhaps = arrayOf("Tinh-Tan-fix", "Tran-Trong", "Vo-Mong", "Tu-Tap-Khong-Phai-Chi-La-Thien",
         "suy-nghi-tich-cuc", "cacchudetutaptrongcuocsong_dinhHinhTuongLai", "thuyetPhap_cuocSongLaDeSuDung",
