@@ -14,7 +14,8 @@
       - [Set widget minWidth and minHeight](#set-widget-minwidth-and-minheight)
       - [Remove default textview](#remove-default-textview)
     - [How to load image and audio from local resources (within the app)?](#how-to-load-image-and-audio-from-local-resources-within-the-app)
-    - [TODO: How to save phap image to album?](#todo-how-to-save-phap-image-to-album)
+    - [How to save phap image to album?](#how-to-save-phap-image-to-album)
+    - [TODO: How to make use of Google Keep widget and Zalo floating widget?](#todo-how-to-make-use-of-google-keep-widget-and-zalo-floating-widget)
     - [where is APK file?](#where-is-apk-file)
   - [2. Use Flutter for main app UI](#2-use-flutter-for-main-app-ui)
     - [Run on real device](#run-on-real-device)
@@ -70,7 +71,8 @@ import com.bumptech.glide.Glide
 
 ## How to show Glide image autoscale to target width?
 
-Set override(1200) to scale image to fit widescreen phone screen
+NOW: Set override(1200) to scale image to fit widescreen phone screen
+
 LATER: need to find widget width to override(size) the image
 
 ### How to play audio from an url?
@@ -193,7 +195,7 @@ Caused by: java.io.FileNotFoundException: /android_asset/quotes/1159.ogg: open f
 
 Calling setDataSource(java.io.FileDescriptor), or setDataSource(java.lang.String), or setDataSource(android.content.Context,android.net.Uri), or setDataSource(java.io.FileDescriptor,long,long), or setDataSource(android.media.MediaDataSource) transfers a MediaPlayer object in the Idle state to the
 
-### TODO: How to save phap image to album?
+### How to save phap image to album?
 
 https://developer.android.com/reference/android/content/Context#getExternalFilesDir(java.lang.String)
 
@@ -208,10 +210,20 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
     views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
 ```
+
 NOW: save to ... 'Android/data/dev.tiendung.tamedu/files/quotes'
+
 LATER: request access to storage permission to save to public `Pictures` folder
 https://stackoverflow.com/questions/8854359/exception-open-failed-eacces-permission-denied-on-android
 https://developer.android.com/training/permissions/requesting.html
+
+### TODO: How to make use of Google Keep widget and Zalo floating widget?
+
+ Google Keep widget click on [+] button will show a popup menu that dim the whole screen.
+It very good to quick select a task. Select a phap to play for example ...
+
+Floating widget (like Zalo chat)
+https://viblo.asia/p/huong-dan-tao-ung-dung-su-dung-floating-widget-giong-facebook-messenger-gEmROxLEKpv
 
 ### where is APK file?
 
@@ -232,6 +244,11 @@ https://github.com/Solido/awesome-flutter
 
 https://developer.android.com/studio/debug/dev-options
 Tap 'Build Number' 7 times 'Settings > About Phone > Software Information > Build Number' to enable developer options
+
+https://flutter.dev/docs/resources/faq#what-devices-and-os-versions-does-flutter-run-on
+Mobile operating systems: Android Jelly Bean, v16, 4.1.x or newer, and iOS 8 or newer.
+Mobile hardware: iOS devices (iPhone 4S or newer) and ARM Android devices.
+
 
 ### Run on web (for fast prototying)
 
