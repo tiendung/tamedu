@@ -9,13 +9,11 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.media.MediaPlayer.OnPreparedListener
 import android.net.Uri
 import android.os.SystemClock
 import android.widget.RemoteViews
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.AppWidgetTarget
-import android.content.res.AssetManager
 
 /**
  * Implementation of App Widget functionality.
@@ -155,8 +153,10 @@ fun playQuoteById(quoteId: Int, context: Context) {
         )
         setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength())
         // setDataSource(context, Uri.parse(audioUrl))
-        setOnPreparedListener(OnPreparedListener { mp -> mp.start() })
-        prepareAsync()
+        // setOnPreparedListener(OnPreparedListener { mp -> mp.start() })
+        // prepareAsync()
+        prepare()
+        start()
     }
 }
 
