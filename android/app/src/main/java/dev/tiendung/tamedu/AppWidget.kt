@@ -55,6 +55,7 @@ class AppWidget : AppWidgetProvider() {
             updateView = false
             if (_phapIsPlaying) {
                 _phapPlayer.stop()
+                _phapPlayer?.release()
                 Toast.makeText(context, "Đã dừng nghe pháp",
                         Toast.LENGTH_LONG).show()
                 _phapIsPlaying = false
@@ -105,6 +106,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
    
     // Stop previous audio if playing
     _mediaPlayer.stop()
+    _mediaPlayer?.release()
 
     // Handle events
     views.setOnClickPendingIntent(R.id.nghe_phap_button,
@@ -228,7 +230,7 @@ fun playRandomPhap(context: Context) {
                         .build()
         )
         setDataSource(context, Uri.parse(audioUrl))
-        setOnPreparedListener(OnPreparedListener { mp -> mp.start() })
+        setOnPreparedListener(OnPreparedListener { mp -> mp?.start() })
         prepareAsync()
     }
 }
