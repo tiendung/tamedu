@@ -27,6 +27,7 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
   - [2. Use Flutter for main app UI](#2-use-flutter-for-main-app-ui)
     - [Run on real device](#run-on-real-device)
     - [Run on web (for fast prototying)](#run-on-web-for-fast-prototying)
+    - [Run on desktop (for fastest build)](#run-on-desktop-for-fastest-build)
     - [Add navigation to main screen](#add-navigation-to-main-screen)
     - [TODO: Present vuot-qua-de-duoi in cards that swipable](#todo-present-vuot-qua-de-duoi-in-cards-that-swipable)
     - [TODO: List phaps as a list of item on main screen](#todo-list-phaps-as-a-list-of-item-on-main-screen)
@@ -260,6 +261,14 @@ Mobile hardware: iOS devices (iPhone 4S or newer) and ARM Android devices.
 ### Run on web (for fast prototying)
 
 https://flutter.dev/docs/get-started/web
+
+### Run on desktop (for fastest build)
+
+https://github.com/go-flutter-desktop/hover
+`brew install go`
+`GO111MODULE=on go get -u -a github.com/go-flutter-desktop/hover`
+`~/go/bin/hover init github.com/tiendung/tameu`
+`~/go/bin/hover run`
 
 ### Add navigation to main screen
 
