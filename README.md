@@ -33,6 +33,7 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
     - [TODO: List phaps as a list of item on main screen](#todo-list-phaps-as-a-list-of-item-on-main-screen)
   - [3. Use Android notifications to remind nghe-phap every day at 6am](#3-use-android-notifications-to-remind-nghe-phap-every-day-at-6am)
     - [TODO: Show a notification on both lock screen and notification bar. Click on it will lead to tiendung.github.io to nghe-phap](#todo-show-a-notification-on-both-lock-screen-and-notification-bar-click-on-it-will-lead-to-tiendunggithubio-to-nghe-phap)
+  - [TODO: Apply this https://chrisbrownie.dev/making-a-stateful-android-battery-widget](#todo-apply-this-httpschrisbrowniedevmaking-a-stateful-android-battery-widget)
 
 ## 1. Diplay random quote on homescreen widget and talk it outloud
 
@@ -207,9 +208,18 @@ Calling setDataSource(java.io.FileDescriptor), or setDataSource(java.lang.String
 
 https://developer.android.com/reference/android/content/Context#getExternalFilesDir(java.lang.String)
 
-Click on imageview to save it to album
-Removed code
+```Kotlin
+// Storage Permissions
+// https://stackoverflow.com/questions/8854359/exception-open-failed-eacces-permission-denied-on-android
+// https://developer.android.com/training/permissions/requesting.html
+private const val REQUEST_EXTERNAL_STORAGE = 1
+private val PERMISSIONS_STORAGE = arrayOf<String>(
+        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+)
+```
 
+Removed code
 ```Kotlin
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
   ...
@@ -288,3 +298,5 @@ Data at https://tiendung.github.io/phaps.json
 ## 3. Use Android notifications to remind nghe-phap every day at 6am
 
 ### TODO: Show a notification on both lock screen and notification bar. Click on it will lead to tiendung.github.io to nghe-phap
+
+## TODO: Apply this https://chrisbrownie.dev/making-a-stateful-android-battery-widget

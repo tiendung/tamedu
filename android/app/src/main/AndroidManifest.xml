@@ -6,6 +6,11 @@
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="tamedu">
+        <service
+            android:name=".PhapService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <receiver android:name=".AppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
