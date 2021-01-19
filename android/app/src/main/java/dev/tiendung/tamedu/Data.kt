@@ -8,13 +8,15 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-data class Phap(val title: String, val url: String)
+data class Phap(val title: String, val audioUri: Uri)
 data class Quote(val imageUri: Uri, val imageFileName: String, val audioFd: AssetFileDescriptor)
 
 fun getRandomPhap(): Phap {
     val r = (0..PHAP_IDS_TO_TITLES.size).random()
     val x = PHAP_IDS_TO_TITLES.entries.elementAt(r)
-    return Phap(title = x.value,  url = "https://tiendung.github.io/${x.key}")
+    val u = Uri.parse("https://tiendung.github.io/${x.key}")
+//    val u = Uri.parse("https://tiendung.github.io/quotes/opus/11.ogg")
+    return Phap(title = x.value,  audioUri = u)
 }
 
 fun getRandomQuote(context: Context): Quote {

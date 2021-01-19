@@ -9,20 +9,15 @@ import android.content.Intent
 import android.content.res.AssetFileDescriptor
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.net.Uri
-import android.util.Log
 import android.widget.RemoteViews
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.AppWidgetTarget
 
 import dev.tiendung.tamedu.data.*
 import dev.tiendung.tamedu.helpers.*
-import java.io.File
-import java.io.FileDescriptor
 
 /**
- * Implementation of App Widget functionality.
+ * Implementation of App Widge
  */
 class AppWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -34,8 +29,23 @@ class AppWidget : AppWidgetProvider() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
-
+        val action = intent.action
+        when (action) {
+            PLAY_RANDOM_PHAP -> {
+                _phapIsLoading = true
+                context.sendIntent(action)
+            }
+            PLAY_PHAP_BEGIN -> {
+                _phapIsPlaying = true
+                _phapIsLoading = false
+                toast(context, "Đang nghe pháp ${_currentPhap.title}")
+            }
+            FINISH_PHAP -> {
+                _phapIsPlaying = false
+                toast(context, "Kết thúc nghe pháp ${_currentPhap.title}")
+            }
+            else -> super.onReceive(context, intent)
+        }
 
         _speakQuoteToggleClicked = intent.action == "speakQuoteToggle"
         _newQuoteClicked = intent.action == "newQuote"
@@ -83,13 +93,11 @@ class AppWidget : AppWidgetProvider() {
     }
 }
 
-private fun getPendingIntentWidget(context: Context, action: String): PendingIntent
-{
-    // Construct an Intent which is pointing this class.
+private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {
     val intent = Intent(context, AppWidget::class.java)
     intent.action = action
-    // And this time we are sending a broadcast with getBroadcast
-    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+    views.setOnClickPendingIntent(id, pendingIntent)
 }
 
 // Init a mediaPlayer to play quote audio
@@ -105,19 +113,13 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     val views = RemoteViews(context.packageName, R.layout.app_widget)
 
     // Handle events
-    views.setOnClickPendingIntent(R.id.nghe_phap_button,
-            getPendingIntentWidget(context, "nghePhap"))
+    // setupIntent(context, views, PLAY_RANDOM_PHAP, R.id.nghe_phap_button)
+    setupIntent(context, views, "nghePhap", R.id.nghe_phap_button)
+    setupIntent(context, views, "speakQuoteToggle", R.id.speak_quote_toggle_button)
+    setupIntent(context, views, "saveQuoteImage", R.id.save_quote_button)
+    setupIntent(context, views, "newQuote", R.id.appwidget_image)
 
-    views.setOnClickPendingIntent(R.id.speak_quote_toggle_button,
-            getPendingIntentWidget(context, "speakQuoteToggle"))
-
-    views.setOnClickPendingIntent(R.id.save_quote_button,
-            getPendingIntentWidget(context, "saveQuoteImage"))
-
-    views.setOnClickPendingIntent(R.id.appwidget_image,
-            getPendingIntentWidget(context, "newQuote"))
-
-    // Show and play random quote
+    // Show quote
     if (_isInitOrAutoUpdate || _newQuoteClicked) {
         _currentQuote = getRandomQuote(context)
         showQuote(_currentQuote!!, context, views, appWidgetId)
@@ -134,12 +136,8 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
 
-    _mediaPlayer?.release()
     // Play audio after update quote image to views
-    if (_isInitOrAutoUpdate)
-        playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
-    else if ((_newQuoteClicked || _speakQuoteToggleClicked) && _allowToSpeakQuote)
-        playAudioFile(_currentQuote!!.audioFd)
+    playQuoteOrBell(context)
 
     _isInitOrAutoUpdate = true
 }
@@ -151,6 +149,14 @@ fun showQuote(quote: Quote, context: Context, views: RemoteViews, appWidgetId: I
             .load(quote.imageUri)
             .override(1200)
             .into(appWidgetTarget)
+}
+
+fun playQuoteOrBell(context: Context) {
+    _mediaPlayer?.release()
+    if (_isInitOrAutoUpdate)
+        playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
+    else if ((_newQuoteClicked || _speakQuoteToggleClicked) && _allowToSpeakQuote)
+        playAudioFile(_currentQuote!!.audioFd)
 }
 
 fun playAudioFile(fd: AssetFileDescriptor) {
@@ -171,16 +177,16 @@ fun playAudioFile(fd: AssetFileDescriptor) {
 var _phapPlayer : MediaPlayer = MediaPlayer()
 var _phapIsPlaying : Boolean = false
 var _phapIsLoading : Boolean = false
-var _currentPhapTitle : String = ""
+var _currentPhap : Phap = getRandomPhap()
 
 fun playRandomPhap(context: Context) {
+//    return
     if (_phapIsLoading) {
-        toast(context, "Đang tải '${_currentPhapTitle}' ...")
+        toast(context, "Đang tải '${_currentPhap.title}' ...")
         return
     }
-    val (phapTitle, audioUrl) = getRandomPhap()
-    _currentPhapTitle = phapTitle
-    toast(context, "Đang tải '${_currentPhapTitle}' ...")
+    _currentPhap = getRandomPhap()
+    toast(context, "Đang tải '${_currentPhap.title}' ...")
 
     _phapIsLoading = true
     _phapPlayer = MediaPlayer().apply {
@@ -190,36 +196,15 @@ fun playRandomPhap(context: Context) {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
-        setDataSource(context, Uri.parse(audioUrl))
+        setDataSource(context, _currentPhap.audioUri)
         setOnPreparedListener(MediaPlayer.OnPreparedListener { mp ->
             mp?.start()
-            _phapIsPlaying = true
-            _phapIsLoading = false
-            val appWidgetManager = AppWidgetManager.getInstance(context)
-            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
-
-            Intent().also { intent ->
-                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-//                intent.action = "phapStartedToPlay"
-//                intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-//                PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT).send()
-//                context.sendBroadcast(intent)
-            }
+            context.broadcastUpdateWidgetPlayingPhap(_currentPhap)
+        })
+        setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
+            mp?.release()
+            context.broadcastUpdateWidgetFinishPhap(_currentPhap)
         })
         prepareAsync()
     }
-    _phapPlayer.setOnCompletionListener(MediaPlayer.OnCompletionListener { _ ->
-        try {
-            _phapIsPlaying = false
-            val appWidgetManager = AppWidgetManager.getInstance(context)
-            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
-            Intent().also { intent ->
-//                intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-//                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-//                context.sendBroadcast(intent)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    })
 }

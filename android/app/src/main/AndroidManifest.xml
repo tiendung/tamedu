@@ -5,11 +5,17 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="tamedu">
+        android:label="TamEdu">
+
         <service
             android:name=".PhapService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false">
+            <intent-filter>
+                <action android:name="dev.tiendung.tamedu.action.PLAY_RANDOM_PHAP" />
+                <action android:name="dev.tiendung.tamedu.action.FINISH_PHAP" />
+            </intent-filter>
+        </service>
 
         <receiver android:name=".AppWidget">
             <intent-filter>
@@ -51,7 +57,6 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
