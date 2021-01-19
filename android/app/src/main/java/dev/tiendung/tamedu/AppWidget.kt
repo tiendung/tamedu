@@ -28,58 +28,65 @@ class AppWidget : AppWidgetProvider() {
         }
     }
 
+    fun updatePlayPhap(context: Context) {
+        if (_phapIsPlaying) {
+            _phapPlayer?.release()
+            _phapIsPlaying = false
+        } else {
+            playRandomPhap(context)
+        }
+        // Update nghe_phap_button text
+        val txt = if (_phapIsPlaying) "Dừng nghe" else "Nghe pháp"
+        updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
-        val action = intent.action
-        when (action) {
+        when (intent.action) {
             PLAY_RANDOM_PHAP -> {
                 _phapIsLoading = true
-                context.sendIntent(action)
+                context.sendIntent(PLAY_RANDOM_PHAP)
             }
             PLAY_PHAP_BEGIN -> {
                 _phapIsPlaying = true
                 _phapIsLoading = false
-                toast(context, "Đang nghe pháp ${_currentPhap.title}")
+                toast(context, "Đang nghe pháp '${_currentPhap.title}'")
+                // Update nghe_phap_button text
+                val txt = if (_phapIsPlaying) "Dừng nghe" else "Nghe pháp"
+                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
             }
             FINISH_PHAP -> {
                 _phapIsPlaying = false
-                toast(context, "Kết thúc nghe pháp ${_currentPhap.title}")
+                _phapPlayer?.release()
+                toast(context, "Kết thúc '${_currentPhap.title}'")
+                // Update nghe_phap_button text
+                val txt = if (_phapIsPlaying) "Dừng nghe" else "Nghe pháp"
+                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
             }
+            "speakQuoteToggle" -> {
+                _allowToSpeakQuote = !_allowToSpeakQuote
+                val txt = if (_allowToSpeakQuote) "Dừng đọc" else "Đọc lời dạy"
+                updateViews(context, { it.setTextViewText(R.id.speak_quote_toggle_button, txt) })
+            }
+            "saveQuoteImage" -> {
+                val file = saveQuoteImageToFile(context, _currentQuote!!)
+                toast(context, "Lưu lời dạy tại $file")
+            }
+            "nghePhap" -> updatePlayPhap(context)
             else -> super.onReceive(context, intent)
         }
 
         _speakQuoteToggleClicked = intent.action == "speakQuoteToggle"
         _newQuoteClicked = intent.action == "newQuote"
-
         _isInitOrAutoUpdate = intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE
+    }
 
-        if (_speakQuoteToggleClicked) {
-            _allowToSpeakQuote = !_allowToSpeakQuote
-        }
-        
-        var updateView = true
-
-        if (intent.action == "saveQuoteImage") {
-            updateView = false
-            val file = saveQuoteImageToFile(context, _currentQuote!!)
-            toast(context, "Lưu lời dạy tại $file")
-        }
-
-        if (intent.action == "nghePhap") {
-            _isInitOrAutoUpdate = false
-            if (_phapIsPlaying) {
-                _phapPlayer?.release()
-                _phapIsPlaying = false
-            } else {
-                playRandomPhap(context)
-            }
-        }
-        
-        if (updateView) {
-            val appWidgetManager = AppWidgetManager.getInstance(context)
-            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
-            for (appWidgetId in ids) {
-                updateAppWidget(context, appWidgetManager, appWidgetId)
-            }
+    fun updateViews(context: Context, updateViews: (views: RemoteViews) -> Unit) {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
+        for (appWidgetId in ids) {
+            val views = RemoteViews(context.packageName, R.layout.app_widget)
+            updateViews(views)
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
 
@@ -93,13 +100,6 @@ class AppWidget : AppWidgetProvider() {
     }
 }
 
-private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {
-    val intent = Intent(context, AppWidget::class.java)
-    intent.action = action
-    val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
-    views.setOnClickPendingIntent(id, pendingIntent)
-}
-
 // Init a mediaPlayer to play quote audio
 var _mediaPlayer: MediaPlayer = MediaPlayer()
 var  _newQuoteClicked: Boolean = false
@@ -107,6 +107,19 @@ var _speakQuoteToggleClicked = false
 var _allowToSpeakQuote: Boolean = false
 var _isInitOrAutoUpdate: Boolean = true
 var _currentQuote: Quote? = null
+
+// Init a mediaPlayer to play phap
+var _phapPlayer : MediaPlayer = MediaPlayer()
+var _phapIsPlaying : Boolean = false
+var _phapIsLoading : Boolean = false
+var _currentPhap : Phap = getRandomPhap()
+
+private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {
+    val intent = Intent(context, AppWidget::class.java)
+    intent.action = action
+    val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+    views.setOnClickPendingIntent(id, pendingIntent)
+}
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     // Construct the RemoteViews object
@@ -124,14 +137,6 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
         _currentQuote = getRandomQuote(context)
         showQuote(_currentQuote!!, context, views, appWidgetId)
     }
-
-    // Update speak_quote_toggle_button text
-    var txt = if (_allowToSpeakQuote) "Dừng đọc" else "Đọc lời dạy"
-    views.setTextViewText(R.id.speak_quote_toggle_button, txt)
-
-    // Update nghe_phap_button text
-    txt = if (_phapIsPlaying) "Dừng nghe" else "Nghe pháp"
-    views.setTextViewText(R.id.nghe_phap_button, txt)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -174,13 +179,7 @@ fun playAudioFile(fd: AssetFileDescriptor) {
     }
 }
 
-var _phapPlayer : MediaPlayer = MediaPlayer()
-var _phapIsPlaying : Boolean = false
-var _phapIsLoading : Boolean = false
-var _currentPhap : Phap = getRandomPhap()
-
 fun playRandomPhap(context: Context) {
-//    return
     if (_phapIsLoading) {
         toast(context, "Đang tải '${_currentPhap.title}' ...")
         return
