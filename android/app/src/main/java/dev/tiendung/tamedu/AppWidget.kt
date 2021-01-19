@@ -32,15 +32,20 @@ class AppWidget : AppWidgetProvider() {
         if (_phapPlayer.isPlaying()) {
             _phapPlayer?.release()
             updateViews(context, { views, _ -> views.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
-        } else {
-            playRandomPhap(context)
-            updateViews(context, { views, _ -> views.setTextViewText(R.id.nghe_phap_button, "Đang tải ...") })
+        }
+        else {
+            if (!_phapIsLoading) {
+                _currentPhap = getRandomPhap()
+                loadAndPlayPhap(context, _currentPhap)
+                updateViews(context, { views, _ -> views.setTextViewText(R.id.nghe_phap_button, "Đang tải ...") })
+            }
+            toast(context, "Đang tải '${_currentPhap.title}' ...")
         }
     }
 
     fun speakQuoteToggle(context: Context) {
         _allowToSpeakQuote = !_allowToSpeakQuote
-        _quotePlayer?.release()
+        _quotePlayer.release()
         if (_allowToSpeakQuote) {
             updateViews(context, { views, _ -> views.setTextViewText(R.id.speak_quote_toggle_button, "Dừng đọc") })
             playAudioFile(_currentQuote!!.audioFd)
@@ -54,7 +59,6 @@ class AppWidget : AppWidgetProvider() {
             "speakQuoteToggle" -> speakQuoteToggle(context)
             "nghePhap" -> updatePlayPhap(context)
             PLAY_PHAP_BEGIN -> {
-                _phapIsLoading = false
                 toast(context, "Đang nghe pháp '${_currentPhap.title}'")
                 updateViews(context, { views, _ -> views.setTextViewText(R.id.nghe_phap_button, "Dừng nghe") })
             }
@@ -70,7 +74,7 @@ class AppWidget : AppWidgetProvider() {
             "newQuote" -> {
                 _currentQuote = getRandomQuote(context)
                 if (_allowToSpeakQuote) {
-                    _quotePlayer?.release()
+                    _quotePlayer.release()
                     playAudioFile(_currentQuote!!.audioFd)
                 }
                 updateViews(context, { views, appWidgetId ->  showQuote(_currentQuote!!, context, views, appWidgetId) })
@@ -144,7 +148,7 @@ fun showQuote(quote: Quote, context: Context, views: RemoteViews, appWidgetId: I
     Glide.with(context)
             .asBitmap()
             .load(quote.imageUri)
-            .override(1200)
+            .override(800)
             .into(appWidgetTarget)
 }
 
@@ -163,14 +167,7 @@ fun playAudioFile(fd: AssetFileDescriptor) {
     }
 }
 
-fun playRandomPhap(context: Context) {
-    if (_phapIsLoading) {
-        toast(context, "Đang tải '${_currentPhap.title}' ...")
-        return
-    }
-    _currentPhap = getRandomPhap()
-    toast(context, "Đang tải '${_currentPhap.title}' ...")
-
+fun loadAndPlayPhap(context: Context, phap: Phap) {
     _phapIsLoading = true
     _phapPlayer = MediaPlayer().apply {
         setAudioAttributes(
@@ -179,14 +176,15 @@ fun playRandomPhap(context: Context) {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
-        setDataSource(context, _currentPhap.audioUri)
+        setDataSource(context, phap.audioUri)
         setOnPreparedListener(MediaPlayer.OnPreparedListener { mp ->
+            _phapIsLoading = false
             mp?.start()
-            context.broadcastUpdateWidgetPlayingPhap(_currentPhap)
+            context.broadcastUpdateWidgetPlayingPhap(phap)
         })
         setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
             mp?.release()
-            context.broadcastUpdateWidgetFinishPhap(_currentPhap)
+            context.broadcastUpdateWidgetFinishPhap(phap)
         })
         prepareAsync()
     }
