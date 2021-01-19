@@ -32,12 +32,11 @@ class AppWidget : AppWidgetProvider() {
         if (_phapIsPlaying) {
             _phapPlayer?.release()
             _phapIsPlaying = false
+            updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
         } else {
             playRandomPhap(context)
+            updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Đang tải ...") })
         }
-        // Update nghe_phap_button text
-        val txt = if (_phapIsPlaying) "Dừng nghe" else "Nghe pháp"
-        updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -50,17 +49,13 @@ class AppWidget : AppWidgetProvider() {
                 _phapIsPlaying = true
                 _phapIsLoading = false
                 toast(context, "Đang nghe pháp '${_currentPhap.title}'")
-                // Update nghe_phap_button text
-                val txt = if (_phapIsPlaying) "Dừng nghe" else "Nghe pháp"
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
+                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Dừng nghe") })
             }
             FINISH_PHAP -> {
                 _phapIsPlaying = false
                 _phapPlayer?.release()
                 toast(context, "Kết thúc '${_currentPhap.title}'")
-                // Update nghe_phap_button text
-                val txt = if (_phapIsPlaying) "Dừng nghe" else "Nghe pháp"
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
+                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
             }
             "speakQuoteToggle" -> {
                 _allowToSpeakQuote = !_allowToSpeakQuote
