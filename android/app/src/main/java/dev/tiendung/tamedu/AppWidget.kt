@@ -29,58 +29,66 @@ class AppWidget : AppWidgetProvider() {
     }
 
     fun updatePlayPhap(context: Context) {
-        if (_phapIsPlaying) {
+        if (_phapPlayer.isPlaying()) {
             _phapPlayer?.release()
-            _phapIsPlaying = false
-            updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
+            updateViews(context, { views, _ -> views.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
         } else {
             playRandomPhap(context)
-            updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Đang tải ...") })
+            updateViews(context, { views, _ -> views.setTextViewText(R.id.nghe_phap_button, "Đang tải ...") })
+        }
+    }
+
+    fun speakQuoteToggle(context: Context) {
+        _allowToSpeakQuote = !_allowToSpeakQuote
+        _quotePlayer?.release()
+        if (_allowToSpeakQuote) {
+            updateViews(context, { views, _ -> views.setTextViewText(R.id.speak_quote_toggle_button, "Dừng đọc") })
+            playAudioFile(_currentQuote!!.audioFd)
+        } else {
+            updateViews(context, { views, _ -> views.setTextViewText(R.id.speak_quote_toggle_button, "Đọc lời dạy") })
         }
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-            PLAY_RANDOM_PHAP -> {
-                _phapIsLoading = true
-                context.sendIntent(PLAY_RANDOM_PHAP)
-            }
+            "speakQuoteToggle" -> speakQuoteToggle(context)
+            "nghePhap" -> updatePlayPhap(context)
             PLAY_PHAP_BEGIN -> {
-                _phapIsPlaying = true
                 _phapIsLoading = false
                 toast(context, "Đang nghe pháp '${_currentPhap.title}'")
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Dừng nghe") })
+                updateViews(context, { views, _ -> views.setTextViewText(R.id.nghe_phap_button, "Dừng nghe") })
             }
             FINISH_PHAP -> {
-                _phapIsPlaying = false
                 _phapPlayer?.release()
                 toast(context, "Kết thúc '${_currentPhap.title}'")
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
-            }
-            "speakQuoteToggle" -> {
-                _allowToSpeakQuote = !_allowToSpeakQuote
-                val txt = if (_allowToSpeakQuote) "Dừng đọc" else "Đọc lời dạy"
-                updateViews(context, { it.setTextViewText(R.id.speak_quote_toggle_button, txt) })
+                updateViews(context, { views, _ -> views.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
             }
             "saveQuoteImage" -> {
                 val file = saveQuoteImageToFile(context, _currentQuote!!)
                 toast(context, "Lưu lời dạy tại $file")
             }
-            "nghePhap" -> updatePlayPhap(context)
+            "newQuote" -> {
+                _currentQuote = getRandomQuote(context)
+                if (_allowToSpeakQuote) {
+                    _quotePlayer?.release()
+                    playAudioFile(_currentQuote!!.audioFd)
+                }
+                updateViews(context, { views, appWidgetId ->  showQuote(_currentQuote!!, context, views, appWidgetId) })
+            }
+//            PLAY_RANDOM_PHAP -> {
+//                _phapIsLoading = true
+//                context.sendIntent(PLAY_RANDOM_PHAP)
+//            }
             else -> super.onReceive(context, intent)
         }
-
-        _speakQuoteToggleClicked = intent.action == "speakQuoteToggle"
-        _newQuoteClicked = intent.action == "newQuote"
-        _isInitOrAutoUpdate = intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE
     }
 
-    fun updateViews(context: Context, updateViews: (views: RemoteViews) -> Unit) {
+    fun updateViews(context: Context, updateViews: (views: RemoteViews, appWidgetId: Int) -> Unit) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
         for (appWidgetId in ids) {
             val views = RemoteViews(context.packageName, R.layout.app_widget)
-            updateViews(views)
+            updateViews(views, appWidgetId)
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
@@ -96,16 +104,12 @@ class AppWidget : AppWidgetProvider() {
 }
 
 // Init a mediaPlayer to play quote audio
-var _mediaPlayer: MediaPlayer = MediaPlayer()
-var  _newQuoteClicked: Boolean = false
-var _speakQuoteToggleClicked = false
+var _quotePlayer: MediaPlayer = MediaPlayer()
 var _allowToSpeakQuote: Boolean = false
-var _isInitOrAutoUpdate: Boolean = true
 var _currentQuote: Quote? = null
 
 // Init a mediaPlayer to play phap
 var _phapPlayer : MediaPlayer = MediaPlayer()
-var _phapIsPlaying : Boolean = false
 var _phapIsLoading : Boolean = false
 var _currentPhap : Phap = getRandomPhap()
 
@@ -127,19 +131,12 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, "saveQuoteImage", R.id.save_quote_button)
     setupIntent(context, views, "newQuote", R.id.appwidget_image)
 
-    // Show quote
-    if (_isInitOrAutoUpdate || _newQuoteClicked) {
-        _currentQuote = getRandomQuote(context)
-        showQuote(_currentQuote!!, context, views, appWidgetId)
-    }
-
+    _currentQuote = getRandomQuote(context)
+    showQuote(_currentQuote!!, context, views, appWidgetId)
+    playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
 
-    // Play audio after update quote image to views
-    playQuoteOrBell(context)
-
-    _isInitOrAutoUpdate = true
 }
 
 fun showQuote(quote: Quote, context: Context, views: RemoteViews, appWidgetId: Int) {
@@ -151,17 +148,9 @@ fun showQuote(quote: Quote, context: Context, views: RemoteViews, appWidgetId: I
             .into(appWidgetTarget)
 }
 
-fun playQuoteOrBell(context: Context) {
-    _mediaPlayer?.release()
-    if (_isInitOrAutoUpdate)
-        playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
-    else if ((_newQuoteClicked || _speakQuoteToggleClicked) && _allowToSpeakQuote)
-        playAudioFile(_currentQuote!!.audioFd)
-}
-
 fun playAudioFile(fd: AssetFileDescriptor) {
     // https://stackoverflow.com/questions/5747060/how-do-you-play-android-inputstream-on-mediaplayer
-    _mediaPlayer = MediaPlayer().apply {
+    _quotePlayer = MediaPlayer().apply {
         setAudioAttributes(
                 AudioAttributes.Builder()
                         .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
