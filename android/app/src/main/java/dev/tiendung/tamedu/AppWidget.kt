@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.res.AssetFileDescriptor
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
@@ -15,11 +16,10 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.AppWidgetTarget
 
-import dev.tiendung.tamedu.data.getRandomPhap
-import dev.tiendung.tamedu.data.getRandomQuoteId
-import dev.tiendung.tamedu.helpers.toast
-import dev.tiendung.tamedu.helpers.copyFromAssetsToFile
+import dev.tiendung.tamedu.data.*
+import dev.tiendung.tamedu.helpers.*
 import java.io.File
+import java.io.FileDescriptor
 
 /**
  * Implementation of App Widget functionality.
@@ -50,7 +50,8 @@ class AppWidget : AppWidgetProvider() {
 
         if (intent.action == "saveQuoteImage") {
             updateView = false
-            copyQuoteFromAssets(context, _currentQuoteId)
+            val file = saveQuoteImageToFile(context, _currentQuote!!)
+            toast(context, "Lưu lời dạy tại $file")
         }
 
         if (intent.action == "nghePhap") {
@@ -74,6 +75,7 @@ class AppWidget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
+        context.sendIntent(BROADCAST_STATUS)
     }
 
     override fun onDisabled(context: Context) {
@@ -96,7 +98,7 @@ var  _newQuoteClicked: Boolean = false
 var _speakQuoteToggleClicked = false
 var _allowToSpeakQuote: Boolean = false
 var _isInitOrAutoUpdate: Boolean = true
-var _currentQuoteId: Int = 0
+var _currentQuote: Quote? = null
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     // Construct the RemoteViews object
@@ -117,8 +119,8 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     // Show and play random quote
     if (_isInitOrAutoUpdate || _newQuoteClicked) {
-        _currentQuoteId = getRandomQuoteId()
-        showQuoteById(_currentQuoteId, context, views, appWidgetId)
+        _currentQuote = getRandomQuote(context)
+        showQuote(_currentQuote!!, context, views, appWidgetId)
     }
 
     // Update speak_quote_toggle_button text
@@ -134,36 +136,25 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     _mediaPlayer?.release()
     // Play audio after update quote image to views
-    if (_isInitOrAutoUpdate) {
-        playQuoteById(-1, context) // play a bell
-    } else if ((_newQuoteClicked || _speakQuoteToggleClicked) && _allowToSpeakQuote)
-        playQuoteById(_currentQuoteId, context) // play quote
-    
+    if (_isInitOrAutoUpdate)
+        playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
+    else if ((_newQuoteClicked || _speakQuoteToggleClicked) && _allowToSpeakQuote)
+        playAudioFile(_currentQuote!!.audioFd)
+
     _isInitOrAutoUpdate = true
 }
 
-fun copyQuoteFromAssets(context: Context, quoteId: Int) {
-    File(context.getExternalFilesDir(null), "/quotes").mkdir()
-    val file = File(context.getExternalFilesDir(null), "/quotes/quote$quoteId.png")
-    toast(context, "Lưu lời dạy tại $file")
-    copyFromAssetsToFile(context, "quotes/$quoteId.png", file)
-}
-
-
-fun showQuoteById(quoteId: Int, context: Context, views: RemoteViews, appWidgetId: Int) {
+fun showQuote(quote: Quote, context: Context, views: RemoteViews, appWidgetId: Int) {
     val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
     Glide.with(context)
             .asBitmap()
-            .load(Uri.parse("file:///android_asset/quotes/$quoteId.png"))
+            .load(quote.imageUri)
             .override(1200)
             .into(appWidgetTarget)
 }
 
-fun playQuoteById(quoteId: Int, context: Context) {
+fun playAudioFile(fd: AssetFileDescriptor) {
     // https://stackoverflow.com/questions/5747060/how-do-you-play-android-inputstream-on-mediaplayer
-    val fileName = if (quoteId == -1) "bell.ogg" else "quotes/$quoteId.ogg"
-    val fd = context.getAssets().openFd(fileName) // file descriptor
-
     _mediaPlayer = MediaPlayer().apply {
         setAudioAttributes(
                 AudioAttributes.Builder()

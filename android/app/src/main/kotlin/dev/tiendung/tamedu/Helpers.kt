@@ -1,33 +1,36 @@
 package dev.tiendung.tamedu.helpers
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import dev.tiendung.tamedu.PhapService
+
+fun Context.sendIntent(action: String) {
+    Intent(this, PhapService::class.java).apply {
+        this.action = action
+        try {
+            if (isOreoPlus()) {
+                startForegroundService(this)
+            } else {
+                startService(this)
+            }
+        } catch (ignored: Exception) {
+        }
+    }
+}
 
 fun isOreoPlus() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
 fun toast(context: Context, txt: String) {
     Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
 }
-
-fun copyFromAssetsToFile(context: Context, asset : String, file : File) {
-    try {
-        val assetManager = context.getAssets()
-        val ins = assetManager.open(asset)
-        val os = FileOutputStream(file)
-        val data = ByteArray(ins.available())
-        ins.read(data)
-        os.write(data)
-        ins.close()
-        os.close()
-    } catch (e: IOException) {
-        Log.w("ExternalStorage", "Error writing $file", e)
-    }
-}
 const val PROGRESS = "progress"
-const val PLAY_PHAP = "play_phap"
-const val FINISH_PLAY_PHAP = "finish_play_phap"
+private const val PATH = "dev.tiendung.tamedu.action."
+const val FINISH_PHAP = PATH + "FINISH_PHAP"
+const val PLAY_PHAP = PATH + "PLAY_PHAP"
+const val BROADCAST_STATUS = PATH + "BROADCAST_STATUS"

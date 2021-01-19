@@ -1,15 +1,52 @@
 package dev.tiendung.tamedu.data
 
-fun getRandomPhap(): Pair<String, String> {
+import android.content.Context
+import android.content.res.AssetFileDescriptor
+import android.net.Uri
+import android.util.Log
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+
+data class Phap(val title: String, val url: String)
+data class Quote(val imageUri: Uri, val imageFileName: String, val audioFd: AssetFileDescriptor)
+
+fun getRandomPhap(): Phap {
     val r = (0..PHAP_IDS_TO_TITLES.size).random()
     val x = PHAP_IDS_TO_TITLES.entries.elementAt(r)
-    return Pair(x.value, "https://tiendung.github.io/${x.key}")
+    return Phap(title = x.value,  url = "https://tiendung.github.io/${x.key}")
 }
 
-fun getRandomQuoteId(): Int {
-    QUOTE_IDS_SORTED_BY_LEN[(0..999).random()]
+fun getRandomQuote(context: Context): Quote {
+    val quoteId = QUOTE_IDS_SORTED_BY_LEN[(0..999).random()]
+    val quoteFile = "$QUOTE_DIR/$quoteId"
+    return Quote(
+            imageFileName = "$quoteFile.png",
+            imageUri = Uri.parse("file:///android_asset/$quoteFile.png"),
+            audioFd = context.getAssets().openFd("$quoteFile.ogg")
+    )
 }
 
+const val QUOTE_DIR = "quotes"
+fun saveQuoteImageToFile(context: Context, quote: Quote) : File {
+    val externalFilesDir = context.getExternalFilesDir(null)
+    File(externalFilesDir, QUOTE_DIR).mkdir()
+    val file = File(externalFilesDir, quote.imageFileName)
+    try {
+        val ins = context.getAssets().open(quote.imageFileName)
+        val os = FileOutputStream(file)
+        val data = ByteArray(ins.available())
+        ins.read(data)
+        os.write(data)
+        ins.close()
+        os.close()
+    } catch (e: IOException) {
+        Log.w("ExternalStorage", "Error writing $file", e)
+    }
+    return file
+}
+
+const val BELL_FILE_NAME = "bell.ogg"
 val PHAP_IDS_TO_TITLES: HashMap<String, String> = hashMapOf(
         "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",
         "phaps/Vo-Mong.ogg" to "Vỡ mộng",
