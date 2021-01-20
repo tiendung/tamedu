@@ -42,7 +42,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:background="#400D00"
-            android:gravity="center_vertical|bottom"
+            android:gravity="center_vertical|left"
             android:orientation="vertical">
 
             <TextView
@@ -51,10 +51,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:background="#541303"
                 android:contentDescription="@string/appwidget_text"
-                android:padding="6dp"
-                android:paddingLeft="8dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="10dp"
                 android:text="Hãy cố quan sát cách tâm đối phó với một hoàn cảnh khó khăn, từ nhiều góc độ khác nhau. Một khi đã hiểu cách làm việc của tâm, trí tuệ bắt đầu hoạt động. Lần sau nó sẽ biết phải làm gì."
                 android:textColor="#E9DA95"
                 android:textSize="19sp"
@@ -67,10 +68,12 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/appwidget_text"
-                android:padding="6dp"
-                android:paddingLeft="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="4dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="10dp"
                 android:text="sutamphap.com"
-                android:textColor="@android:color/white"
+                android:textColor="#DDD"
                 android:textSize="13sp"
                 android:textStyle="italic" />
 
