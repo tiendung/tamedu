@@ -10,27 +10,21 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
 - [Tamedu: The Mind Education App](#tamedu-the-mind-education-app)
   - [1. Diplay random quote on homescreen widget and talk it outloud](#1-diplay-random-quote-on-homescreen-widget-and-talk-it-outloud)
     - [Resources](#resources)
-    - [How to create an android app with homescreen widget?](#how-to-create-an-android-app-with-homescreen-widget)
-    - [How to add image from an url to android homesreen widget using glide kotlin?](#how-to-add-image-from-an-url-to-android-homesreen-widget-using-glide-kotlin)
-    - [How to show Glide image autoscale to target width?](#how-to-show-glide-image-autoscale-to-target-width)
     - [How to play audio from an url?](#how-to-play-audio-from-an-url)
     - [How to prepareAsync so that mediaPlayer don't block main UI?](#how-to-prepareasync-so-that-mediaplayer-dont-block-main-ui)
-    - [How to handle (click) events on widget?](#how-to-handle-click-events-on-widget)
     - [How to refresh a widget after a fixed period of time?](#how-to-refresh-a-widget-after-a-fixed-period-of-time)
     - [Refine widget UI](#refine-widget-ui)
       - [Set widget minWidth and minHeight](#set-widget-minwidth-and-minheight)
-      - [Remove default textview](#remove-default-textview)
     - [How to load image and audio from local resources (within the app)?](#how-to-load-image-and-audio-from-local-resources-within-the-app)
     - [How to save phap image to album?](#how-to-save-phap-image-to-album)
     - [LATER: How to make use of Google Keep widget and Zalo floating widget?](#later-how-to-make-use-of-google-keep-widget-and-zalo-floating-widget)
     - [where is APK file?](#where-is-apk-file)
-    - [TODO: Fix W/System  ( 9454): A resource failed to call close when change to new quote](#todo-fix-wsystem---9454-a-resource-failed-to-call-close-when-change-to-new-quote)
   - [2. Use Flutter for main app UI](#2-use-flutter-for-main-app-ui)
     - [Run on real device](#run-on-real-device)
     - [Run on web (for fast prototying)](#run-on-web-for-fast-prototying)
     - [Run on desktop (for fastest build)](#run-on-desktop-for-fastest-build)
     - [Add navigation to main screen](#add-navigation-to-main-screen)
-    - [TODO: List phaps as a list of item on main screen](#todo-list-phaps-as-a-list-of-item-on-main-screen)
+    - [TODO: Build main app based-on vuot-qua-de-duoi](#todo-build-main-app-based-on-vuot-qua-de-duoi)
 
 ## 1. Diplay random quote on homescreen widget and talk it outloud
 
@@ -44,43 +38,6 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
 * image at ./quotes/650x/i.png ( 9mb, total,  9k avg)
 * audio at ./quotes/opus/i.ogg (12mb, total  12k avg)
 
-### How to create an android app with homescreen widget?
-
-* https://inspirecoding.app/android-widgets-advanced/#elementor-toc__heading-anchor-8
-* https://inspirecoding.app/android-widgets-update-using-kotlin-flow-room-and-hilt/
-* https://developer.android.com/reference/android/widget/RemoteViews
-
-From Android 5.0 you can add widgets only to the Home screen. The previous Android versions allow you to place widgets on the lock screen as well.
-
-Right mouse button click on the main source set (where you can find the MainAcitvity.kt file as well). Then, from the quick menu select New, then the Widget option. From the submenu choose the App Widget option.
-
-### How to add image from an url to android homesreen widget using glide kotlin?
-
-* https://bumptech.github.io/glide/doc/download-setup.html#gradle
-* https://futurestud.io/tutorials/glide-loading-images-into-notifications-and-appwidgets !!
-* https://www.c-sharpcorner.com/article/how-to-load-the-imageurl-to-imageview-using-glide-in-kotlin2/ !
-
-`code app/build.gradle`
-
-```Kotlin
-dependencies {
-    implementation "com.github.bumptech.glide:glide:4.11.0"
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'     
-```
-
-`code AppWidget.kt`
-
-```Kotlin
-import com.bumptech.glide.Glide  
-...
-```
-
-### How to show Glide image autoscale to target width?
-
-NOW: Set override(1200) to scale image to fit widescreen phone screen
-
-LATER: need to find widget width to override(size) the image
-
 ### How to play audio from an url?
 
 https://developer.android.com/guide/topics/media/media-formats
@@ -90,24 +47,6 @@ https://developer.android.com/guide/topics/media/mediaplayer
 ### How to prepareAsync so that mediaPlayer don't block main UI?
 
 https://developer.android.com/reference/android/media/MediaPlayer.OnPreparedListener
-
-### How to handle (click) events on widget?
-
-Android remoteview widget only support press (click) and scroll event
-https://developer.android.com/codelabs/advanced-android-training-widgets#4
-
-```Kotlin
-internal fun updateAppWidget
-... // ADD
-    // Click on the quote image to update the widget
-    val intent = Intent(context, AppWidget::class.java)
-    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
-    val pendingIntent = PendingIntent.getBroadcast(
-            context, 0, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT)
-    views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
-```
 
 ### How to refresh a widget after a fixed period of time?
 
@@ -154,24 +93,6 @@ https://developer.android.com/codelabs/advanced-android-training-widgets#7
 
 Set app_widget_info.xml: minWidth to 4 rows (250dp) and 3 cols (180dp)
 
-#### Remove default textview
-
-```XML
-    <TextView
-        android:id="@+id/appwidget_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="?attr/appWidgetBackgroundColor"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textColor="?attr/appWidgetTextColor"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
-```
-
 ### How to load image and audio from local resources (within the app)?
 
 https://developer.android.com/guide/topics/resources/providing-resources
@@ -215,7 +136,6 @@ private val PERMISSIONS_STORAGE = arrayOf<String>(
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 )
 ```
-
 Removed code
 ```Kotlin
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
@@ -285,6 +205,24 @@ https://gallery.flutter.dev/#/demo/nav_rail
 
 Các ứng dụng di động thường được hiển thị dưới dạng Full-screen thường được gọi là "screens" hoặc "pages". Trong Flutter, chúng được gọi là các routes và được quản lý bởi Navigator widget. Navigator giữ stack các route và cung cấp các method để quản lý stack đó như: Navigator.push và Navigator.pop
 
-### TODO: List phaps as a list of item on main screen
+### TODO: Build main app based-on vuot-qua-de-duoi
 
-Data at https://tiendung.github.io/phaps.json
+Rèn luyện khả năng tự chế, bắt đầu từ những việc nhỏ nhất
+Người càng dễ duôi, khả năng tự chế càng kém. Khả năng tự chế trước mọi cám dỗ và thúc bách của tâm không phải tự nhiên mà có, mà là kết quả của sự rèn luyện thường xuyên, lâu dài. Hãy bắt đầu từ những việc nhỏ nhất, chẳng hạn: Tự chế ngự sự thúc giục muốn mở điện thoại xem tin nhắn mới đến – làm các bài test thử xem được bao nhiêu phút. Tự chế chỉ ăn 80% dạ dày; hoặc nhất định không gắp món ngon kia; bữa thắng, bữa thua, không sao cả.
+
+Thắng thua không quan trọng, điều quan trọng là mình đang tự rèn luyện. Tự chế không phạm giới bằng cách chủ động tham gia vào 1 câu chuyện với ý định rèn luyện không nói lời vô ích trong câu chuyện này. Để cái bánh ngọt trước mặt và nhìn nó, rèn luyện sự tự chế không ăn, đo xem chống cự được bao nhiêu phút để so với lần sau… (nhưng những cám dỗ quá lớn có khả năng phạm giới với hậu quả nặng thì đừng mang ra mà luyện. Tránh né là tốt nhất, yếu không nên ra gió).
+
+Khả năng tự chế của chúng ta kém là vì chúng ta không bao giờ chủ động rèn luyện nó, mà chỉ khi gặp cám dỗ mới bị động mang đội quân chẳng bao giờ huấn luyện ra chống địch. Thua không oan.
+
+- - - 
+
+Có chế độ thưởng phạt và nghiêm túc làm theo. Kiểm điểm và ghi chép lại
+Nhưng chớ có thưởng cho mình bằng cách được phép làm 1 cái gì có hại mà mình vẫn thường tự ngăn cấm bản thân. Phạt thì phạt theo cách tích cực, chẳng hạn lỡ ăn 1 miếng bánh thì phạt ngồi thiền 10 phút, hoặc tập thể dục 10 phút, đi bộ 1km...
+
+Nếu thấy mình nghị lực và tự giác kém thì nhờ người nhà làm trọng tài giám sát hộ. Ghi chép lại mỗi ngày thành bảng biểu để theo dõi mức độ tiến bộ, nhìn lại có thể thấy việc nào hay dễ duôi nhất, dựa trên thống kê để có chiến lược đối phó thích hợp.
+
+Đừng bao giờ nghĩ rằng mình đã hiểu bản thân. Sự ghi chép thực tế và khách quan luôn cho chúng ta thấy rõ các mặt khuất và các điểm mù. Người tu tập thành công luôn là người rất nghiêm túc với bản thân, rất tự giác và nỗ lực.
+
+- - - 
+
+Thay thế ý định dễ duôi bằng việc làm ngay 1 việc tích cực. Tập thói quen năng động, sử dụng tối đa thời gian, không bao giờ ngồi không
