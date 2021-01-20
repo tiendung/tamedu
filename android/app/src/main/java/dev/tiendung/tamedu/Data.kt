@@ -4,6 +4,11 @@ import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.net.Uri
 import android.util.Log
+import dev.tiendung.tamedu.R
+import dev.tiendung.tamedu._currentPhap
+import dev.tiendung.tamedu._phapPlayer
+import dev.tiendung.tamedu.helpers.toast
+import dev.tiendung.tamedu.updateViews
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -45,6 +50,23 @@ fun saveQuoteImageToFile(context: Context, quote: Quote) : File {
         Log.w("ExternalStorage", "Error writing $file", e)
     }
     return file
+}
+
+fun getSpeakQuoteToggleText(allowToSpeak: Boolean): String {
+    return when (allowToSpeak) {
+        true  -> "Dừng đọc"
+        false -> "Đọc lời dạy"
+    }
+}
+
+fun getNghePhapButtonText(phapIsPlaying: Boolean, phapIsLoading: Boolean): String {
+    return when (phapIsPlaying) {
+        true  -> "Dừng nghe"
+        false -> when (phapIsLoading) {
+            true  -> "Đang tải ..."
+            false -> "Nghe pháp"
+        }
+    }
 }
 
 const val BELL_FILE_NAME = "bell.ogg"

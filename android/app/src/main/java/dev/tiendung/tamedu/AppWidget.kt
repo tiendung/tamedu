@@ -36,26 +36,24 @@ class AppWidget : AppWidgetProvider() {
                     _phapPlayer.release()
                     _phapIsPlaying = false
                     _stopPhapClicksCount = 0
-                    updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
                 }
             } // when
         } else if (!_phapIsLoading) {
             _currentPhap = getRandomPhap()
             loadAndPlayPhap(context, _currentPhap)
-            updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Đang tải ...") })
             toast(context, "Đang tải '${_currentPhap.title}' ...")
         }
+        val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading)
+        updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
     }
 
     fun speakQuoteToggle(context: Context) {
         _allowToSpeakQuote = !_allowToSpeakQuote
         _quotePlayer.release()
-        if (_allowToSpeakQuote) {
-            updateViews(context, { it.setTextViewText(R.id.speak_quote_toggle_button, "Dừng đọc") })
+        if (_allowToSpeakQuote)
             playAudioFile(_currentQuote!!.audioFd)
-        } else {
-            updateViews(context, { it.setTextViewText(R.id.speak_quote_toggle_button, "Đọc lời dạy") })
-        }
+        val txt = getSpeakQuoteToggleText(_allowToSpeakQuote)
+        updateViews(context, { it.setTextViewText(R.id.speak_quote_toggle_button, txt) })
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -64,12 +62,14 @@ class AppWidget : AppWidgetProvider() {
             "nghePhap" -> updatePlayPhap(context)
             PLAY_PHAP_BEGIN -> {
                 toast(context, "Đang nghe pháp '${_currentPhap.title}'")
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Dừng nghe") })
+                val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading)
+                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
             }
             FINISH_PHAP -> {
                 _phapPlayer.release()
                 toast(context, "Kết thúc '${_currentPhap.title}'")
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
+                val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading)
+                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
             }
             "saveQuoteImage" -> {
                 val file = saveQuoteImageToFile(context, _currentQuote!!)
@@ -142,11 +142,13 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, "saveQuoteImage", R.id.save_quote_button)
     setupIntent(context, views, "newQuote", R.id.quote_content)
 
-    _currentQuote = getRandomQuote(context)
+    if (_currentQuote == null) _currentQuote = getRandomQuote(context)
+    views.setTextViewText(R.id.speak_quote_toggle_button, getSpeakQuoteToggleText(_allowToSpeakQuote))
+    views.setTextViewText(R.id.nghe_phap_button, getNghePhapButtonText(_phapIsPlaying, _phapIsLoading))
     views.setTextViewText(R.id.quote_text, _currentQuote!!.text)
-    playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
+    playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
 }
 
 fun playAudioFile(fd: AssetFileDescriptor) {
