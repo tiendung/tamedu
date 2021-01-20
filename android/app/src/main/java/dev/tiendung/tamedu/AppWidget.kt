@@ -28,11 +28,18 @@ class AppWidget : AppWidgetProvider() {
 
     fun updatePlayPhap(context: Context) {
         if (_phapIsPlaying) {
-            _phapPlayer.release()
-            _phapIsPlaying = false
-            updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
-        }
-        else if (!_phapIsLoading) {
+            _stopPhapClicksCount += 1
+            when (_stopPhapClicksCount) {
+                1 ->
+                    toast(context, "Đang nghe \"${_currentPhap.title}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc.")
+                2 -> {
+                    _phapPlayer.release()
+                    _phapIsPlaying = false
+                    _stopPhapClicksCount = 0
+                    updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
+                }
+            } // when
+        } else if (!_phapIsLoading) {
             _currentPhap = getRandomPhap()
             loadAndPlayPhap(context, _currentPhap)
             updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Đang tải ...") })
@@ -101,10 +108,11 @@ var _allowToSpeakQuote: Boolean = false
 var _currentQuote: Quote? = null
 
 // Init a mediaPlayer to play phap
-var _phapPlayer : MediaPlayer = MediaPlayer()
-var _phapIsLoading : Boolean = false
-var _phapIsPlaying : Boolean = false
-var _currentPhap : Phap = getRandomPhap()
+var _phapPlayer: MediaPlayer = MediaPlayer()
+var _phapIsLoading: Boolean = false
+var _phapIsPlaying: Boolean = false
+var _currentPhap: Phap = getRandomPhap()
+var _stopPhapClicksCount: Int = 0
 
 fun updateViews(context: Context, updateViews: (views: RemoteViews) -> Unit) {
     val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -139,7 +147,6 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
-
 }
 
 fun playAudioFile(fd: AssetFileDescriptor) {
