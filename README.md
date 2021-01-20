@@ -244,7 +244,7 @@ https://viblo.asia/p/huong-dan-tao-ung-dung-su-dung-floating-widget-giong-facebo
 
 `ls app/build/outputs/apk/debug/app-debug.apk`
 
-### TODO: Fix W/System  ( 9454): A resource failed to call close when change to new quote
+
 ## 2. Use Flutter for main app UI
 
 https://viblo.asia/p/cross-platform-showdown-2020-react-native-vs-flutter-1VgZv0GR5Aw
