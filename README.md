@@ -22,18 +22,15 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
       - [Remove default textview](#remove-default-textview)
     - [How to load image and audio from local resources (within the app)?](#how-to-load-image-and-audio-from-local-resources-within-the-app)
     - [How to save phap image to album?](#how-to-save-phap-image-to-album)
-    - [TODO: How to make use of Google Keep widget and Zalo floating widget?](#todo-how-to-make-use-of-google-keep-widget-and-zalo-floating-widget)
+    - [LATER: How to make use of Google Keep widget and Zalo floating widget?](#later-how-to-make-use-of-google-keep-widget-and-zalo-floating-widget)
     - [where is APK file?](#where-is-apk-file)
+    - [TODO: Fix W/System  ( 9454): A resource failed to call close when change to new quote](#todo-fix-wsystem---9454-a-resource-failed-to-call-close-when-change-to-new-quote)
   - [2. Use Flutter for main app UI](#2-use-flutter-for-main-app-ui)
     - [Run on real device](#run-on-real-device)
     - [Run on web (for fast prototying)](#run-on-web-for-fast-prototying)
     - [Run on desktop (for fastest build)](#run-on-desktop-for-fastest-build)
     - [Add navigation to main screen](#add-navigation-to-main-screen)
-    - [TODO: Present vuot-qua-de-duoi in cards that swipable](#todo-present-vuot-qua-de-duoi-in-cards-that-swipable)
     - [TODO: List phaps as a list of item on main screen](#todo-list-phaps-as-a-list-of-item-on-main-screen)
-  - [3. Use Android notifications to remind nghe-phap every day at 6am](#3-use-android-notifications-to-remind-nghe-phap-every-day-at-6am)
-    - [TODO: Show a notification on both lock screen and notification bar. Click on it will lead to tiendung.github.io to nghe-phap](#todo-show-a-notification-on-both-lock-screen-and-notification-bar-click-on-it-will-lead-to-tiendunggithubio-to-nghe-phap)
-  - [TODO: Apply this https://chrisbrownie.dev/making-a-stateful-android-battery-widget](#todo-apply-this-httpschrisbrowniedevmaking-a-stateful-android-battery-widget)
 
 ## 1. Diplay random quote on homescreen widget and talk it outloud
 
@@ -120,7 +117,7 @@ Change field android:updatePeriodMillis attribute in the AppWidget meta-data fil
 
 Note: If the device is asleep when it is time for an update (as defined by updatePeriodMillis), then the device will wake up in order to perform the update. If you don't update more than once per hour, this probably won't cause significant problems for the battery life. If, however, you need to update more frequently and/or you do not need to update while the device is asleep, then you can instead perform updates based on an alarm that will not wake the device. To do so, set an alarm with an Intent that your AppWidgetProvider receives, using the AlarmManager. Set the alarm type to either ELAPSED_REALTIME or RTC, which will only deliver the alarm when the device is awake. Then set updatePeriodMillis to zero ("0").
 
-TODO: Using AlarmManager to update quote every 5 minutes
+LATER: Using AlarmManager to update quote every 5 minutes
 https://code.tutsplus.com/tutorials/code-a-widget-for-your-android-app-updating-the-widget-continued--cms-30669
 https://www.appsrox.com/android/tutorials/dailyvocab/2/
 
@@ -235,7 +232,7 @@ LATER: request access to storage permission to save to public `Pictures` folder
 https://stackoverflow.com/questions/8854359/exception-open-failed-eacces-permission-denied-on-android
 https://developer.android.com/training/permissions/requesting.html
 
-### TODO: How to make use of Google Keep widget and Zalo floating widget?
+### LATER: How to make use of Google Keep widget and Zalo floating widget?
 
  Google Keep widget click on [+] button will show a popup menu that dim the whole screen.
 It very good to quick select a task. Select a phap to play for example ...
@@ -247,6 +244,7 @@ https://viblo.asia/p/huong-dan-tao-ung-dung-su-dung-floating-widget-giong-facebo
 
 `ls app/build/outputs/apk/debug/app-debug.apk`
 
+### TODO: Fix W/System  ( 9454): A resource failed to call close when change to new quote
 ## 2. Use Flutter for main app UI
 
 https://viblo.asia/p/cross-platform-showdown-2020-react-native-vs-flutter-1VgZv0GR5Aw
@@ -286,10 +284,6 @@ https://flutter.dev/docs/cookbook/design/drawer
 https://gallery.flutter.dev/#/demo/nav_rail
 
 Các ứng dụng di động thường được hiển thị dưới dạng Full-screen thường được gọi là "screens" hoặc "pages". Trong Flutter, chúng được gọi là các routes và được quản lý bởi Navigator widget. Navigator giữ stack các route và cung cấp các method để quản lý stack đó như: Navigator.push và Navigator.pop
-
-### TODO: Present vuot-qua-de-duoi in cards that swipeable
-
-https://pub.dev/packages/flutter_swiper/install
 
 ### TODO: List phaps as a list of item on main screen
 
