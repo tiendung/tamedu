@@ -58,8 +58,8 @@ class AppWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-            "speakQuoteToggle" -> speakQuoteToggle(context)
-            "nghePhap" -> updatePlayPhap(context)
+            SPEAK_QUOTE_TOGGLE -> speakQuoteToggle(context)
+            NGHE_PHAP -> updatePlayPhap(context)
             PLAY_PHAP_BEGIN -> {
                 toast(context, "Đang nghe pháp '${_currentPhap.title}'")
                 val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading)
@@ -71,11 +71,11 @@ class AppWidget : AppWidgetProvider() {
                 val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading)
                 updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
             }
-            "saveQuoteImage" -> {
+            SAVE_QUOTE_IMAGE -> {
                 val file = saveQuoteImageToFile(context, _currentQuote!!)
                 toast(context, "Lưu lời dạy tại $file")
             }
-            "newQuote" -> {
+            NEW_QUOTE -> {
                 _currentQuote = getRandomQuote(context)
                 if (_allowToSpeakQuote) {
                     if (_quotePlayer.isPlaying()) { _quotePlayer.release() }
@@ -137,10 +137,10 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     // Handle events
     // setupIntent(context, views, PLAY_RANDOM_PHAP, R.id.nghe_phap_button)
-    setupIntent(context, views, "nghePhap", R.id.nghe_phap_button)
-    setupIntent(context, views, "speakQuoteToggle", R.id.speak_quote_toggle_button)
-    setupIntent(context, views, "saveQuoteImage", R.id.save_quote_button)
-    setupIntent(context, views, "newQuote", R.id.quote_content)
+    setupIntent(context, views, NGHE_PHAP, R.id.nghe_phap_button)
+    setupIntent(context, views, SPEAK_QUOTE_TOGGLE, R.id.speak_quote_toggle_button)
+    setupIntent(context, views, SAVE_QUOTE_IMAGE, R.id.save_quote_button)
+    setupIntent(context, views, NEW_QUOTE, R.id.quote_content)
 
     if (_currentQuote == null) _currentQuote = getRandomQuote(context)
     views.setTextViewText(R.id.speak_quote_toggle_button, getSpeakQuoteToggleText(_allowToSpeakQuote))
