@@ -12,11 +12,11 @@ data class Phap(val title: String, val audioUri: Uri)
 data class Quote(val imageUri: Uri, val imageFileName: String, val audioFd: AssetFileDescriptor)
 
 fun getRandomPhap(): Phap {
-    val r = (0..PHAP_IDS_TO_TITLES.size).random()
-    val x = PHAP_IDS_TO_TITLES.entries.elementAt(r)
-    val u = Uri.parse("https://tiendung.github.io/${x.key}")
+    val random = (0..PHAP_IDS_TO_TITLES.size).random()
+    val (id, title) = PHAP_IDS_TO_TITLES[random]
+    val uri = Uri.parse("https://tiendung.github.io/$id")
 //    val u = Uri.parse("https://tiendung.github.io/quotes/opus/11.ogg")
-    return Phap(title = x.value,  audioUri = u)
+    return Phap(title = title,  audioUri = uri)
 }
 
 fun getRandomQuote(context: Context): Quote {
@@ -49,7 +49,7 @@ fun saveQuoteImageToFile(context: Context, quote: Quote) : File {
 }
 
 const val BELL_FILE_NAME = "bell.ogg"
-val PHAP_IDS_TO_TITLES: HashMap<String, String> = hashMapOf(
+val PHAP_IDS_TO_TITLES = arrayOf(
         "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",
         "phaps/Vo-Mong.ogg" to "Vỡ mộng",
         "phaps/Tinh-Tan-fix.ogg" to "Tinh tấn",

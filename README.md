@@ -287,16 +287,10 @@ https://gallery.flutter.dev/#/demo/nav_rail
 
 Các ứng dụng di động thường được hiển thị dưới dạng Full-screen thường được gọi là "screens" hoặc "pages". Trong Flutter, chúng được gọi là các routes và được quản lý bởi Navigator widget. Navigator giữ stack các route và cung cấp các method để quản lý stack đó như: Navigator.push và Navigator.pop
 
-### TODO: Present vuot-qua-de-duoi in cards that swipable
+### TODO: Present vuot-qua-de-duoi in cards that swipeable
 
 https://pub.dev/packages/flutter_swiper/install
 
 ### TODO: List phaps as a list of item on main screen
 
 Data at https://tiendung.github.io/phaps.json
-
-## 3. Use Android notifications to remind nghe-phap every day at 6am
-
-### TODO: Show a notification on both lock screen and notification bar. Click on it will lead to tiendung.github.io to nghe-phap
-
-## TODO: Apply this https://chrisbrownie.dev/making-a-stateful-android-battery-widget

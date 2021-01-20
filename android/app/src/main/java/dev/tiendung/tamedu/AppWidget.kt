@@ -145,11 +145,15 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
 fun showQuote(quote: Quote, context: Context, views: RemoteViews, appWidgetId: Int) {
     val appWidgetTarget = AppWidgetTarget(context, R.id.appwidget_image, views, appWidgetId)
-    Glide.with(context)
-            .asBitmap()
-            .load(quote.imageUri)
-            .override(800)
-            .into(appWidgetTarget)
+    try {
+        Glide.with(context)
+                .asBitmap()
+                .load(quote.imageUri)
+                .override(800)
+                .into(appWidgetTarget)
+    } catch (e: Exception) {
+        e.printStackTrace();
+    }
 }
 
 fun playAudioFile(fd: AssetFileDescriptor) {
