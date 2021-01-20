@@ -27,16 +27,15 @@ class AppWidget : AppWidgetProvider() {
     }
 
     fun updatePlayPhap(context: Context) {
-        if (_phapPlayer.isPlaying()) {
+        if (_phapIsPlaying) {
             _phapPlayer.release()
+            _phapIsPlaying = false
             updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Nghe pháp") })
         }
-        else {
-            if (!_phapIsLoading) {
-                _currentPhap = getRandomPhap()
-                loadAndPlayPhap(context, _currentPhap)
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Đang tải ...") })
-            }
+        else if (!_phapIsLoading) {
+            _currentPhap = getRandomPhap()
+            loadAndPlayPhap(context, _currentPhap)
+            updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, "Đang tải ...") })
             toast(context, "Đang tải '${_currentPhap.title}' ...")
         }
     }
@@ -104,6 +103,7 @@ var _currentQuote: Quote? = null
 // Init a mediaPlayer to play phap
 var _phapPlayer : MediaPlayer = MediaPlayer()
 var _phapIsLoading : Boolean = false
+var _phapIsPlaying : Boolean = false
 var _currentPhap : Phap = getRandomPhap()
 
 fun updateViews(context: Context, updateViews: (views: RemoteViews) -> Unit) {
@@ -169,11 +169,13 @@ fun loadAndPlayPhap(context: Context, phap: Phap) {
         setDataSource(context, phap.audioUri)
         setOnPreparedListener(MediaPlayer.OnPreparedListener { mp ->
             _phapIsLoading = false
+            _phapIsPlaying = true
             mp?.start()
             context.broadcastUpdateWidgetPlayingPhap(phap)
         })
         setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
             mp.release()
+            _phapIsPlaying = false
             context.broadcastUpdateWidgetFinishPhap(phap)
         })
         prepareAsync()

@@ -12,8 +12,7 @@ data class Phap(val title: String, val audioUri: Uri)
 data class Quote(val text: String, val imageFileName: String, val audioFd: AssetFileDescriptor)
 
 fun getRandomPhap(): Phap {
-    val random = (0..PHAP_IDS_TO_TITLES.size).random()
-    val (id, title) = PHAP_IDS_TO_TITLES[random]
+    val (id, title) = PHAP_IDS_TO_TITLES.random()
     val uri = Uri.parse("https://tiendung.github.io/$id")
 //    val u = Uri.parse("https://tiendung.github.io/quotes/opus/11.ogg")
     return Phap(title = title,  audioUri = uri)
