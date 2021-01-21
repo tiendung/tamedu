@@ -12,7 +12,7 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
 - - -
 
 - [The Android Widget](#the-android-widget)
-  - [1. Diplay random quote on homescreen widget and talk it outloud](#1-diplay-random-quote-on-homescreen-widget-and-talk-it-outloud)
+  - [Diplay random quote on homescreen widget and talk it outloud](#diplay-random-quote-on-homescreen-widget-and-talk-it-outloud)
     - [Resources](#resources)
     - [How to add image from an url to android homesreen widget using glide kotlin?](#how-to-add-image-from-an-url-to-android-homesreen-widget-using-glide-kotlin)
     - [How to play audio from an url?](#how-to-play-audio-from-an-url)
@@ -22,9 +22,9 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
       - [Set widget minWidth and minHeight](#set-widget-minwidth-and-minheight)
     - [How to load image and audio from local resources (within the app)?](#how-to-load-image-and-audio-from-local-resources-within-the-app)
     - [How to save phap image to album?](#how-to-save-phap-image-to-album)
-  - [LATER: 2. How to make use of Google Keep widget and Zalo floating widget?](#later-2-how-to-make-use-of-google-keep-widget-and-zalo-floating-widget)
+  - [LATER: How to make use of Google Keep widget and Zalo floating widget?](#later-how-to-make-use-of-google-keep-widget-and-zalo-floating-widget)
 
-## 1. Diplay random quote on homescreen widget and talk it outloud
+## Diplay random quote on homescreen widget and talk it outloud
 
 ### Resources
 
@@ -166,7 +166,7 @@ LATER: request access to storage permission to save to public `Pictures` folder
 https://stackoverflow.com/questions/8854359/exception-open-failed-eacces-permission-denied-on-android
 https://developer.android.com/training/permissions/requesting.html
 
-## LATER: 2. How to make use of Google Keep widget and Zalo floating widget?
+## LATER: How to make use of Google Keep widget and Zalo floating widget?
 
  Google Keep widget click on [+] button will show a popup menu that dim the whole screen. It very good to quick select a task. Select a phap to play for example ...
 
