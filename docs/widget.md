@@ -132,23 +132,6 @@ https://developer.android.com/reference/kotlin/android/content/res/AssetManager
 https://medium.com/mobile-app-development-publication/assets-or-resource-raw-folder-of-android-5bdc042570e0
 https://stackoverflow.com/questions/16715003/simple-mediaplayer-play-mp3-from-file-path
 
-```Kotlin
-    val assetManager = context.getAssets()
-    val inputStream = assetManager.open("quotes/$quoteId.png")
-    context.getAssets().list("quotes/$quoteId.ogg")
-
-    // Load audio from local resources
-    // val audioUrl = if (quoteId == -1)  // Play a bell
-    //         // context.getAssets().list("bell.ogg")?.first()
-    //         "file:///android_asset/bell.ogg"
-    //     else  // Play a quote
-    //         // context.getAssets().list("quotes/$quoteId.ogg")?.first()
-    //         "file:///android_asset/quotes/$quoteId.ogg"
-```
-The URI "file:///android_asset/" points to YourProject/app/src/main/assets/.
-Caused by: java.io.FileNotFoundException: /android_asset/quotes/1159.ogg: open failed: ENOENT (No such file or directory)
-
-Calling setDataSource(java.io.FileDescriptor), or setDataSource(java.lang.String), or setDataSource(android.content.Context,android.net.Uri), or setDataSource(java.io.FileDescriptor,long,long), or setDataSource(android.media.MediaDataSource) transfers a MediaPlayer object in the Idle state to the
 
 ### How to save phap image to album?
 

@@ -1,21 +1,23 @@
 # Use Flutter for main app UI
 
-https://viblo.asia/p/cross-platform-showdown-2020-react-native-vs-flutter-1VgZv0GR5Aw
 https://github.com/Solido/awesome-flutter
 
-`flutter doctor --android-licenses`
-`flutter devices`
-`flutter emulators`
-`flutter emulators --launch Pixel_3a_API_30_x86`
-`flutter run`
-
+```bash
+flutter doctor --android-licenses
+flutter devices
+flutter emulators
+flutter emulators --launch Pixel_3a_API_30_x86
+flutter run
+```
 ## Run on real device
 
 https://developer.android.com/studio/debug/dev-options
-Tap 'Build Number' 7 times 'Settings > About Phone > Software Information > Build Number' to enable developer options
+Tap 'Build Number' 7 times `Settings > About Phone > Software Information > Build Number` to enable developer options
 
 https://flutter.dev/docs/resources/faq#what-devices-and-os-versions-does-flutter-run-on
+
 Mobile operating systems: Android Jelly Bean, v16, 4.1.x or newer, and iOS 8 or newer.
+
 Mobile hardware: iOS devices (iPhone 4S or newer) and ARM Android devices.
 
 
@@ -26,10 +28,13 @@ https://flutter.dev/docs/get-started/web
 ## Run on desktop (for fastest build)
 
 https://github.com/go-flutter-desktop/hover
-`brew install go`
-`GO111MODULE=on go get -u -a github.com/go-flutter-desktop/hover`
-`~/go/bin/hover init github.com/tiendung/tameu`
-`~/go/bin/hover run`
+
+```bash
+brew install go
+GO111MODULE=on go get -u -a github.com/go-flutter-desktop/hover
+~/go/bin/hover init github.com/tiendung/tamedu
+~/go/bin/hover run
+```
 
 ## Add navigation to main screen
 
