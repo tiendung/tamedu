@@ -1,8 +1,8 @@
-# sutamphap.com teachings in Practice
+# SuTamPhap.com Teachings in Practice
 
-## Build main app around the idea of "Vượt qua dễ duôi"
+## Build an Android (iOS) app around the idea of ["Vượt qua dễ duôi"](https://sutamphap.com/hoi-dap-3-vuot-qua-de-duoi/)
 
-https://sutamphap.com/hoi-dap-3-vuot-qua-de-duoi/
+...
 
 ### 2. Gần gũi bậc thiện trí, tiếp xúc thường xuyên với những thứ nhắc nhở mình tinh tấn
 
@@ -10,15 +10,13 @@ Sự nhắc nhở thường xuyên là rất quan trọng, đừng ỷ lại và
 
 Ngoài ra, hãy nghe pháp thường xuyên, đó là sự nhắc nhở và sách tấn rất lớn. Nghe 1 lần con không hiểu hết đâu, thực hành rồi nghe lại, lại thấy như mới, hiểu sâu hơn và động tâm ở những câu trước kia mình không cảm nhận được gì. Đấy chính là gần gũi bậc thiện trí con ạ.
 
-=> [Android widget to add quote, remind bell (every 30mins), nghe Pháp button on the homescreen](docs/widget.md)
+- [x] [**DONE:** Android widget to add quotes, "Nghe Pháp" button on the homescreen, and play remind bell every 30-mins](docs/widget.md)
 
 - - - 
 
 ### 3. Luyện thói quen trì hoãn, làm chậm mọi việc, dừng lại 1 phút trước khi quyết định làm gì, không bao giờ làm và quyết định khi cảm xúc đang ở đỉnh cao.
 
 Sự thúc giục của cảm xúc luôn dâng trào bồng bột, nhưng chóng tàn. Chúng ta sẽ thấy sự thúc bách ấy như cưỡng ép, nhưng nếu trì hoãn 1 chút cho qua đỉnh cảm xúc, chúng ta sẽ có cơ hội chọn lựa có làm theo hay không, có cơ hội suy xét: đó là tham, sân, ngã mạn, ghen tỵ… muốn hay thực sự là mình muốn. Vì vậy, đừng đáp ứng ngay lập tức đòi hỏi của tâm, hãy tìm mọi cách trì hoãn, một phút tạm dừng đó sẽ cứu mình khỏi những bàn thua trông thấy.
-
-- - - 
 
 ### 4. Rèn luyện khả năng tự chế, bắt đầu từ những việc nhỏ nhất
 
@@ -38,10 +36,17 @@ Nếu thấy mình nghị lực và tự giác kém thì nhờ người nhà là
 
 Đừng bao giờ nghĩ rằng mình đã hiểu bản thân. Sự ghi chép thực tế và khách quan luôn cho chúng ta thấy rõ các mặt khuất và các điểm mù. Người tu tập thành công luôn là người rất nghiêm túc với bản thân, rất tự giác và nỗ lực.
 
-- - - 
-
 ### 6. Thay thế ý định dễ duôi bằng việc làm ngay 1 việc tích cực.
 
 Tập thói quen năng động, sử dụng tối đa thời gian, không bao giờ ngồi không
 
-=> Mimic https://play.google.com/store/apps/details?id=com.habitnow to track & form good-habits
+- [ ] **TODO:** (6+5) = Mimic [HabitNow](https://play.google.com/store/apps/details?id=com.habitnow) to track & form good-habits
+
+| ![1](https://play-lh.googleusercontent.com/-oMKK_tov5OFjQHc0cIhz8CgD67xFKUqv0fvrvLL7_ncQp_liszs1LjCCszJx1avcb9B=w1440-h620)| ![2](https://play-lh.googleusercontent.com/mkWhNHo-8hAoHcj05Yghf8d-Lc0XW2UJs-wnkahQ_XihUh90onR14lNb_Sk1oPLh4UA=w1440-h620) | ![3](https://play-lh.googleusercontent.com/1XsphzsX_jx2ckAkt_HUuP942FEwtc_cz0xlakMzJWkB0zh9zqU1wTfJVPE1MSrfegY=w1440-h620) |
+| ------------------- |:---------------------:|:---------------------:|
+
+
+- - - 
+
+...
+
