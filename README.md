@@ -1,4 +1,4 @@
-# Tamedu: The Mind Education App
+# Tamedu: Tsutamphap.com in Practice
 
 Add a widget to android homescreen that show sutamphap.com's quotes:
 + [LƯU] button to save quote image (quote$id.png) to disk
@@ -7,7 +7,7 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
 + Change quote every 30 mins with a mindfulness bell
 + Click on quote image to change to the new one
 
-- [Tamedu: The Mind Education App](#tamedu-the-mind-education-app)
+- [Tamedu: Tsutamphap.com in Practice](#tamedu-tsutamphapcom-in-practice)
   - [1. Diplay random quote on homescreen widget and talk it outloud](#1-diplay-random-quote-on-homescreen-widget-and-talk-it-outloud)
     - [Resources](#resources)
     - [How to play audio from an url?](#how-to-play-audio-from-an-url)
