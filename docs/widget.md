@@ -1,11 +1,15 @@
 # The Android Widget
 
 Add a widget to android homescreen that show sutamphap.com's quotes:
-+ [LƯU] button to save quote image (quote$id.png) to disk
-+ [ĐỌC TO/DỪNG ĐỌC] button to turn on/off speaking quote outloud
-+ [NGHE PHÁP] Play random seleted phaps
-+ Change quote every 30 mins with a mindfulness bell
-+ Click on quote image to change to the new one
+- [x] **LƯU** button to save quote image to phone storage
+- [x] **ĐỌC TO/DỪNG ĐỌC** button to turn on/off speaking quote outloud
+- [x] **NGHE PHÁP/ĐANG TẢI/DỪNG NGHE** button to play random seleted phaps
+- [x] Change quote every 30 mins with a remind bell
+- [x] Click on the quote image to change to the new one
+
+![1](https://lh3.googleusercontent.com/1VL3QBQ40Dcd2y8qdoEXSSl1vC04cCUHuGUanqvy_4BCG25iUURzNtl52keCUrOoROsPoXn0_mNFAHEoC0WhVAzzDA_XvLOhOLg5LOLAeZyRyI2sPHSvy7qKoX8EduTJoL-Dj06a7jjagO2ODX1Swo-7cOrGjVTMXS_u0qnHg4YLF5y9_heVL82Nk9OUtQFRYm1PQENPfp0i3EQ7dJVCx2et1Qrmc35PNkGdQNq8C0J82acZo1YWweHyrDJE2V_cbYPy8nK-BNzGDssYfEugNY99AJwLMFVbpbm5bRW9519KzV8LLVRN7Zgktpyjxmq0brKXvDkq5-LyH32V9D1nMTcioG1lOeDMewbFEYqpl5QosRlGV-iZZbhm9M5C-Zvb91_ETC3AdfFJ4y4QZxKOBNdxveeOI3rZZ_dTqSRiJDZFt44-yL1due5PxpNowTwQZsdpLPd5wlWOQzR5hehqmIbh_QmAH7a036J-nnKgxvcggLU6BNEQjJImFfQAJHKJxrDSSfOLyJSk4nbCew93wA6yHR6UGOIYrayzu5gD4aU8oGOKtunBFXU2_zvEMVasxZGYgzMnZnJ--4NqqspgobOo8A5MDMh8Ce_TOibze_WZosFlkKfNPIiEU_ujcZUP84fWB5h736xjhJh1k845fBEujMzvxjU2G-uuZa5bQSX9W0FHgUbkK_qQlbU3zQakww_DbC51HmKlRnEZE2U0DIoNs8M7gWEh-8VMa-_4uv7afRbRa-CUOlc=w427-h581-no?authuser=0)
+
+- - -
 
 - [The Android Widget](#the-android-widget)
   - [1. Diplay random quote on homescreen widget and talk it outloud](#1-diplay-random-quote-on-homescreen-widget-and-talk-it-outloud)
@@ -18,8 +22,7 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
       - [Set widget minWidth and minHeight](#set-widget-minwidth-and-minheight)
     - [How to load image and audio from local resources (within the app)?](#how-to-load-image-and-audio-from-local-resources-within-the-app)
     - [How to save phap image to album?](#how-to-save-phap-image-to-album)
-    - [LATER: How to make use of Google Keep widget and Zalo floating widget?](#later-how-to-make-use-of-google-keep-widget-and-zalo-floating-widget)
-    - [where is APK file?](#where-is-apk-file)
+  - [LATER: 2. How to make use of Google Keep widget and Zalo floating widget?](#later-2-how-to-make-use-of-google-keep-widget-and-zalo-floating-widget)
 
 ## 1. Diplay random quote on homescreen widget and talk it outloud
 
@@ -163,14 +166,9 @@ LATER: request access to storage permission to save to public `Pictures` folder
 https://stackoverflow.com/questions/8854359/exception-open-failed-eacces-permission-denied-on-android
 https://developer.android.com/training/permissions/requesting.html
 
-### LATER: How to make use of Google Keep widget and Zalo floating widget?
+## LATER: 2. How to make use of Google Keep widget and Zalo floating widget?
 
- Google Keep widget click on [+] button will show a popup menu that dim the whole screen.
-It very good to quick select a task. Select a phap to play for example ...
+ Google Keep widget click on [+] button will show a popup menu that dim the whole screen. It very good to quick select a task. Select a phap to play for example ...
 
 Floating widget (like Zalo chat)
 https://viblo.asia/p/huong-dan-tao-ung-dung-su-dung-floating-widget-giong-facebook-messenger-gEmROxLEKpv
-
-### where is APK file?
-
-`ls app/build/outputs/apk/debug/app-debug.apk`
