@@ -1,5 +1,3 @@
-// library jobs;
-
 import 'package:hive/hive.dart';
 part 'job.g.dart';
 
@@ -14,17 +12,21 @@ class Job extends HiveObject {
   @HiveField(2)
   String unit;
 
-  // @HiveField(3)
-  // DateTime dueDateTime;
+  @HiveField(3)
+  DateTime dueDateTime;
 
-  Job(this.name, this.repeat, this.unit);
-
+  Job(this.name, this.repeat, this.unit, this.dueDateTime);
   String toString() {
-    return "$name $repeat $unit => key: $key";
+    return "$name $repeat $unit, ${dueDateTime} => key: $key";
   }
 
-// Datetime.millisecondsSinceEpoch
-  // String dueDate
-}
+  static const String BOX_NAME = "jobs";
+  static Box x;
 
-// valuesBetween
+  static getAllForDate(DateTime date) {
+    return x.values.where((j) =>
+        j.dueDateTime.year == date.year &&
+        j.dueDateTime.month == date.month &&
+        j.dueDateTime.day == date.day);
+  }
+}

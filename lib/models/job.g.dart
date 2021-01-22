@@ -20,19 +20,22 @@ class JobAdapter extends TypeAdapter<Job> {
       fields[0] as String,
       fields[1] as int,
       fields[2] as String,
+      fields[3] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, Job obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.repeat)
       ..writeByte(2)
-      ..write(obj.unit);
+      ..write(obj.unit)
+      ..writeByte(3)
+      ..write(obj.dueDateTime);
   }
 
   @override
