@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'helpers/constants.dart';
+import 'models/job.dart';
 
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox('habits')
-  runApp(MyApp());
+  // await Hive.openBox(Constants.HABS_BOX);
+  // await Hive.openBox(Constants.JOBS_BOX);
+  // await Hive.openBox(Constants.MINE_BOX);
+
+  runApp(Constants(
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +29,8 @@ class MyApp extends StatelessWidget {
         // closer togethesr (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Vượt qua dễ duôi'),
+      // home: MyHomePage(title: 'Vượt qua dễ duôi'),
+      home: MyHomePage(title: Constants.of(context).homepageTitle),
     );
   }
 }
