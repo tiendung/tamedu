@@ -15,7 +15,7 @@ import dev.tiendung.tamedu.data.*
 import dev.tiendung.tamedu.helpers.*
 
 /**
- * Implementation of App Widge
+ * Implementation of App Widget
  */
 class AppWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -84,17 +84,12 @@ class AppWidget : AppWidgetProvider() {
 
                 updateViews(context, { it.setTextViewText(R.id.quote_text, _currentQuote!!.text) })
             }
-//            PLAY_RANDOM_PHAP -> {
-//                _phapIsLoading = true
-//                context.sendIntent(PLAY_RANDOM_PHAP)
-//            }
             else -> super.onReceive(context, intent)
         }
     }
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
-        context.sendIntent(BROADCAST_STATUS)
     }
 
     override fun onDisabled(context: Context) {
@@ -136,7 +131,6 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     val views = RemoteViews(context.packageName, R.layout.app_widget)
 
     // Handle events
-    // setupIntent(context, views, PLAY_RANDOM_PHAP, R.id.nghe_phap_button)
     setupIntent(context, views, NGHE_PHAP, R.id.nghe_phap_button)
     setupIntent(context, views, SPEAK_QUOTE_TOGGLE, R.id.speak_quote_toggle_button)
     setupIntent(context, views, SAVE_QUOTE_IMAGE, R.id.save_quote_button)
@@ -146,6 +140,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     views.setTextViewText(R.id.speak_quote_toggle_button, getSpeakQuoteToggleText(_allowToSpeakQuote))
     views.setTextViewText(R.id.nghe_phap_button, getNghePhapButtonText(_phapIsPlaying, _phapIsLoading))
     views.setTextViewText(R.id.quote_text, _currentQuote!!.text)
+
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
     playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
@@ -180,12 +175,12 @@ fun loadAndPlayPhap(context: Context, phap: Phap) {
             _phapIsLoading = false
             _phapIsPlaying = true
             mp?.start()
-            context.broadcastUpdateWidgetPlayingPhap(phap)
+            context.broadcastUpdateWidgetPlayingPhap()
         })
         setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
             mp.release()
             _phapIsPlaying = false
-            context.broadcastUpdateWidgetFinishPhap(phap)
+            context.broadcastUpdateWidgetFinishPhap()
         })
         prepareAsync()
     }
