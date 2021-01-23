@@ -14,6 +14,7 @@ private var _phapIsLoading: Boolean = false
 private var _phapIsPlaying: Boolean = false
 private var _currentPhap: Phap? = null
 private var _stopPhapClicksCount: Int = 0
+private var _autoPlayed = false
 
 fun updatePlayPhap(context: Context): String? {
     if (_phapIsPlaying) {
@@ -51,17 +52,14 @@ fun buttonText(): String {
     }
 }
 
-private var _autoPlayed = false
 fun checkToPlayInEarlyMorning(context: Context): String {
     val currentTime = Calendar.getInstance()
     val currH = currentTime[Calendar.HOUR_OF_DAY]
     val currM = currentTime[Calendar.MINUTE]
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying &&
-        currH == 5 && currM > 15) {
+        ((currH == 5 && currM > 15) || (currH == 19 && currM > 15)) ) {
         context.broadcastUpdateWidget(NGHE_PHAP)
         _autoPlayed = true
-    }
-    if (currH >= 22) {
     }
     return "$currH : $currM"
 }
