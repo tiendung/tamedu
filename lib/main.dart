@@ -9,15 +9,15 @@ import 'models/habit.dart';
 import 'models/mine.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  await Hive.init('db');
+  // await Hive.initFlutter();
+  // await Hive.init('db');
 
-  Hive.registerAdapter(JobAdapter());
-  Hive.registerAdapter(HabitAdapter());
+  // Hive.registerAdapter(JobAdapter());
+  // Hive.registerAdapter(HabitAdapter());
 
-  Habit.x = await Hive.openBox<Habit>(Habit.BOX_NAME);
-  Job.x = await Hive.openBox<Job>(Job.BOX_NAME);
-  Mine.x = await Hive.openBox(Mine.BOX_NAME);
+  // Habit.x = await Hive.openBox<Habit>(Habit.BOX_NAME);
+  // Job.x = await Hive.openBox<Job>(Job.BOX_NAME);
+  // Mine.x = await Hive.openBox(Mine.BOX_NAME);
 
   runApp(Constants(
     child: MyApp(),

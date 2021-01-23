@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.res.AssetFileDescriptor
 import android.widget.RemoteViews
 import dev.tiendung.tamedu.helpers.*
 
@@ -97,6 +96,8 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, NEW_QUOTE, R.id.quote_content)
 
     tamedu.quote.newCurrent(context)
+    tamedu.phap.checkToPlayInEarlyMorning(context)
+
     views.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
     views.setTextViewText(R.id.quote_text, tamedu.quote.currentText())

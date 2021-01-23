@@ -4,13 +4,15 @@ import android.content.Context
 import android.net.Uri
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import java.util.Calendar
+
 import dev.tiendung.tamedu.helpers.*
 
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
 private var _phapIsLoading: Boolean = false
 private var _phapIsPlaying: Boolean = false
-private var _currentPhap: Phap = getRandomPhap()
+private var _currentPhap: Phap? = null
 private var _stopPhapClicksCount: Int = 0
 
 fun updatePlayPhap(context: Context) {
@@ -18,7 +20,7 @@ fun updatePlayPhap(context: Context) {
         _stopPhapClicksCount += 1
         when (_stopPhapClicksCount) {
             1 ->
-                toast(context, "Đang nghe \"${_currentPhap.title}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc.")
+                toast(context, "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc.")
             2 -> {
                 _phapPlayer.release()
                 _phapIsPlaying = false
@@ -27,14 +29,14 @@ fun updatePlayPhap(context: Context) {
         } // when
     } else if (!_phapIsLoading) {
         _currentPhap = getRandomPhap()
-        loadAndPlayPhap(context, _currentPhap)
-        toast(context, "Đang tải '${_currentPhap.title}' ...")
+        loadAndPlayPhap(context)
+        toast(context, "Đang tải '${currentTitle()}' ...")
     }
 }
 
 fun release() { _phapPlayer.release() }
 
-fun currentTitle(): String { return _currentPhap.title }
+fun currentTitle(): String { return _currentPhap!!.title }
 fun buttonText(): String {
     return when (_phapIsPlaying) {
         true  -> if (_stopPhapClicksCount == 0) "Dừng nghe" else "Dừng nghe ($_stopPhapClicksCount)"
@@ -45,7 +47,24 @@ fun buttonText(): String {
     }
 }
 
-fun loadAndPlayPhap(context: Context, phap: Phap) {
+private var _playedInEarlyMorning = false
+fun checkToPlayInEarlyMorning(context: Context): String {
+    val currentTime = Calendar.getInstance()
+    val currH = currentTime[Calendar.HOUR_OF_DAY]
+    val currM = currentTime[Calendar.MINUTE]
+    if (!_playedInEarlyMorning && !_phapIsLoading && !_phapIsPlaying &&
+        currH == 5 && currM > 25) {
+        context.broadcastUpdateWidget(NGHE_PHAP)
+        _playedInEarlyMorning = true // enough for today
+    }
+    if (currH >= 22) {
+        _playedInEarlyMorning = false // continue to play in the next morning
+    }
+    return "$currH : $currM"
+}
+
+fun loadAndPlayPhap(context: Context) {
+    val phap: Phap = _currentPhap!!
     _phapIsLoading = true
     _phapPlayer = MediaPlayer().apply {
         setAudioAttributes(
@@ -59,12 +78,12 @@ fun loadAndPlayPhap(context: Context, phap: Phap) {
             _phapIsLoading = false
             _phapIsPlaying = true
             mp.start()
-            context.broadcastUpdateWidgetPlayingPhap()
+            context.broadcastUpdateWidget(PLAY_PHAP_BEGIN)
         })
         setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
             mp.release()
             _phapIsPlaying = false
-            context.broadcastUpdateWidgetFinishPhap()
+            context.broadcastUpdateWidget(FINISH_PHAP)
         })
         prepareAsync()
     }
@@ -75,7 +94,7 @@ data class Phap(val title: String, val audioUri: Uri)
 private fun getRandomPhap(): Phap {
     val (id, title) = PHAP_IDS_TO_TITLES.random()
     val uri = Uri.parse("https://tiendung.github.io/$id")
-//    val u = Uri.parse("https://tiendung.github.io/quotes/opus/11.ogg")
+//    val uri = Uri.parse("https://tiendung.github.io/quotes/opus/11.ogg")
     return Phap(title = title,  audioUri = uri)
 }
 
