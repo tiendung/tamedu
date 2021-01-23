@@ -53,7 +53,7 @@ fun checkToPlayInEarlyMorning(context: Context): String {
     val currH = currentTime[Calendar.HOUR_OF_DAY]
     val currM = currentTime[Calendar.MINUTE]
     if (!_playedInEarlyMorning && !_phapIsLoading && !_phapIsPlaying &&
-        currH == 5 && currM > 25) {
+        currH == 5 && currM > 15) {
         context.broadcastUpdateWidget(NGHE_PHAP)
         _playedInEarlyMorning = true // enough for today
     }
