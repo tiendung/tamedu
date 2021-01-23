@@ -43,7 +43,7 @@ class AppWidget : AppWidgetProvider() {
             loadAndPlayPhap(context, _currentPhap)
             toast(context, "Đang tải '${_currentPhap.title}' ...")
         }
-        val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading)
+        val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading, _stopPhapClicksCount)
         updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
     }
 
@@ -62,13 +62,13 @@ class AppWidget : AppWidgetProvider() {
             NGHE_PHAP -> updatePlayPhap(context)
             PLAY_PHAP_BEGIN -> {
                 toast(context, "Đang nghe pháp '${_currentPhap.title}'")
-                val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading)
+                val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading, _stopPhapClicksCount)
                 updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
             }
             FINISH_PHAP -> {
                 _phapPlayer.release()
                 toast(context, "Kết thúc '${_currentPhap.title}'")
-                val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading)
+                val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading, _stopPhapClicksCount)
                 updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
             }
             SAVE_QUOTE_IMAGE -> {
@@ -138,7 +138,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     if (_currentQuote == null) _currentQuote = getRandomQuote(context)
     views.setTextViewText(R.id.speak_quote_toggle_button, getSpeakQuoteToggleText(_allowToSpeakQuote))
-    views.setTextViewText(R.id.nghe_phap_button, getNghePhapButtonText(_phapIsPlaying, _phapIsLoading))
+    views.setTextViewText(R.id.nghe_phap_button, getNghePhapButtonText(_phapIsPlaying, _phapIsLoading, _stopPhapClicksCount))
     views.setTextViewText(R.id.quote_text, _currentQuote!!.text)
 
     // Instruct the widget manager to update the widget

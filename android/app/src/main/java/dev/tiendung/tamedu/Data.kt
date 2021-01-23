@@ -51,25 +51,8 @@ fun saveQuoteImageToFile(context: Context, quote: Quote) : File {
     }
     return file
 }
-
-fun getSpeakQuoteToggleText(allowToSpeak: Boolean): String {
-    return when (allowToSpeak) {
-        true  -> "Dừng đọc"
-        false -> "Đọc lời dạy"
-    }
-}
-
-fun getNghePhapButtonText(phapIsPlaying: Boolean, phapIsLoading: Boolean): String {
-    return when (phapIsPlaying) {
-        true  -> "Dừng nghe"
-        false -> when (phapIsLoading) {
-            true  -> "Đang tải ..."
-            false -> "Nghe pháp"
-        }
-    }
-}
-
 const val BELL_FILE_NAME = "bell.ogg"
+
 val PHAP_IDS_TO_TITLES = arrayOf(
         "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",
         "phaps/Vo-Mong.ogg" to "Vỡ mộng",
