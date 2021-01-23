@@ -8,10 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.AssetFileDescriptor
 import android.widget.RemoteViews
-import android.media.AudioAttributes
-import android.media.MediaPlayer
-
-import dev.tiendung.tamedu.data.*
 import dev.tiendung.tamedu.helpers.*
 
 /**
@@ -27,24 +23,8 @@ class AppWidget : AppWidgetProvider() {
     }
 
     fun updatePlayPhap(context: Context) {
-        if (_phapIsPlaying) {
-            _stopPhapClicksCount += 1
-            when (_stopPhapClicksCount) {
-                1 ->
-                    toast(context, "Đang nghe \"${_currentPhap.title}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc.")
-                2 -> {
-                    _phapPlayer.release()
-                    _phapIsPlaying = false
-                    _stopPhapClicksCount = 0
-                }
-            } // when
-        } else if (!_phapIsLoading) {
-            _currentPhap = getRandomPhap()
-            loadAndPlayPhap(context, _currentPhap)
-            toast(context, "Đang tải '${_currentPhap.title}' ...")
-        }
-        val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading, _stopPhapClicksCount)
-        updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
+        tamedu.phap.updatePlayPhap(context)
+        updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) })
     }
 
     fun speakQuoteToggle(context: Context) {
@@ -59,15 +39,13 @@ class AppWidget : AppWidgetProvider() {
             SPEAK_QUOTE_TOGGLE -> speakQuoteToggle(context)
             NGHE_PHAP -> updatePlayPhap(context)
             PLAY_PHAP_BEGIN -> {
-                toast(context, "Đang nghe pháp '${_currentPhap.title}'")
-                val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading, _stopPhapClicksCount)
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
+                toast(context, "Đang nghe pháp '${tamedu.phap.currentTitle()}'")
+                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) })
             }
             FINISH_PHAP -> {
-                _phapPlayer.release()
-                toast(context, "Kết thúc '${_currentPhap.title}'")
-                val txt = getNghePhapButtonText(_phapIsPlaying, _phapIsLoading, _stopPhapClicksCount)
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
+                tamedu.phap.release()
+                toast(context, "Kết thúc '${tamedu.phap.currentTitle()}'")
+                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) })
             }
             SAVE_QUOTE_IMAGE -> {
                 val file = tamedu.quote.saveCurrentToFile(context)
@@ -90,13 +68,6 @@ class AppWidget : AppWidgetProvider() {
         // Enter relevant functionality for when the last widget is disabled
     }
 }
-
-// Init a mediaPlayer to play phap
-var _phapPlayer: MediaPlayer = MediaPlayer()
-var _phapIsLoading: Boolean = false
-var _phapIsPlaying: Boolean = false
-var _currentPhap: Phap = getRandomPhap()
-var _stopPhapClicksCount: Int = 0
 
 fun updateViews(context: Context, updateViews: (views: RemoteViews) -> Unit) {
     val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -127,35 +98,10 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     tamedu.quote.newCurrent(context)
     views.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
-    views.setTextViewText(R.id.nghe_phap_button, getNghePhapButtonText(_phapIsPlaying, _phapIsLoading, _stopPhapClicksCount))
+    views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
     views.setTextViewText(R.id.quote_text, tamedu.quote.currentText())
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
     tamedu.quote.playBellOrSpeakCurrent(context)
  }
-
-fun loadAndPlayPhap(context: Context, phap: Phap) {
-    _phapIsLoading = true
-    _phapPlayer = MediaPlayer().apply {
-        setAudioAttributes(
-                AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-        )
-        setDataSource(context, phap.audioUri)
-        setOnPreparedListener(MediaPlayer.OnPreparedListener { mp ->
-            _phapIsLoading = false
-            _phapIsPlaying = true
-            mp?.start()
-            context.broadcastUpdateWidgetPlayingPhap()
-        })
-        setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
-            mp.release()
-            _phapIsPlaying = false
-            context.broadcastUpdateWidgetFinishPhap()
-        })
-        prepareAsync()
-    }
-}
