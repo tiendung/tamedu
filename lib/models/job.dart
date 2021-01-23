@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import '../helpers/util.dart';
 part 'job.g.dart';
 
 @HiveType(typeId: 0)
@@ -17,10 +18,10 @@ class Job extends HiveObject {
 
   Job(this.name, this.repeat, this.unit, this.dueDateTime);
   String toString() {
-    return "$name $repeat $unit, ${dueDateTime} => key: $key";
+    return "$name $repeat $unit, ${dateStr(dueDateTime)} => key: $key";
   }
 
-  static const String BOX_NAME = "jobs";
+  static const BOX_NAME = "jobs";
   static Box x;
 
   static getAllForDate(DateTime date) {

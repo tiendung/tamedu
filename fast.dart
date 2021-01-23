@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-import 'lib/helpers/config.dart';
+import 'lib/models/mine.dart';
 import 'lib/models/job.dart';
 import 'lib/models/habit.dart';
 
@@ -10,10 +10,11 @@ void main() async {
   Hive.registerAdapter(JobAdapter());
   Hive.registerAdapter(HabitAdapter());
 
+  Habit.x = await Hive.openBox<Habit>(Habit.BOX_NAME);
   Job.x = await Hive.openBox<Job>(Job.BOX_NAME);
-  var mine = await Hive.openBox(MINE_BOX);
+  Mine.x = await Hive.openBox(Mine.BOX_NAME);
 
-  print('hello');
+  print('Boxed loaded.');
 
   var j = Job('Run', 5, 'km', new DateTime.now());
   print(j);

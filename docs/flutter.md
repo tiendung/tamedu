@@ -1,6 +1,8 @@
 # Use Flutter for main app UI
 
+https://github.com/olexale/flutter_roadmap
 https://github.com/Solido/awesome-flutter
+https://flutterstudio.app/ UI Builder
 
 ```bash
 flutter doctor --android-licenses
@@ -42,3 +44,20 @@ https://flutter.dev/docs/cookbook/design/drawer
 https://gallery.flutter.dev/#/demo/nav_rail
 
 Các ứng dụng di động thường được hiển thị dưới dạng Full-screen thường được gọi là "screens" hoặc "pages". Trong Flutter, chúng được gọi là các routes và được quản lý bởi Navigator widget. Navigator giữ stack các route và cung cấp các method để quản lý stack đó như: Navigator.push và Navigator.pop
+
+## Bonus
+
+https://www.funkyspacemonkey.com/a-free-and-open-source-macos-system-cleaner
+https://ingmarstein.github.io/Monolingual
+
+```bash
+brew install clean-me
+brew install monolingual
+brew install AppCleaner
+brew install GrandPerspective
+```
+
+### Zola & geek sites
+https://mrkaran.dev/posts/
+https://endler.dev/2020/review/
+https://jameslittle.me/

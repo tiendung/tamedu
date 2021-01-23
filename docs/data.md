@@ -1,3 +1,10 @@
+# Consider sqlite3 (most popular) vs hivedb (only Dart)
+
+MUST: Data needed to be accessed from Flutter (Dart) and native Android (Kotlin),
+native iOS (Swift)
+
+## TODO: Find out if can access hivedb from Kotlin?
+
 https://docs.hivedb.dev/
 
 ```Dart

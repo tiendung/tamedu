@@ -15,4 +15,7 @@ class Habit extends HiveObject {
   String toString() {
     return "$name ";
   }
+
+  static const BOX_NAME = "habits";
+  static Box x;
 }

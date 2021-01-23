@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
 import 'helpers/constants.dart';
+import 'helpers/util.dart';
 import 'models/job.dart';
+import 'models/habit.dart';
+import 'models/mine.dart';
 
 void main() async {
   await Hive.initFlutter();
-  // await Hive.openBox(Constants.HABS_BOX);
-  // await Hive.openBox(Constants.JOBS_BOX);
-  // await Hive.openBox(Constants.MINE_BOX);
+  await Hive.init('db');
+
+  Hive.registerAdapter(JobAdapter());
+  Hive.registerAdapter(HabitAdapter());
+
+  Habit.x = await Hive.openBox<Habit>(Habit.BOX_NAME);
+  Job.x = await Hive.openBox<Job>(Job.BOX_NAME);
+  Mine.x = await Hive.openBox(Mine.BOX_NAME);
 
   runApp(Constants(
     child: MyApp(),
