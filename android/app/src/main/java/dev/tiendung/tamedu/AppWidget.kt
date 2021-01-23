@@ -7,9 +7,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.res.AssetFileDescriptor
+import android.widget.RemoteViews
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.widget.RemoteViews
 
 import dev.tiendung.tamedu.data.*
 import dev.tiendung.tamedu.helpers.*
@@ -48,11 +48,9 @@ class AppWidget : AppWidgetProvider() {
     }
 
     fun speakQuoteToggle(context: Context) {
-        _allowToSpeakQuote = !_allowToSpeakQuote
-        _quotePlayer.release()
-        if (_allowToSpeakQuote)
-            playAudioFile(_currentQuote!!.audioFd)
-        val txt = getSpeakQuoteToggleText(_allowToSpeakQuote)
+        tamedu.quote.toggle()
+        tamedu.quote.speakCurrent()
+        val txt = tamedu.quote.toggleText()
         updateViews(context, { it.setTextViewText(R.id.speak_quote_toggle_button, txt) })
     }
 
@@ -72,17 +70,13 @@ class AppWidget : AppWidgetProvider() {
                 updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, txt) })
             }
             SAVE_QUOTE_IMAGE -> {
-                val file = saveQuoteImageToFile(context, _currentQuote!!)
+                val file = tamedu.quote.saveCurrentToFile(context)
                 toast(context, "Lưu lời dạy tại $file")
             }
             NEW_QUOTE -> {
-                _currentQuote = getRandomQuote(context)
-                if (_allowToSpeakQuote) {
-                    if (_quotePlayer.isPlaying()) { _quotePlayer.release() }
-                    playAudioFile(_currentQuote!!.audioFd)
-                }
-
-                updateViews(context, { it.setTextViewText(R.id.quote_text, _currentQuote!!.text) })
+                tamedu.quote.newCurrent(context)
+                tamedu.quote.speakCurrent()
+                updateViews(context, { it.setTextViewText(R.id.quote_text, tamedu.quote.currentText()) })
             }
             else -> super.onReceive(context, intent)
         }
@@ -96,11 +90,6 @@ class AppWidget : AppWidgetProvider() {
         // Enter relevant functionality for when the last widget is disabled
     }
 }
-
-// Init a mediaPlayer to play quote audio
-var _quotePlayer: MediaPlayer = MediaPlayer()
-var _allowToSpeakQuote: Boolean = false
-var _currentQuote: Quote? = null
 
 // Init a mediaPlayer to play phap
 var _phapPlayer: MediaPlayer = MediaPlayer()
@@ -136,30 +125,15 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, SAVE_QUOTE_IMAGE, R.id.save_quote_button)
     setupIntent(context, views, NEW_QUOTE, R.id.quote_content)
 
-    if (_currentQuote == null) _currentQuote = getRandomQuote(context)
-    views.setTextViewText(R.id.speak_quote_toggle_button, getSpeakQuoteToggleText(_allowToSpeakQuote))
+    tamedu.quote.newCurrent(context)
+    views.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
     views.setTextViewText(R.id.nghe_phap_button, getNghePhapButtonText(_phapIsPlaying, _phapIsLoading, _stopPhapClicksCount))
-    views.setTextViewText(R.id.quote_text, _currentQuote!!.text)
+    views.setTextViewText(R.id.quote_text, tamedu.quote.currentText())
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
-    playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
-}
-
-fun playAudioFile(fd: AssetFileDescriptor) {
-    // https://stackoverflow.com/questions/5747060/how-do-you-play-android-inputstream-on-mediaplayer
-    _quotePlayer = MediaPlayer().apply {
-        setAudioAttributes(
-                AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-        )
-        setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength())
-        prepare()
-        start()
-    }
-}
+    tamedu.quote.playBellOrSpeakCurrent(context)
+ }
 
 fun loadAndPlayPhap(context: Context, phap: Phap) {
     _phapIsLoading = true
