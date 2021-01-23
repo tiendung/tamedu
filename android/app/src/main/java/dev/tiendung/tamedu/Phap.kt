@@ -15,26 +15,30 @@ private var _phapIsPlaying: Boolean = false
 private var _currentPhap: Phap? = null
 private var _stopPhapClicksCount: Int = 0
 
-fun updatePlayPhap(context: Context) {
+fun updatePlayPhap(context: Context): String? {
     if (_phapIsPlaying) {
         _stopPhapClicksCount += 1
         when (_stopPhapClicksCount) {
-            1 ->
-                toast(context, "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc.")
-            2 -> {
-                _phapPlayer.release()
-                _phapIsPlaying = false
-                _stopPhapClicksCount = 0
-            }
-        } // when
-    } else if (!_phapIsLoading) {
+            1 -> return "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc."
+            2 -> return finishPhap()
+        }
+    }
+    if (!_phapIsLoading) {
         _currentPhap = getRandomPhap()
         loadAndPlayPhap(context)
-        toast(context, "Đang tải '${currentTitle()}' ...")
+        return "Đang tải '${currentTitle()}' ..."
     }
+    return null
 }
 
-fun release() { _phapPlayer.release() }
+private fun finishPhap(): String? { 
+    _phapPlayer.release() 
+    _phapIsPlaying = false
+    _phapIsLoading = false
+    _autoPlayed = false
+    _stopPhapClicksCount = 0
+    return null
+}
 
 fun currentTitle(): String { return _currentPhap!!.title }
 fun buttonText(): String {
@@ -47,23 +51,22 @@ fun buttonText(): String {
     }
 }
 
-private var _playedInEarlyMorning = false
+private var _autoPlayed = false
 fun checkToPlayInEarlyMorning(context: Context): String {
     val currentTime = Calendar.getInstance()
     val currH = currentTime[Calendar.HOUR_OF_DAY]
     val currM = currentTime[Calendar.MINUTE]
-    if (!_playedInEarlyMorning && !_phapIsLoading && !_phapIsPlaying &&
+    if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying &&
         currH == 5 && currM > 15) {
         context.broadcastUpdateWidget(NGHE_PHAP)
-        _playedInEarlyMorning = true // enough for today
+        _autoPlayed = true
     }
     if (currH >= 22) {
-        _playedInEarlyMorning = false // continue to play in the next morning
     }
     return "$currH : $currM"
 }
 
-fun loadAndPlayPhap(context: Context) {
+private fun loadAndPlayPhap(context: Context) {
     val phap: Phap = _currentPhap!!
     _phapIsLoading = true
     _phapPlayer = MediaPlayer().apply {
@@ -81,8 +84,7 @@ fun loadAndPlayPhap(context: Context) {
             context.broadcastUpdateWidget(PLAY_PHAP_BEGIN)
         })
         setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
-            mp.release()
-            _phapIsPlaying = false
+            finishPhap()
             context.broadcastUpdateWidget(FINISH_PHAP)
         })
         prepareAsync()

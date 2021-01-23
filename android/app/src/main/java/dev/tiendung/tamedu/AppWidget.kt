@@ -22,7 +22,8 @@ class AppWidget : AppWidgetProvider() {
     }
 
     fun updatePlayPhap(context: Context) {
-        tamedu.phap.updatePlayPhap(context)
+        val txt = tamedu.phap.updatePlayPhap(context)
+        if (txt != null) toast(context, txt)
         updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) })
     }
 
@@ -42,7 +43,6 @@ class AppWidget : AppWidgetProvider() {
                 updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) })
             }
             FINISH_PHAP -> {
-                tamedu.phap.release()
                 toast(context, "Kết thúc '${tamedu.phap.currentTitle()}'")
                 updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) })
             }
