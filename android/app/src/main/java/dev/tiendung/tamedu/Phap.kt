@@ -17,19 +17,21 @@ private var _stopPhapClicksCount: Int = 0
 private var _autoPlayed = false
 
 fun updatePlayPhap(context: Context): String? {
+    var txt: String? = null
     if (_phapIsPlaying) {
         _stopPhapClicksCount += 1
         when (_stopPhapClicksCount) {
-            1 -> return "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc."
-            2 -> return finishPhap()
+            1 -> txt = "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc."
+            2 -> txt = finishPhap()
         }
-    }
-    if (!_phapIsLoading) {
+        if (txt != null) toast(context, txt)
+    } else if (!_phapIsLoading) {
         _currentPhap = getRandomPhap()
         loadAndPlayPhap(context)
-        return "Đang tải '${currentTitle()}' ..."
+        toast(context, "Đang tải ${_currentPhap!!.audioUrl}")
+        txt = "Đang tải \"${currentTitle()}\" ..."
     }
-    return null
+    return txt
 }
 
 private fun finishPhap(): String? { 
@@ -74,7 +76,7 @@ private fun loadAndPlayPhap(context: Context) {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
-        setDataSource(context, phap.audioUri)
+        setDataSource(context, Uri.parse(phap.audioUrl))
         setOnPreparedListener(MediaPlayer.OnPreparedListener { mp ->
             _phapIsLoading = false
             _phapIsPlaying = true
@@ -89,13 +91,11 @@ private fun loadAndPlayPhap(context: Context) {
     }
 }
 
-data class Phap(val title: String, val audioUri: Uri)
+data class Phap(val title: String, val audioUrl: String)
 
 private fun getRandomPhap(): Phap {
     val (id, title) = PHAP_IDS_TO_TITLES.random()
-    val uri = Uri.parse("https://tiendung.github.io/$id")
-//    val uri = Uri.parse("https://tiendung.github.io/quotes/opus/11.ogg")
-    return Phap(title = title,  audioUri = uri)
+    return Phap(title = title, audioUrl = "https://tiendung.github.io/$id")
 }
 
 private val PHAP_IDS_TO_TITLES = arrayOf(

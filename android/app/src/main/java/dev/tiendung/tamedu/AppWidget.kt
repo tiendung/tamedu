@@ -7,6 +7,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
+import android.view.View
+
 import dev.tiendung.tamedu.helpers.*
 
 /**
@@ -22,9 +24,12 @@ class AppWidget : AppWidgetProvider() {
     }
 
     fun updatePlayPhap(context: Context) {
-        val txt = tamedu.phap.updatePlayPhap(context)
-        if (txt != null) toast(context, txt)
-        updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) })
+        var txt = tamedu.phap.updatePlayPhap(context)
+        if (txt == null) txt = APP_TITLE
+        updateViews(context, { 
+            it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) 
+            it.setTextViewText(R.id.marquee_status, txt)
+        })
     }
 
     fun speakQuoteToggle(context: Context) {
@@ -39,12 +44,19 @@ class AppWidget : AppWidgetProvider() {
             SPEAK_QUOTE_TOGGLE -> speakQuoteToggle(context)
             NGHE_PHAP -> updatePlayPhap(context)
             PLAY_PHAP_BEGIN -> {
-                toast(context, "Đang nghe pháp '${tamedu.phap.currentTitle()}'")
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) })
+                val txt = "Đang nghe pháp \"${tamedu.phap.currentTitle()}\""
+                toast(context, txt)
+                updateViews(context, { 
+                    it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) 
+                    it.setTextViewText(R.id.marquee_status, txt) 
+                })
             }
             FINISH_PHAP -> {
-                toast(context, "Kết thúc '${tamedu.phap.currentTitle()}'")
-                updateViews(context, { it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) })
+                toast(context, "Kết thúc \"${tamedu.phap.currentTitle()}\"")
+                updateViews(context, { 
+                    it.setTextViewText(R.id.marquee_status, APP_TITLE)
+                    it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) 
+                })
             }
             SAVE_QUOTE_IMAGE -> {
                 val file = tamedu.quote.saveCurrentToFile(context)
@@ -93,7 +105,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, NGHE_PHAP, R.id.nghe_phap_button)
     setupIntent(context, views, SPEAK_QUOTE_TOGGLE, R.id.speak_quote_toggle_button)
     setupIntent(context, views, SAVE_QUOTE_IMAGE, R.id.save_quote_button)
-    setupIntent(context, views, NEW_QUOTE, R.id.quote_content)
+    setupIntent(context, views, NEW_QUOTE, R.id.quote_area)
 
     tamedu.quote.newCurrent(context)
     tamedu.phap.checkToPlayInEarlyMorning(context)
@@ -101,6 +113,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     views.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
     views.setTextViewText(R.id.quote_text, tamedu.quote.currentText())
+    views.setTextViewText(R.id.marquee_status, APP_TITLE)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
