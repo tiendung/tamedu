@@ -33,7 +33,7 @@ class AppWidget : AppWidgetProvider() {
     }
 
     fun updateQuoteView(context: Context) {
-        val txt = tamedu.quote.speakCurrent()
+        val txt = tamedu.quote.speakCurrent(context)
         updateViews(context, {
             it.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
             it.setTextViewText(R.id.quote_text, tamedu.quote.currentText())
@@ -65,7 +65,7 @@ class AppWidget : AppWidgetProvider() {
             }
             SAVE_QUOTE_IMAGE -> {
                 val file = tamedu.quote.saveCurrentToFile(context)
-                toast(context, "Lưu lời dạy tại $file")
+                if (file != null) toast(context, "Lưu lời dạy tại $file")
             }
             NEW_QUOTE -> {
                 tamedu.quote.newCurrent(context)
