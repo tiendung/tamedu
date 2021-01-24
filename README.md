@@ -56,3 +56,8 @@ adb connect 192.168.12.30:9999
 adb connect 192.168.43.1:9999
 adb install -r ...
 ```
+
+- - - 
+
+https://heartbeat.fritz.ai/10-tips-to-speed-up-android-gradle-build-times-c0ec665fc800
+
