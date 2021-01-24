@@ -32,7 +32,10 @@ fun speakCurrent(): String {
 
 fun playBellOrSpeakCurrent(context: Context) {
     _player.release()
-    playAudioFile(context.getAssets().openFd(BELL_FILE_NAME)) // play bell
+    if (_allowToSpeak)
+        playAudioFile(_current!!.audioFd)
+    else
+        playAudioFile(context.getAssets().openFd(BELL_FILE_NAME)) // play bell
 }
 
 private fun playAudioFile(fd: AssetFileDescriptor) {
