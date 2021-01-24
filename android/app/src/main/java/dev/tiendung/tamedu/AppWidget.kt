@@ -112,7 +112,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, NEW_QUOTE, R.id.quote_area)
 
     tamedu.quote.newCurrent(context)
-    tamedu.phap.checkToPlayInEarlyMorning(context)
+    tamedu.phap.checkTimeToPlay(context)
 
     views.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())

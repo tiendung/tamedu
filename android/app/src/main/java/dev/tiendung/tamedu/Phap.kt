@@ -5,6 +5,9 @@ import android.net.Uri
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import java.util.Calendar
+import java.io.File
+import java.io.FileDescriptor
+import java.io.FileInputStream
 
 import dev.tiendung.tamedu.helpers.*
 
@@ -29,11 +32,11 @@ fun updatePlayPhap(context: Context): String? {
     }
     
     if (!_phapIsLoading) {
-        _currentPhap = getRandomPhap()
-        loadAndPlayPhap(context)
+        _currentPhap = getRandomPhap(context)
+        
+        toast(context, loadAndPlayPhap(context))
     }
     
-    toast(context, _currentPhap!!.audioUrl)
     txt = "Đang tải \"${currentTitle()}\" ..."
     return txt
 }
@@ -58,7 +61,7 @@ fun buttonText(): String {
     }
 }
 
-fun checkToPlayInEarlyMorning(context: Context): String {
+fun checkTimeToPlay(context: Context): String {
     val currentTime = Calendar.getInstance()
     val currH = currentTime[Calendar.HOUR_OF_DAY]
     val currM = currentTime[Calendar.MINUTE]
@@ -70,7 +73,7 @@ fun checkToPlayInEarlyMorning(context: Context): String {
     return "$currH : $currM"
 }
 
-private fun loadAndPlayPhap(context: Context) {
+private fun loadAndPlayPhap(context: Context): String {
     val phap: Phap = _currentPhap!!
     _phapIsLoading = true
     _phapPlayer = MediaPlayer().apply {
@@ -80,7 +83,6 @@ private fun loadAndPlayPhap(context: Context) {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
-        setDataSource(context, Uri.parse(phap.audioUrl))
         setOnPreparedListener(MediaPlayer.OnPreparedListener { mp ->
             _phapIsLoading = false
             _phapIsPlaying = true
@@ -91,17 +93,31 @@ private fun loadAndPlayPhap(context: Context) {
             finishPhap()
             context.broadcastUpdateWidget(FINISH_PHAP)
         })
-        prepareAsync()
     }
+
+    var txt = phap.audioUrl
+    if (phap.audioFile.exists()) {
+        val fd = FileInputStream(phap.audioFile).getFD()
+        _phapPlayer.setDataSource(fd)
+        txt = "${phap.audioFile}"
+    } else _phapPlayer.setDataSource(context, Uri.parse(phap.audioUrl))
+    _phapPlayer.prepareAsync()
+
+    return txt
 }
 
-data class Phap(val title: String, val audioUrl: String)
+data class Phap(val title: String, val audioUrl: String, val audioFile: File)
 
-private fun getRandomPhap(): Phap {
+private fun getRandomPhap(context: Context): Phap {
     val (id, title) = PHAP_IDS_TO_TITLES.random()
-    return Phap(title = title, audioUrl = "https://tiendung.github.io/$id")
+    val externalFilesDir = context.getExternalFilesDir(null)
+    return Phap(
+        title = title,
+        audioUrl = "https://tiendung.github.io/$id",
+        audioFile = File(externalFilesDir, id)
+    )
 }
-
+// audioFd = context.getAssets().openFd("$quoteFile.ogg")
 private val PHAP_IDS_TO_TITLES = arrayOf(
     "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",
     "phaps/Vo-Mong.ogg" to "Vỡ mộng",
@@ -127,7 +143,6 @@ private val PHAP_IDS_TO_TITLES = arrayOf(
     "phaps/tutaptrongCS_DauTuChoTuongLai.ogg" to "Đầu tư cho tương lai",
     "phaps/tutaptrongCS_XungDangCuocSongLamNguoi.ogg" to "Xứng đáng cuộc sống làm người",
     "phaps/tutaptrongCS_NguoiChanhNiemLamGi.ogg" to "Người chánh niệm làm gì",
-    "phaps/tutaptrongCS_NoiChuyenVeHanhPhuc.ogg" to "Nói chuyện về hạnh phúc",
     "phaps/tutaptrongCS_SuDungChanhNiem.ogg" to "Sử dụng chánh niệm",
     "phaps/tutaptrongCS_NguoiThuongLuu.ogg" to "Người thượng lưu",
     "phaps/tutaptrongCS_DayCon.ogg" to "Dạy con",
