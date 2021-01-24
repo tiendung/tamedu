@@ -7,7 +7,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import android.view.View
 
 import dev.tiendung.tamedu.helpers.*
 
@@ -23,7 +22,7 @@ class AppWidget : AppWidgetProvider() {
         }
     }
 
-    fun updatePlayPhap(context: Context) {
+    private fun updatePlayPhap(context: Context) {
         var txt = tamedu.phap.updatePlayPhap(context)
         if (txt == null) txt = APP_TITLE
         updateViews(context, { 
@@ -32,7 +31,7 @@ class AppWidget : AppWidgetProvider() {
         })
     }
 
-    fun updateQuoteView(context: Context) {
+    private fun updateQuoteView(context: Context) {
         val txt = tamedu.quote.speakCurrent(context)
         updateViews(context, {
             it.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
