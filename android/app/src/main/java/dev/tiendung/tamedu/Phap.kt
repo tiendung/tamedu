@@ -25,12 +25,16 @@ fun updatePlayPhap(context: Context): String? {
             2 -> txt = finishPhap()
         }
         if (txt != null) toast(context, txt)
-    } else if (!_phapIsLoading) {
+        return txt
+    }
+    
+    if (!_phapIsLoading) {
         _currentPhap = getRandomPhap()
         loadAndPlayPhap(context)
-        toast(context, "Đang tải ${_currentPhap!!.audioUrl}")
-        txt = "Đang tải \"${currentTitle()}\" ..."
     }
+    
+    toast(context, _currentPhap!!.audioUrl)
+    txt = "Đang tải \"${currentTitle()}\" ..."
     return txt
 }
 

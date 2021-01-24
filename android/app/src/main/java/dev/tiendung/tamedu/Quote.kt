@@ -9,6 +9,7 @@ import android.media.MediaPlayer
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import dev.tiendung.tamedu.helpers.*
 
 // Init a mediaPlayer to play quote audio
 private var _player: MediaPlayer = MediaPlayer()
@@ -20,9 +21,13 @@ fun toggle() {
     _player.release()
 }
 
-fun speakCurrent() {
+fun speakCurrent(): String {
     _player.release()
-    if (_allowToSpeak) playAudioFile(_current!!.audioFd)
+    if (_allowToSpeak) {
+        playAudioFile(_current!!.audioFd)
+        return _current!!.text
+    }
+    return APP_TITLE
 }
 
 fun playBellOrSpeakCurrent(context: Context) {

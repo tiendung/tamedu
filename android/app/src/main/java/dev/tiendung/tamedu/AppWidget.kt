@@ -32,16 +32,21 @@ class AppWidget : AppWidgetProvider() {
         })
     }
 
-    fun speakQuoteToggle(context: Context) {
-        tamedu.quote.toggle()
-        tamedu.quote.speakCurrent()
-        val txt = tamedu.quote.toggleText()
-        updateViews(context, { it.setTextViewText(R.id.speak_quote_toggle_button, txt) })
+    fun updateQuoteView(context: Context) {
+        val txt = tamedu.quote.speakCurrent()
+        updateViews(context, {
+            it.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
+            it.setTextViewText(R.id.quote_text, tamedu.quote.currentText())
+            it.setTextViewText(R.id.marquee_status, txt)
+        })
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-            SPEAK_QUOTE_TOGGLE -> speakQuoteToggle(context)
+            SPEAK_QUOTE_TOGGLE -> {
+                tamedu.quote.toggle()
+                updateQuoteView(context)
+            }
             NGHE_PHAP -> updatePlayPhap(context)
             PLAY_PHAP_BEGIN -> {
                 val txt = "Đang nghe pháp \"${tamedu.phap.currentTitle()}\""
@@ -64,8 +69,7 @@ class AppWidget : AppWidgetProvider() {
             }
             NEW_QUOTE -> {
                 tamedu.quote.newCurrent(context)
-                tamedu.quote.speakCurrent()
-                updateViews(context, { it.setTextViewText(R.id.quote_text, tamedu.quote.currentText()) })
+                updateQuoteView(context)
             }
             else -> super.onReceive(context, intent)
         }
