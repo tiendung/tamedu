@@ -37,6 +37,7 @@ class AppWidget : AppWidgetProvider() {
             it.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
             it.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
             it.setTextViewText(R.id.marquee_status, txt)
+            it.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
         })
     }
 

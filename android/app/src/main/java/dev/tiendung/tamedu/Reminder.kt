@@ -26,27 +26,28 @@ fun toggle() {
 fun speakCurrent(): String {
     finishPlaying()
     if (_allowToSpeak) {
-        val fd = _current!!.audioAssetFd
-        if (fd != null) playAudioFile(fd)
+        speakCurrentAudio()
         return _current!!.text
     }
     return APP_TITLE
+}
+
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+fun playBellOrSpeakCurrent(context: Context) {
+    finishPlaying()
+    if (_allowToSpeak) speakCurrentAudio()
+    else playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
 }
 
 private fun finishPlaying() {
     _player.release()
 }
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-fun playBellOrSpeakCurrent(context: Context) {
-    finishPlaying()
-    if (_allowToSpeak) {
-        if (_current!!.audioFile!!.exists())
-            playAudioFile(null, FileInputStream(_current!!.audioFile!!).getFD())
-        else
-            playAudioFile(_current!!.audioAssetFd)
-    } else
-        playAudioFile(context.getAssets().openFd(BELL_FILE_NAME)) 
+private fun speakCurrentAudio() {
+    if (_current!!.audioFile!!.exists())
+        playAudioFile(null, FileInputStream(_current!!.audioFile!!).getFD())
+    else
+        playAudioFile(_current!!.audioAssetFd)
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -74,28 +75,26 @@ data class Reminder(val text: String, val audioFile: File?,
     val audioAssetFd: AssetFileDescriptor?, val bgColor: Int)
 
 fun newCurrent(context: Context) {
-    _current = if (Math.random() < 0.5) newTeaching(context) else newQuote(context)
-}
-
-private fun newTeaching(context: Context): Reminder {
+    var bgColor = ""; var txt = ""; var fileName = ""
+    if (Math.random() < 0.5) {
+        val id = (0..(TEACHINGS.size-1)).random()
+        txt = TEACHINGS[id]
+        fileName = "teachings/$id.ogg"
+        bgColor = TEACHING_BG_COLORS.random()
+    } else {
+        val id = QUOTE_IDS_SORTED_BY_LEN.random()
+        txt = QUOTES[id]
+        fileName = "quotes/$id.ogg"
+        bgColor = QUOTE_BG_COLORS.random()
+    }
     val externalFilesDir = context.getExternalFilesDir(null)
-    val id = (0..(TEACHINGS.size-1)).random()
-    return Reminder(
-        text = TEACHINGS[id], 
-        audioAssetFd = context.getAssets().openFd("teachings/$id.ogg"),
-        audioFile = File(externalFilesDir, "teachings/$id.ogg"),
-        bgColor = Color.parseColor(TEACHING_BG_COLOR)
-    )
-}
-
-private fun newQuote(context: Context): Reminder {
-    val externalFilesDir = context.getExternalFilesDir(null)
-    val id = QUOTE_IDS_SORTED_BY_LEN.random()
-    return Reminder(
-            text = QUOTES[id],
-            audioAssetFd = context.getAssets().openFd("quotes/$id.ogg"),
-            audioFile = File(externalFilesDir, "quotes/$id.ogg"),
-            bgColor = Color.parseColor(QUOTE_BG_COLOR)
+    val am = context.getAssets()
+    val ls = am.list(fileName)
+    val fd = if (ls == null || ls.size == 0) null else am.openFd(fileName)
+    _current = Reminder(
+            text = txt, audioAssetFd = fd,
+            audioFile = File(externalFilesDir, fileName),
+            bgColor = Color.parseColor(bgColor)
     )
 }
 
@@ -117,7 +116,7 @@ private val TEACHINGS = arrayOf(
 "Cần tập thói quen rất quan trọng là thoải mái trong mỗi lúc. Thoải mái trong khi hành thiền cũng như trong cuộc sống.",
 "Hãy làm cho mình thoải mái nhất có thể được. Khi thoải mái, tâm luôn TÍCH CỰC, mọi thứ sẽ luôn TÍCH CỰC.",
 "Khi ngồi hoặc đi, làm việc gì ... cũng tự kiểm tra và tự hỏi xem thế này đã thoải mái chưa? Có thể thoải mái hơn được nữa không?",
-"Hãy luôn cái tiến, kể cả cách suy nghĩ, cách làm việc, cách nói chuyện hay quan hệ ... làm sao để thoải mái hơn nữa. Tìm xem có cách nào để thoải mái hơn tý nữa được không?",
+"Hãy luôn cải tiến, kể cả cách suy nghĩ, cách làm việc, cách nói chuyện hay quan hệ ... làm sao để thoải mái hơn nữa. Tìm xem có cách nào để thoải mái hơn tý nữa được không?",
 "Nếu cứ hay để ý đến cảm nhận hay đánh giá của người khác thì sẽ không thoải mái. Vậy lấy thoải mái đặt lên hàng đầu, việc nguời ta hiểu hay không, nghĩ thế nào ... để xuống hạng thứ 2.",
 "Dòng suy nghĩ quá mạnh, tâm rất mờ và yếu. Muốn ngắt cần có biện pháp mạnh: đang làm gì, nhớ ra thì dừng lại, kiểu như \"đứng hình\" trong vài giây. Cảm nhận ngay tư thế toàn thân đang đứng hình ấy thật rõ rồi mới làm tiếp.", 
 "Đang đi thấy suy nghĩ thì đứng lại, hết dòng suy nghĩ mới đi tiếp. Làm việc gì thất niệm, nhất quyết làm lại từ đầu.",

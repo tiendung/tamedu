@@ -16,9 +16,8 @@ const val SAVE_REMINDER_IMAGE = PATH + "SAVE_REMINDER_IMAGE"
 const val NEW_REMINDER = PATH + "NEW_REMINDER"
 
 const val APP_TITLE = "SuTamPhap.com in Practice"
-const val QUOTE_BG_COLOR = "#400D00"
-const val TEACHING_BG_COLOR = "#2D555E" // "#345920"
-const val PRACTICE_BG_COLOR = "##1E3A5F"
+val QUOTE_BG_COLORS = arrayOf("#442F19", "#400D00")
+val TEACHING_BG_COLORS = arrayOf("#2D555E", "#1E3A5F")
 
 fun Context.broadcastUpdateWidget(actionName: String) {
     Intent(this, dev.tiendung.tamedu.AppWidget::class.java).apply {

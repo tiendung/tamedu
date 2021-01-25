@@ -6,7 +6,7 @@ teachings = [
 "Cần tập thói quen rất quan trọng là thoải mái trong mỗi lúc. Thoải mái trong khi hành thiền cũng như trong cuộc sống.",
 "Hãy làm cho mình thoải mái nhất có thể được. Khi thoải mái, tâm luôn TÍCH CỰC, mọi thứ sẽ luôn TÍCH CỰC.",
 "Khi ngồi hoặc đi, làm việc gì ... cũng tự kiểm tra và tự hỏi xem thế này đã thoải mái chưa? Có thể thoải mái hơn được nữa không?",
-"Hãy luôn cái tiến, kể cả cách suy nghĩ, cách làm việc, cách nói chuyện hay quan hệ ... làm sao để thoải mái hơn nữa. Tìm xem có cách nào để thoải mái hơn tý nữa được không?",
+"Hãy luôn cải tiến, kể cả cách suy nghĩ, cách làm việc, cách nói chuyện hay quan hệ ... làm sao để thoải mái hơn nữa. Tìm xem có cách nào để thoải mái hơn tý nữa được không?",
 "Nếu cứ hay để ý đến cảm nhận hay đánh giá của người khác thì sẽ không thoải mái. Vậy lấy thoải mái đặt lên hàng đầu, việc nguời ta hiểu hay không, nghĩ thế nào ... để xuống hạng thứ 2.",
 "Dòng suy nghĩ quá mạnh, tâm rất mờ và yếu. Muốn ngắt cần có biện pháp mạnh: đang làm gì, nhớ ra thì dừng lại, kiểu như \"đứng hình\" trong vài giây. Cảm nhận ngay tư thế toàn thân đang đứng hình ấy thật rõ rồi mới làm tiếp.", 
 "Đang đi thấy suy nghĩ thì đứng lại, hết dòng suy nghĩ mới đi tiếp. Làm việc gì thất niệm, nhất quyết làm lại từ đầu.",

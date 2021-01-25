@@ -1,13 +1,8 @@
 #!/bin/sh
 rm build/app/outputs/flutter-apk/app-release.apk
 
-mkdir ../_save
-mv android/app/src/main/assets/quotes ../_save
-mv android/app/src/main/assets/teachings ../_save
-
+./sub-assets.sh
 flutter build apk --target-platform android-arm
-
-mv ../_save/quotes android/app/src/main/assets
-mv ../_save/teachings android/app/src/main/assets
+./add-assets.sh
 
 adb install -r build/app/outputs/flutter-apk/app-release.apk
