@@ -4,9 +4,10 @@ import android.content.Context
 import android.net.Uri
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.util.Calendar
 import java.io.File
-import java.io.FileDescriptor
 import java.io.FileInputStream
 
 import dev.tiendung.tamedu.helpers.*
@@ -19,6 +20,7 @@ private var _currentPhap: Phap? = null
 private var _stopPhapClicksCount: Int = 0
 private var _autoPlayed = false
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun updatePlayPhap(context: Context): String? {
     var txt: String? = null
     if (_phapIsPlaying) {
@@ -73,6 +75,7 @@ fun checkTimeToPlay(context: Context): String {
     return "$currH : $currM"
 }
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 private fun loadAndPlayPhap(context: Context): String {
     val phap: Phap = _currentPhap!!
     _phapIsLoading = true

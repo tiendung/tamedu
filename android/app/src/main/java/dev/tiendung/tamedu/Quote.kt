@@ -2,16 +2,17 @@ package tamedu.quote
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor
-import android.net.Uri
 import android.util.Log
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.os.Build
 import android.speech.tts.TextToSpeech
+import androidx.annotation.RequiresApi
 
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.Locale
+// import java.util.Locale
 
 import dev.tiendung.tamedu.helpers.*
 
@@ -23,13 +24,11 @@ private var _current: Quote? = null
 
 fun toggle() {
     _allowToSpeak = !_allowToSpeak
-    _player.release()
-    if (_tts != null && _tts!!.isSpeaking) _tts!!.stop()
 }
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun speakCurrent(context: Context): String {
-    _player.release()
-    if (_tts != null && _tts!!.isSpeaking) _tts!!.stop()
+    finishPlaying()
     if (_allowToSpeak) {
         val fd = _current!!.audioFd
         if (fd == null) ttsCurrent(context) else playAudioFile(fd)
@@ -38,17 +37,21 @@ fun speakCurrent(context: Context): String {
     return APP_TITLE
 }
 
-fun playBellOrSpeakCurrent(context: Context) {
+private fun finishPlaying() {
     _player.release()
     if (_tts != null && _tts!!.isSpeaking) _tts!!.stop()
-    // if (_allowToSpeak)
-    //     playAudioFile(_current!!.audioFd)
-    // else
-        playAudioFile(context.getAssets().openFd(BELL_FILE_NAME)) // play bell
+}
+
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+fun playBellOrSpeakCurrent(context: Context) {
+    finishPlaying()
+     if (_allowToSpeak && _current!!.audioFd != null)
+          playAudioFile(_current!!.audioFd!!)
+     else playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
 }
 
 private fun ttsCurrent(context: Context) {
-    return
+    /*
     if (_tts == null)
         _tts = TextToSpeech(context, TextToSpeech.OnInitListener { status ->
             if (status != TextToSpeech.ERROR) {
@@ -57,8 +60,10 @@ private fun ttsCurrent(context: Context) {
             }
         })
     _tts!!.speak(currentText(), TextToSpeech.QUEUE_FLUSH, null)
+     */
 }
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 private fun playAudioFile(fd: AssetFileDescriptor) {
     _player = MediaPlayer().apply {
         setAudioAttributes(
@@ -76,13 +81,17 @@ private fun playAudioFile(fd: AssetFileDescriptor) {
 // Quote data
 data class Quote(val text: String, val imageFileName: String?, val audioFd: AssetFileDescriptor?)
 
-fun newCurrent(context: Context) {
-    _current = Quote(text = MY_TEACHINGS.random(), imageFileName = null, audioFd = null)
-    return
+fun newCurrent(context: Context, showMyTeaching: Boolean = true) {
+    _current = if (showMyTeaching)
+        Quote(text = MY_TEACHINGS.random(), imageFileName = null, audioFd = null)
+    else
+        newQuote(context)
+}
 
+private fun newQuote(context: Context): Quote {
     val quoteId = QUOTE_IDS_SORTED_BY_LEN.random()
     val quoteFile = "$QUOTE_DIR/$quoteId"
-    _current = Quote(
+    return Quote(
             imageFileName = "$quoteFile.png",
             text = QUOTES[quoteId],
             audioFd = context.getAssets().openFd("$quoteFile.ogg")
