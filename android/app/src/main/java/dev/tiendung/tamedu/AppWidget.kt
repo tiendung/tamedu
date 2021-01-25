@@ -32,10 +32,10 @@ class AppWidget : AppWidgetProvider() {
     }
 
     private fun updateQuoteView(context: Context) {
-        val txt = tamedu.quote.speakCurrent(context)
+        val txt = tamedu.reminder.speakCurrent(context)
         updateViews(context, {
-            it.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
-            it.setTextViewText(R.id.quote_text, tamedu.quote.currentText())
+            it.setTextViewText(R.id.speak_quote_toggle_button, tamedu.reminder.toggleText())
+            it.setTextViewText(R.id.quote_text, tamedu.reminder.currentText())
             it.setTextViewText(R.id.marquee_status, txt)
         })
     }
@@ -43,7 +43,7 @@ class AppWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             SPEAK_QUOTE_TOGGLE -> {
-                tamedu.quote.toggle()
+                tamedu.reminder.toggle()
                 updateQuoteView(context)
             }
             NGHE_PHAP -> updatePlayPhap(context)
@@ -63,11 +63,11 @@ class AppWidget : AppWidgetProvider() {
                 })
             }
             SAVE_QUOTE_IMAGE -> {
-                val file = tamedu.quote.saveCurrentToFile(context)
+                val file = tamedu.reminder.saveCurrentToFile(context)
                 if (file != null) toast(context, "Lưu lời dạy tại $file")
             }
             NEW_QUOTE -> {
-                tamedu.quote.newCurrent(context)
+                tamedu.reminder.newCurrent(context)
                 updateQuoteView(context)
             }
             else -> super.onReceive(context, intent)
@@ -110,15 +110,15 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, SAVE_QUOTE_IMAGE, R.id.save_quote_button)
     setupIntent(context, views, NEW_QUOTE, R.id.quote_area)
 
-    tamedu.quote.newCurrent(context)
+    tamedu.reminder.newCurrent(context)
     tamedu.phap.checkTimeToPlay(context)
 
-    views.setTextViewText(R.id.speak_quote_toggle_button, tamedu.quote.toggleText())
+    views.setTextViewText(R.id.speak_quote_toggle_button, tamedu.reminder.toggleText())
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
-    views.setTextViewText(R.id.quote_text, tamedu.quote.currentText())
+    views.setTextViewText(R.id.quote_text, tamedu.reminder.currentText())
     views.setTextViewText(R.id.marquee_status, APP_TITLE)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
-    tamedu.quote.playBellOrSpeakCurrent(context)
+    tamedu.reminder.playBellOrSpeakCurrent(context)
  }

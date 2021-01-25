@@ -1,4 +1,4 @@
-package tamedu.quote
+package tamedu.reminder
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor
@@ -20,7 +20,7 @@ private var _tts: TextToSpeech? = null
 // Init a mediaPlayer to play quote audio
 private var _player: MediaPlayer = MediaPlayer()
 private var _allowToSpeak: Boolean = false
-private var _current: Quote? = null
+private var _current: Reminder? = null
 
 fun toggle() {
     _allowToSpeak = !_allowToSpeak
@@ -78,22 +78,23 @@ private fun playAudioFile(fd: AssetFileDescriptor) {
     }
 }
 
-// Quote data
-data class Quote(val text: String, val imageFileName: String?, val audioFd: AssetFileDescriptor?)
+// Reminder data including quotes, teachings and practices
+data class Reminder(val text: String, val imageFileName: String?, val audioFile: File?, val audioFd: AssetFileDescriptor?)
 
 fun newCurrent(context: Context, showMyTeaching: Boolean = true) {
     _current = if (showMyTeaching)
-        Quote(text = MY_TEACHINGS.random(), imageFileName = null, audioFd = null)
+        Reminder(text = TEACHINGS.random(), imageFileName = null, audioFd = null, audioFile = null)
     else
         newQuote(context)
 }
 
-private fun newQuote(context: Context): Quote {
+private fun newQuote(context: Context): Reminder {
     val quoteId = QUOTE_IDS_SORTED_BY_LEN.random()
     val quoteFile = "$QUOTE_DIR/$quoteId"
-    return Quote(
+    return Reminder(
             imageFileName = "$quoteFile.png",
             text = QUOTES[quoteId],
+            audioFile = null,
             audioFd = context.getAssets().openFd("$quoteFile.ogg")
     )
 }
@@ -128,11 +129,11 @@ fun saveCurrentToFile(context: Context) : File? {
 
 private const val BELL_FILE_NAME = "bell.ogg"
 private const val QUOTE_DIR = "quotes"
-private val MY_TEACHINGS = arrayOf(
+private val TEACHINGS = arrayOf(
 "Mỗi lần thấy sân lên thì tránh đi chỗ khác, đừng nói gì thêm hoặc bảo là tớ cần tránh đi 1 tý, chút nói chuyện lại.",
 "Mỗi lần thấy sân hít sâu vào và thở ra hết vài lần, tưởng tượng rằng năng lượng xấu của cơn sân đi ra ngoài theo hơi thở và sự mát lành đi vào theo hơi thở vào trong con.",
 "Dừng lại 1 chút trước khi nói gì đó, nhất là khi sân, nếu được thì trong vài hơi thở, nếu không thì 1 hơi thở hoặc nửa hơi thở cũng được.",
-// "Không ai có trách nhiệm phải làm mình vui, hay phải làm cho mình điều này điều kia. Không ai cả. Mình chịu trách nhiệm với chính mình.",
+"Không ai có trách nhiệm phải làm mình vui, hay phải làm cho mình điều này điều kia. Không ai cả. Mình chịu trách nhiệm với chính mình.",
 "Cần tập thói quen rất quan trọng là thoải mái trong mỗi lúc. Thoải mái trong khi hành thiền cũng như trong cuộc sống",
 "Hãy làm cho mình thoải mái nhất có thể được. Khi thoải mái, tâm luôn TÍCH CỰC, mọi thứ sẽ luôn TÍCH CỰC.",
 "Khi ngồi hoặc đi, làm việc gì ... cũng tự kiểm tra và tự hỏi xem thế này đã thoải mái chưa? Có thể thoải mái hơn được nữa không?",
