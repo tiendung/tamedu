@@ -87,15 +87,20 @@ fun newCurrent(context: Context) {
         fileName = "quotes/$id.ogg"
         bgColor = QUOTE_BG_COLORS.random()
     }
-    val externalFilesDir = context.getExternalFilesDir(null)
+    _current = Reminder(
+            text = txt,
+            audioAssetFd = assetFd(context, fileName),
+            audioFile = externalFile(context, fileName),
+            bgColor = Color.parseColor(bgColor) )
+}
+private fun assetFd(context: Context, fileName: String): AssetFileDescriptor? {
     val am = context.getAssets()
     val ls = am.list(fileName)
-    val fd = if (ls == null || ls.size == 0) null else am.openFd(fileName)
-    _current = Reminder(
-            text = txt, audioAssetFd = fd,
-            audioFile = File(externalFilesDir, fileName),
-            bgColor = Color.parseColor(bgColor)
-    )
+    val fileNotExists = (ls == null || ls.size == 0)
+    return if (fileNotExists) null else am.openFd(fileName)
+}
+private fun externalFile(context: Context, fileName: String): File {
+    return File(context.getExternalFilesDir(null), fileName)
 }
 
 fun currentText(): String { return _current!!.text }
