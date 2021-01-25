@@ -32,7 +32,7 @@ class AppWidget : AppWidgetProvider() {
     }
 
     private fun updateReminderView(context: Context) {
-        val txt = tamedu.reminder.speakCurrent(context)
+        val txt = tamedu.reminder.speakCurrent()
         updateViews(context, {
             it.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
             it.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
@@ -62,10 +62,6 @@ class AppWidget : AppWidgetProvider() {
                     it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) 
                 })
             }
-            // SAVE_REMINDER_IMAGE -> {
-            //     val file = tamedu.reminder.saveCurrentToFile(context)
-            //     if (file != null) toast(context, "Lưu lời dạy tại $file")
-            // }
             NEW_REMINDER -> {
                 tamedu.reminder.newCurrent(context)
                 updateReminderView(context)
@@ -107,7 +103,6 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     // Handle events
     setupIntent(context, views, NGHE_PHAP, R.id.nghe_phap_button)
     setupIntent(context, views, SPEAK_REMINDER_TOGGLE, R.id.speak_reminder_toggle_button)
-    // setupIntent(context, views, SAVE_REMINDER_IMAGE, R.id.save_reminder_button)
     setupIntent(context, views, NEW_REMINDER, R.id.reminder_area)
 
     tamedu.reminder.newCurrent(context)
