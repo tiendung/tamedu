@@ -112,6 +112,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
     views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
     views.setTextViewText(R.id.marquee_status, APP_TITLE)
+    views.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)

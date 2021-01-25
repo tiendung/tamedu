@@ -5,6 +5,7 @@ import android.content.res.AssetFileDescriptor
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Build
+import android.graphics.Color
 import androidx.annotation.RequiresApi
 
 import java.io.File
@@ -70,10 +71,10 @@ private fun playAudioFile(assetFd: AssetFileDescriptor?, fd: FileDescriptor? = n
 
 // Reminder data including quotes, teachings and practices
 data class Reminder(val text: String, val audioFile: File?, 
-    val audioAssetFd: AssetFileDescriptor?, val bgColor: String)
+    val audioAssetFd: AssetFileDescriptor?, val bgColor: Int)
 
-fun newCurrent(context: Context, showMyTeaching: Boolean = true) {
-    _current = if (showMyTeaching) newTeaching(context) else newQuote(context)
+fun newCurrent(context: Context) {
+    _current = if (Math.random() < 0.5) newTeaching(context) else newQuote(context)
 }
 
 private fun newTeaching(context: Context): Reminder {
@@ -83,7 +84,7 @@ private fun newTeaching(context: Context): Reminder {
         text = TEACHINGS[id], 
         audioAssetFd = context.getAssets().openFd("teachings/$id.ogg"),
         audioFile = File(externalFilesDir, "teachings/$id.ogg"),
-        bgColor = TEACHING_BG_COLOR
+        bgColor = Color.parseColor(TEACHING_BG_COLOR)
     )
 }
 
@@ -94,11 +95,12 @@ private fun newQuote(context: Context): Reminder {
             text = QUOTES[id],
             audioAssetFd = context.getAssets().openFd("quotes/$id.ogg"),
             audioFile = File(externalFilesDir, "quotes/$id.ogg"),
-            bgColor = QUOTE_BG_COLOR
+            bgColor = Color.parseColor(QUOTE_BG_COLOR)
     )
 }
 
-fun currentText() : String { return _current!!.text }
+fun currentText(): String { return _current!!.text }
+fun currentBgColor(): Int { return _current!!.bgColor }
 fun toggleText(): String {
     return when (_allowToSpeak) {
         true  -> "Dừng đọc"
