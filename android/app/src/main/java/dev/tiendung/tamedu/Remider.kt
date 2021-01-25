@@ -6,18 +6,15 @@ import android.util.Log
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Build
-import android.speech.tts.TextToSpeech
 import androidx.annotation.RequiresApi
 
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-// import java.util.Locale
 
 import dev.tiendung.tamedu.helpers.*
 
-private var _tts: TextToSpeech? = null
-// Init a mediaPlayer to play quote audio
+
 private var _player: MediaPlayer = MediaPlayer()
 private var _allowToSpeak: Boolean = false
 private var _current: Reminder? = null
@@ -30,8 +27,8 @@ fun toggle() {
 fun speakCurrent(context: Context): String {
     finishPlaying()
     if (_allowToSpeak) {
-        val fd = _current!!.audioFd
-        if (fd == null) ttsCurrent(context) else playAudioFile(fd)
+        val fd = _current!!.audioAssetFd
+        if (fd != null) playAudioFile(fd)
         return _current!!.text
     }
     return APP_TITLE
@@ -39,28 +36,14 @@ fun speakCurrent(context: Context): String {
 
 private fun finishPlaying() {
     _player.release()
-    if (_tts != null && _tts!!.isSpeaking) _tts!!.stop()
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun playBellOrSpeakCurrent(context: Context) {
     finishPlaying()
-     if (_allowToSpeak && _current!!.audioFd != null)
-          playAudioFile(_current!!.audioFd!!)
+     if (_allowToSpeak && _current!!.audioAssetFd != null)
+          playAudioFile(_current!!.audioAssetFd!!)
      else playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
-}
-
-private fun ttsCurrent(context: Context) {
-    /*
-    if (_tts == null)
-        _tts = TextToSpeech(context, TextToSpeech.OnInitListener { status ->
-            if (status != TextToSpeech.ERROR) {
-                //if there is no error then set language
-                _tts!!.setLanguage(Locale.forLanguageTag("vi-VN"))
-            }
-        })
-    _tts!!.speak(currentText(), TextToSpeech.QUEUE_FLUSH, null)
-     */
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -79,13 +62,19 @@ private fun playAudioFile(fd: AssetFileDescriptor) {
 }
 
 // Reminder data including quotes, teachings and practices
-data class Reminder(val text: String, val imageFileName: String?, val audioFile: File?, val audioFd: AssetFileDescriptor?)
+data class Reminder(val text: String, val imageFileName: String?, val audioFile: File?, val audioAssetFd: AssetFileDescriptor?, val bgColor: String)
 
 fun newCurrent(context: Context, showMyTeaching: Boolean = true) {
-    _current = if (showMyTeaching)
-        Reminder(text = TEACHINGS.random(), imageFileName = null, audioFd = null, audioFile = null)
-    else
-        newQuote(context)
+    _current = if (showMyTeaching) newTeaching() else newQuote(context)
+}
+
+private fun newTeaching(): Reminder {
+    return Reminder(text = TEACHINGS.random(), 
+        imageFileName = null, 
+        audioAssetFd = null, 
+        audioFile = null,
+        bgColor = TEACHING_BG_COLOR
+    )
 }
 
 private fun newQuote(context: Context): Reminder {
@@ -94,8 +83,9 @@ private fun newQuote(context: Context): Reminder {
     return Reminder(
             imageFileName = "$quoteFile.png",
             text = QUOTES[quoteId],
+            audioAssetFd = context.getAssets().openFd("$quoteFile.ogg"),
             audioFile = null,
-            audioFd = context.getAssets().openFd("$quoteFile.ogg")
+            bgColor = QUOTE_BG_COLOR
     )
 }
 

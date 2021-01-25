@@ -31,23 +31,23 @@ class AppWidget : AppWidgetProvider() {
         })
     }
 
-    private fun updateQuoteView(context: Context) {
+    private fun updateReminderView(context: Context) {
         val txt = tamedu.reminder.speakCurrent(context)
         updateViews(context, {
-            it.setTextViewText(R.id.speak_quote_toggle_button, tamedu.reminder.toggleText())
-            it.setTextViewText(R.id.quote_text, tamedu.reminder.currentText())
+            it.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
+            it.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
             it.setTextViewText(R.id.marquee_status, txt)
         })
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-            SPEAK_QUOTE_TOGGLE -> {
+            SPEAK_REMINDER_TOGGLE -> {
                 tamedu.reminder.toggle()
-                updateQuoteView(context)
+                updateReminderView(context)
             }
             NGHE_PHAP -> updatePlayPhap(context)
-            PLAY_PHAP_BEGIN -> {
+            NGHE_PHAP_BEGIN -> {
                 val txt = "Đang nghe pháp \"${tamedu.phap.currentTitle()}\""
                 toast(context, txt)
                 updateViews(context, { 
@@ -55,20 +55,20 @@ class AppWidget : AppWidgetProvider() {
                     it.setTextViewText(R.id.marquee_status, txt) 
                 })
             }
-            FINISH_PHAP -> {
+            NGHE_PHAP_FINISH -> {
                 toast(context, "Kết thúc \"${tamedu.phap.currentTitle()}\"")
                 updateViews(context, { 
                     it.setTextViewText(R.id.marquee_status, APP_TITLE)
                     it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) 
                 })
             }
-            SAVE_QUOTE_IMAGE -> {
-                val file = tamedu.reminder.saveCurrentToFile(context)
-                if (file != null) toast(context, "Lưu lời dạy tại $file")
-            }
-            NEW_QUOTE -> {
+            // SAVE_REMINDER_IMAGE -> {
+            //     val file = tamedu.reminder.saveCurrentToFile(context)
+            //     if (file != null) toast(context, "Lưu lời dạy tại $file")
+            // }
+            NEW_REMINDER -> {
                 tamedu.reminder.newCurrent(context)
-                updateQuoteView(context)
+                updateReminderView(context)
             }
             else -> super.onReceive(context, intent)
         }
@@ -106,16 +106,16 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     // Handle events
     setupIntent(context, views, NGHE_PHAP, R.id.nghe_phap_button)
-    setupIntent(context, views, SPEAK_QUOTE_TOGGLE, R.id.speak_quote_toggle_button)
-    setupIntent(context, views, SAVE_QUOTE_IMAGE, R.id.save_quote_button)
-    setupIntent(context, views, NEW_QUOTE, R.id.quote_area)
+    setupIntent(context, views, SPEAK_REMINDER_TOGGLE, R.id.speak_reminder_toggle_button)
+    // setupIntent(context, views, SAVE_REMINDER_IMAGE, R.id.save_reminder_button)
+    setupIntent(context, views, NEW_REMINDER, R.id.reminder_area)
 
     tamedu.reminder.newCurrent(context)
     tamedu.phap.checkTimeToPlay(context)
 
-    views.setTextViewText(R.id.speak_quote_toggle_button, tamedu.reminder.toggleText())
+    views.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
-    views.setTextViewText(R.id.quote_text, tamedu.reminder.currentText())
+    views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
     views.setTextViewText(R.id.marquee_status, APP_TITLE)
 
     // Instruct the widget manager to update the widget

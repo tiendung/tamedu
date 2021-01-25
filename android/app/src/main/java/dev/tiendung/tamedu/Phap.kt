@@ -90,11 +90,11 @@ private fun loadAndPlayPhap(context: Context): String {
             _phapIsLoading = false
             _phapIsPlaying = true
             mp.start()
-            context.broadcastUpdateWidget(PLAY_PHAP_BEGIN)
+            context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
         })
         setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
             finishPhap()
-            context.broadcastUpdateWidget(FINISH_PHAP)
+            context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
         })
     }
 
@@ -120,7 +120,7 @@ private fun getRandomPhap(context: Context): Phap {
         audioFile = File(externalFilesDir, id)
     )
 }
-// audioFd = context.getAssets().openFd("$quoteFile.ogg")
+
 private val PHAP_IDS_TO_TITLES = arrayOf(
     "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",
     "phaps/Vo-Mong.ogg" to "Vỡ mộng",

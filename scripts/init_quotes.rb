@@ -6,10 +6,10 @@ quotes_dir = "android/app/src/main/assets/quotes"
 `mkdir #{quotes_dir}` unless File.exist?(quotes_dir)
 quote_ids.each_with_index do |id, index|
     if index < n
-        `cp ~/src/stp/quotes/650x/#{id}.png #{quotes_dir}/` unless File.exist?("#{quotes_dir}/#{id}.png")
+        # `cp ~/src/stp/quotes/650x/#{id}.png #{quotes_dir}/` unless File.exist?("#{quotes_dir}/#{id}.png")
         `cp ~/src/stp/quotes/opus/#{id}.ogg #{quotes_dir}/` unless File.exist?("#{quotes_dir}/#{id}.ogg")
     else
-        `rm #{quotes_dir}/#{id}.png` if File.exist?("#{quotes_dir}/#{id}.png")
+        # `rm #{quotes_dir}/#{id}.png` if File.exist?("#{quotes_dir}/#{id}.png")
         `rm #{quotes_dir}/#{id}.ogg` if File.exist?("#{quotes_dir}/#{id}.ogg")
     end
 end

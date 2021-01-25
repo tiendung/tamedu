@@ -8,14 +8,17 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 
 private const val PATH = "dev.tiendung.tamedu.action."
-const val FINISH_PHAP = PATH + "FINISH_PHAP"
-const val PLAY_PHAP_BEGIN = PATH + "PLAY_PHAP_BEGIN"
+const val NGHE_PHAP_FINISH = PATH + "NGHE_PHAP_FINISH"
+const val NGHE_PHAP_BEGIN = PATH + "NGHE_PHAP_BEGIN"
 const val NGHE_PHAP = PATH + "NGHE_PHAP"
-const val SPEAK_QUOTE_TOGGLE = PATH + "SPEAK_QUOTE_TOGGLE"
-const val SAVE_QUOTE_IMAGE = PATH + "SAVE_QUOTE_IMAGE"
-const val NEW_QUOTE = PATH + "NEW_QUOTE"
+const val SPEAK_REMINDER_TOGGLE = PATH + "SPEAK_REMINDER_TOGGLE"
+const val SAVE_REMINDER_IMAGE = PATH + "SAVE_REMINDER_IMAGE"
+const val NEW_REMINDER = PATH + "NEW_REMINDER"
 
 const val APP_TITLE = "SuTamPhap.com in Practice"
+const val QUOTE_BG_COLOR = "#400D00"
+const val TEACHING_BG_COLOR = "#2D555E" // "#345920"
+const val PRACTICE_BG_COLOR = "##1E3A5F"
 
 fun Context.broadcastUpdateWidget(actionName: String) {
     Intent(this, dev.tiendung.tamedu.AppWidget::class.java).apply {
