@@ -172,3 +172,17 @@ https://developer.android.com/training/permissions/requesting.html
 
 Floating widget (like Zalo chat)
 https://viblo.asia/p/huong-dan-tao-ung-dung-su-dung-floating-widget-giong-facebook-messenger-gEmROxLEKpv
+
+```
+import android.view.View
+import android.graphics.Bitmap
+import android.graphics.Canvas
+
+// https://stackoverflow.com/questions/52642055/view-getdrawingcache-is-deprecated-in-android-api-28
+fun getBitmapFromView(view: View): Bitmap? {
+    var bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+    var canvas = Canvas(bitmap)
+    view.draw(canvas)
+    return bitmap
+}
+```
