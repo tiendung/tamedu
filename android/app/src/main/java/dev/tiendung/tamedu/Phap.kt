@@ -62,18 +62,23 @@ fun setThuGianCount(context: Context, v: Int) {
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): String {
+fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): String? {
 
-    var txt: String = APP_TITLE
-    if (thuGianButtonPressed && _isThuGian) return txt
+    var txt: String? = null
+    if (thuGianButtonPressed && _phapIsPlaying) return txt
 
     if (_phapIsPlaying) {
         _stopPhapClicksCount += 1
         when (_stopPhapClicksCount) {
-            1 -> txt = "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc."
-            2 -> txt = finishPhap()
+            1 -> {
+                txt = "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc."
+                toast(context, txt)       
+            }
+            2 -> {
+                finishPhap()
+                txt = APP_TITLE
+            }
         }
-        if (txt != APP_TITLE) toast(context, txt)
         return txt
     }
     
@@ -91,14 +96,14 @@ fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): Str
     return txt
 }
 
-private fun finishPhap(): String { 
+private fun finishPhap(): String? { 
     _phapPlayer.release() 
     _phapIsPlaying = false
     _phapIsLoading = false
     _autoPlayed = false
     _stopPhapClicksCount = 0
     _isThuGian = false
-    return APP_TITLE
+    return null
 }
 
 fun currentTitle(): String { return _currentPhap!!.title }
