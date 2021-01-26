@@ -3,10 +3,7 @@ package tamedu.count
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
-import dev.tiendung.tamedu.helpers.COUNT_KEY_TO_GOAL
-import dev.tiendung.tamedu.helpers.COUNT_KEY_TO_LABEL
-import dev.tiendung.tamedu.helpers.PREFERENCE_FILE_KEY
-import dev.tiendung.tamedu.helpers.THU_GIAN_COUNT_KEY
+import dev.tiendung.tamedu.helpers.*
 
 private var _sharedPref: SharedPreferences? = null
 private var _thuGianCount: Int? = null
@@ -24,7 +21,6 @@ fun setThuGianCount(context: Context, v: Int) {
         apply()
     }
 }
-
 fun getThuGianCount(context: Context): Int {
     if (_thuGianCount == null)
         _thuGianCount = getSharedPref(context).getInt(THU_GIAN_COUNT_KEY, 0)
@@ -40,6 +36,10 @@ fun set(context: Context, k: String, v: Int) {
 
 fun get(context: Context, k: String): Int {
     return getSharedPref(context).getInt(k, 0)
+}
+
+fun inc(context: Context, k: String, v: Int) {
+    set(context, k, get(context, k) + v)
 }
 
 private val Y = Color.parseColor("#635D19")

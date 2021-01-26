@@ -17,7 +17,7 @@ const val TODAY_PUSH = PATH + "action.TODAY_PUSH"
 const val TODAY_PULL = PATH + "action.TODAY_PULL"
 const val TODAY_ABS = PATH + "action.TODAY_ABS"
 const val COUNT_TOTAL = PATH + "action.COUNT_TOTAL"
-const val COUNT_5 = PATH + "action.COUNT_5"
+const val COUNT_1 = PATH + "action.COUNT_1"
 const val COUNT_10 = PATH + "action.COUNT_10"
 const val COUNT_RESET = PATH + "action.COUNT_RESET"
 
@@ -32,17 +32,19 @@ val COUNT_KEY_TO_LABEL: HashMap<String, String> = hashMapOf(
         SQUAT_COUNT_KEY to "Squat",
         PUSH_COUNT_KEY to "Push",
         PULL_COUNT_KEY to "Pull",
-        ABS_COUNT_KEY to "Abs"
+        ABS_COUNT_KEY to "Abs",
+        THU_GIAN_COUNT_KEY to "Thư giãn"
 )
 
 val COUNT_KEY_TO_GOAL: HashMap<String, Int> = hashMapOf(
+        THU_GIAN_COUNT_KEY to 3,
         SQUAT_COUNT_KEY to 100,
         PUSH_COUNT_KEY to 150,
         PULL_COUNT_KEY to 80,
         ABS_COUNT_KEY to 100
 )
 
-val COUNT_KEYS = arrayOf(THU_GIAN_COUNT_KEY, SQUAT_COUNT_KEY, PUSH_COUNT_KEY, PULL_COUNT_KEY, ABS_COUNT_KEY)
+val COUNT_KEYS = COUNT_KEY_TO_LABEL.keys
 
 const val APP_TITLE = "SuTamPhap.com in Practice"
 val QUOTE_BG_COLORS = arrayOf("#400D00", "#442F19", "#42275E", "#5C2B29")

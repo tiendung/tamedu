@@ -28,9 +28,6 @@ class AppWidget : AppWidgetProvider() {
         _currentCountAdded = 0
         _showHabitsBar = false
     }
-    private fun countAdd(v: Int) {
-        _currentCountAdded = _currentCountAdded + v
-    }
 
     override fun onReceive(context: Context, intent: Intent) {
         var txt: String? = null
@@ -43,11 +40,10 @@ class AppWidget : AppWidgetProvider() {
 
             COUNT_TOTAL -> {
                 _showHabitsBar = true
-                val v = tamedu.count.get(context, _currentCountKey)
-                tamedu.count.set(context, _currentCountKey, v + _currentCountAdded)
+                tamedu.count.inc(context, _currentCountKey, _currentCountAdded)
             }
-            COUNT_5 -> countAdd(5)
-            COUNT_10 -> countAdd(10)
+            COUNT_1 -> _currentCountAdded += 1
+            COUNT_10 -> _currentCountAdded += 10
             COUNT_RESET -> _currentCountAdded = 0
 
             SPEAK_REMINDER_TOGGLE -> {
@@ -154,7 +150,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, TODAY_ABS, R.id.today_abs_button)
 
     setupIntent(context, views, COUNT_TOTAL, R.id.count_total_button)
-    setupIntent(context, views, COUNT_5, R.id.count_5_button)
+    setupIntent(context, views, COUNT_1, R.id.count_1_button)
     setupIntent(context, views, COUNT_10, R.id.count_10_button)
     setupIntent(context, views, COUNT_RESET, R.id.count_reset_button)
 
