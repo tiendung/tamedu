@@ -1,6 +1,7 @@
 package tamedu.phap
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -20,10 +21,43 @@ private var _phapIsPlaying: Boolean = false
 private var _currentPhap: Phap? = null
 private var _stopPhapClicksCount: Int = 0
 private var _autoPlayed = false
+var _isThuGian = false
+private var _thuGianCount: Int? = null
+private var _sharedPref: SharedPreferences? = null
+
+fun thuGianButtonText(context: Context): String {
+    val count = getThuGianCount(context)
+    var txt = "Thư giãn"
+    if (count != 0) txt = "$txt +$count"
+    return txt
+}
+
+private fun getSharedPref(context: Context): SharedPreferences {
+    if (_sharedPref == null)
+        _sharedPref = context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE)
+    return _sharedPref!!
+}
+
+private fun getThuGianCount(context: Context): Int {
+    if (_thuGianCount == null)
+        _thuGianCount = getSharedPref(context).getInt(THU_GIAN_COUNT_KEY, 0)
+    return _thuGianCount!!
+}
+
+fun setThuGianCount(context: Context, v: Int) {
+    _thuGianCount = v
+    with (getSharedPref(context).edit()) {
+        putInt(THU_GIAN_COUNT_KEY, v)
+        apply()
+    }
+}
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun updatePlayPhap(context: Context): String? {
+
     var txt: String? = null
+    if (_isThuGian) return txt
+
     if (_phapIsPlaying) {
         _stopPhapClicksCount += 1
         when (_stopPhapClicksCount) {
@@ -34,9 +68,12 @@ fun updatePlayPhap(context: Context): String? {
         return txt
     }
     
-    if (!_phapIsLoading) {
-        _currentPhap = getRandomPhap(context)
-        
+    if (!_phapIsLoading) { // play new phap or thu gian
+         if (_isThuGian) {
+             _currentPhap = getRandomThuGian(context)
+         } else {
+             _currentPhap = getRandomPhap(context)
+         }
         toast(context, loadAndPlayPhap(context))
     }
     
@@ -50,13 +87,14 @@ private fun finishPhap(): String? {
     _phapIsLoading = false
     _autoPlayed = false
     _stopPhapClicksCount = 0
+    _isThuGian = false
     return null
 }
 
 fun currentTitle(): String { return _currentPhap!!.title }
 fun buttonText(): String {
     return when (_phapIsPlaying) {
-        true  -> if (_stopPhapClicksCount == 0) "Dừng nghe" else "Dừng nghe ($_stopPhapClicksCount)"
+        true  -> if (_stopPhapClicksCount == 0) "Dừng nghe" else "Dừng nghe!"
         false -> when (_phapIsLoading) {
             true  -> "Đang tải ..."
             false -> "Nghe pháp"
@@ -68,6 +106,10 @@ fun checkTimeToPlay(context: Context): String {
     val currentTime = Calendar.getInstance()
     val currH = currentTime[Calendar.HOUR_OF_DAY]
     val currM = currentTime[Calendar.MINUTE]
+    // Reset counter
+    if (currH == 1 && currM > 0) {
+        _thuGianCount = 0
+    }
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying &&
         ((currH == 5 && currM > 15) || (currH == 19 && currM > 15)) ) {
         context.broadcastUpdateWidget(NGHE_PHAP)
@@ -94,6 +136,8 @@ private fun loadAndPlayPhap(context: Context): String {
             context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
         })
         setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
+            if (_isThuGian)
+                setThuGianCount(context, getThuGianCount(context) + 1)
             finishPhap()
             context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
         })
@@ -112,15 +156,30 @@ private fun loadAndPlayPhap(context: Context): String {
 
 data class Phap(val title: String, val audioUrl: String, val audioFile: File)
 
+private fun getRandomThuGian(context: Context): Phap {
+    var (id, title) = THU_GIAN_IDS_TO_TITLES.random()
+    return initPhap(context, id, title)
+}
+
 private fun getRandomPhap(context: Context): Phap {
-    val (id, title) = PHAP_IDS_TO_TITLES.random()
-    val externalFilesDir = context.getExternalFilesDir(null)
+    var (id, title) = PHAP_IDS_TO_TITLES.random()
+    return initPhap(context, id, title)
+}
+
+private fun initPhap(context: Context, id: String, title: String): Phap {
     return Phap(
-        title = title,
-        audioUrl = "https://tiendung.github.io/$id",
-        audioFile = File(externalFilesDir, id)
+            title = title,
+            audioUrl = "https://tiendung.github.io/$id",
+            audioFile = File(context.getExternalFilesDir(null), id)
     )
 }
+
+private val THU_GIAN_IDS_TO_TITLES = arrayOf(
+        "phaps/huongdan_thienNam.ogg" to "Thư giãn 24 phút",
+        "phaps/HuongDanRaQuetVaThuGianToanThan.ogg" to "Thư giãn 30 phút",
+        "phaps/thien_nam_15_phut_01.ogg" to "Thư giãn 15 phút",
+        "phaps/thien_nam_10_phut.ogg" to "Thư giãn 24 phút"
+)
 
 private val PHAP_IDS_TO_TITLES = arrayOf(
     "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",

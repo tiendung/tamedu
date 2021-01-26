@@ -37,6 +37,7 @@ class AppWidget : AppWidgetProvider() {
             it.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
             it.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
             it.setTextViewText(R.id.marquee_status, txt)
+            it.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
             it.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
         })
     }
@@ -48,6 +49,10 @@ class AppWidget : AppWidgetProvider() {
                 updateReminderView(context)
             }
             NGHE_PHAP -> updatePlayPhap(context)
+            THU_GIAN -> {
+                tamedu.phap._isThuGian = true
+                updatePlayPhap(context)
+            }
             NGHE_PHAP_BEGIN -> {
                 val txt = "Đang nghe pháp \"${tamedu.phap.currentTitle()}\""
                 toast(context, txt)
@@ -103,6 +108,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     // Handle events
     setupIntent(context, views, NGHE_PHAP, R.id.nghe_phap_button)
+    setupIntent(context, views, THU_GIAN, R.id.thu_gian_button)
     setupIntent(context, views, SPEAK_REMINDER_TOGGLE, R.id.speak_reminder_toggle_button)
     setupIntent(context, views, NEW_REMINDER, R.id.reminder_area)
 
@@ -113,6 +119,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
     views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
     views.setTextViewText(R.id.marquee_status, APP_TITLE)
+    views.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
     views.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
 
     // Instruct the widget manager to update the widget

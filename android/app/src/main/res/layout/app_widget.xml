@@ -46,7 +46,13 @@
                 android:id="@+id/speak_reminder_toggle_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đọc lời dạy" />
+                android:text="Đọc" />
+
+            <Button
+                android:id="@+id/thu_gian_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thư giãn" />
 
             <Button
                 android:id="@+id/nghe_phap_button"
