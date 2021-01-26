@@ -28,11 +28,18 @@ const val PUSH_COUNT_KEY = "pushCount"
 const val PULL_COUNT_KEY = "pullCount"
 const val ABS_COUNT_KEY = "absCount"
 
-val COUNT_KEYS_TO_LABEL: HashMap<String, String> = hashMapOf(
+val COUNT_KEY_TO_LABEL: HashMap<String, String> = hashMapOf(
         SQUAT_COUNT_KEY to "Squat",
         PUSH_COUNT_KEY to "Push",
         PULL_COUNT_KEY to "Pull",
         ABS_COUNT_KEY to "Abs"
+)
+
+val COUNT_KEY_TO_GOAL: HashMap<String, Int> = hashMapOf(
+        SQUAT_COUNT_KEY to 100,
+        PUSH_COUNT_KEY to 150,
+        PULL_COUNT_KEY to 80,
+        ABS_COUNT_KEY to 100
 )
 
 val COUNT_KEYS = arrayOf(THU_GIAN_COUNT_KEY, SQUAT_COUNT_KEY, PUSH_COUNT_KEY, PULL_COUNT_KEY, ABS_COUNT_KEY)
