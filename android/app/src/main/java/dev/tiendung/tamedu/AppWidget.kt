@@ -22,55 +22,42 @@ class AppWidget : AppWidgetProvider() {
         }
     }
 
-    private fun updatePlayPhapView(context: Context, thuGianButtonPressed: Boolean = false) {
-        var txt = tamedu.phap.updatePlayPhap(context, thuGianButtonPressed)
-        if (txt == null) txt = APP_TITLE
-        updateViews(context, { 
-            it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) 
-            it.setTextViewText(R.id.marquee_status, txt)
-        })
-    }
-
-    private fun updateReminderView(context: Context) {
-        val txt = tamedu.reminder.speakCurrent()
-        updateViews(context, {
-            it.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
-            it.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
-            it.setTextViewText(R.id.marquee_status, txt)
-            it.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
-            it.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
-        })
-    }
-
     override fun onReceive(context: Context, intent: Intent) {
+        var txt: String? = null
+
         when (intent.action) {
             SPEAK_REMINDER_TOGGLE -> {
                 tamedu.reminder.toggle()
-                updateReminderView(context)
+                txt = tamedu.reminder.speakCurrent()
             }
-            NGHE_PHAP -> updatePlayPhapView(context)
-            THU_GIAN -> updatePlayPhapView(context, true)
+            NGHE_PHAP -> {
+                txt = tamedu.phap.updatePlayPhap(context)
+            }
+            THU_GIAN -> {
+                txt = tamedu.phap.updatePlayPhap(context, true)
+            }
             NGHE_PHAP_BEGIN -> {
-                val txt = "Đang nghe pháp \"${tamedu.phap.currentTitle()}\""
+                txt = "Đang nghe pháp \"${tamedu.phap.currentTitle()}\""
                 toast(context, txt)
-                updateViews(context, { 
-                    it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) 
-                    it.setTextViewText(R.id.marquee_status, txt) 
-                })
             }
             NGHE_PHAP_FINISH -> {
+                txt = APP_TITLE
                 toast(context, "Kết thúc \"${tamedu.phap.currentTitle()}\"")
-                updateViews(context, { 
-                    it.setTextViewText(R.id.marquee_status, APP_TITLE)
-                    it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) 
-                })
             }
             NEW_REMINDER -> {
                 tamedu.reminder.newCurrent(context)
-                updateReminderView(context)
+                txt = tamedu.reminder.speakCurrent()
             }
             else -> super.onReceive(context, intent)
-        }
+        } // when
+
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
+        for (appWidgetId in ids) {
+            val views = RemoteViews(context.packageName, R.layout.app_widget)
+            updateViews(context, views, txt)
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }        
     }
 
     override fun onEnabled(context: Context) {
@@ -82,14 +69,14 @@ class AppWidget : AppWidgetProvider() {
     }
 }
 
-fun updateViews(context: Context, updateViews: (views: RemoteViews) -> Unit) {
-    val appWidgetManager = AppWidgetManager.getInstance(context)
-    val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
-    for (appWidgetId in ids) {
-        val views = RemoteViews(context.packageName, R.layout.app_widget)
-        updateViews(views)
-        appWidgetManager.updateAppWidget(appWidgetId, views)
-    }
+fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
+    views.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
+    views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
+    views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
+    views.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
+    views.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
+    if (marqueeTxt != null)
+        views.setTextViewText(R.id.marquee_status, marqueeTxt)
 }
 
 private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {
@@ -112,14 +99,9 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     tamedu.reminder.newCurrent(context)
     tamedu.phap.checkTimeToPlay(context)
 
-    views.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
-    views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
-    views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
-    views.setTextViewText(R.id.marquee_status, APP_TITLE)
-    views.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
-    views.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
-
+    updateViews(context, views, APP_TITLE)
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
+
     tamedu.reminder.playBellOrSpeakCurrent(context)
  }
