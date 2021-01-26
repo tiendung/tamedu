@@ -2,18 +2,16 @@ package tamedu.phap
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.Uri
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
-
-import java.util.Calendar
+import dev.tiendung.tamedu.helpers.*
 import java.io.File
 import java.io.FileInputStream
-
-import dev.tiendung.tamedu.helpers.*
+import java.util.*
 
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
@@ -21,12 +19,25 @@ private var _phapIsLoading: Boolean = false
 private var _phapIsPlaying: Boolean = false
 private var _currentPhap: Phap? = null
 private var _stopPhapClicksCount: Int = 0
+private var _isPause = false
 private var _autoPlayed = false
 var _isThuGian = false
 private var _thuGianCount: Int? = null
 private var _sharedPref: SharedPreferences? = null
 
+//private val updateSeekBar: Runnable = object : Runnable {
+//    override fun run() {
+//        val totalDuration: Long = _phapPlayer.getDuration()
+//        val currentDuration: Long = _phapPlayer.getCurrentPosition()
+//        // Call this thread again after 15 milliseconds => ~ 1000/60fps
+//        seekHandler.postDelayed(this, 15)
+//    }
+//}
+
 fun thuGianButtonText(context: Context): String {
+    if (_phapIsPlaying) {
+        return if (_isPause) "Nghe tiếp" else "Tạm dừng"
+    }
     val count = getThuGianCount(context)
     var txt = "Thư giãn"
     if (count != 0) txt = "$txt +$count"
@@ -34,7 +45,7 @@ fun thuGianButtonText(context: Context): String {
 }
 
 fun speakReminderToggleVisibility(): Int {
-    return if (_phapIsPlaying) View.INVISIBLE else View.VISIBLE 
+    return if (_phapIsPlaying) View.INVISIBLE else View.VISIBLE
 }
 
 fun isPlaying(): Boolean {
@@ -55,7 +66,7 @@ private fun getThuGianCount(context: Context): Int {
 
 fun setThuGianCount(context: Context, v: Int) {
     _thuGianCount = v
-    with (getSharedPref(context).edit()) {
+    with(getSharedPref(context).edit()) {
         putInt(THU_GIAN_COUNT_KEY, v)
         apply()
     }
@@ -65,14 +76,22 @@ fun setThuGianCount(context: Context, v: Int) {
 fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): String? {
 
     var txt: String? = null
-    if (thuGianButtonPressed && _phapIsPlaying) return txt
+    if (thuGianButtonPressed && _phapIsPlaying) {
+        _isPause = !_isPause
+        if (_isPause) {
+            _phapPlayer.pause()
+        } else {
+            _phapPlayer.start()
+        }
+        return txt
+    }
 
     if (_phapIsPlaying) {
         _stopPhapClicksCount += 1
         when (_stopPhapClicksCount) {
             1 -> {
                 txt = "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc."
-                toast(context, txt)       
+                toast(context, txt)
             }
             2 -> {
                 finishPhap()
@@ -109,9 +128,9 @@ private fun finishPhap(): String? {
 fun currentTitle(): String { return _currentPhap!!.title }
 fun buttonText(): String {
     return when (_phapIsPlaying) {
-        true  -> if (_stopPhapClicksCount == 0) "Dừng nghe" else "Dừng nghe!"
+        true -> if (_stopPhapClicksCount == 0) "Dừng nghe" else "Dừng nghe!"
         false -> when (_phapIsLoading) {
-            true  -> "Đang tải ..."
+            true -> "Đang tải ..."
             false -> "Nghe pháp"
         }
     }
@@ -202,36 +221,36 @@ private val THU_GIAN_IDS_TO_TITLES = arrayOf(
 )
 
 private val PHAP_IDS_TO_TITLES = arrayOf(
-    "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",
-    "phaps/Vo-Mong.ogg" to "Vỡ mộng",
-    "phaps/Tinh-Tan-fix.ogg" to "Tinh tấn",
-    "phaps/Tran-Trong.ogg" to "Trân trọng",
-    "phaps/Duyen.ogg" to "Nhân, Duyên và kết quả",
-    "phaps/suy-nghi-tich-cuc.ogg" to "Suy nghĩ tích cực",
-    "phaps/cai-nay-chi-ton-tai-trong-suy-nghi.ogg" to "Cái này chỉ tồn tại trong suy nghĩ",
-    "phaps/thuyetphap-ODoiMoiLaMatTran.ogg" to "Ở đời mới là mặt trận",
-    "phaps/thuyetphap-chilacamgiac.ogg" to "Chỉ là một cảm giác",
-    "phaps/thuyetPhap_goiYDinhHuong.ogg" to "Gợi ý định hướng",
-    "phaps/thuyetphap_giaTriGiaTang.ogg" to "Giá trị gia tăng",
-    "phaps/thuyetphap_songTichCuc.ogg" to "Sống tích cực",
-    "phaps/thuyetPhap_cuocSongLaDeSuDung.ogg" to "Cuộc sống là để sử dụng",
-    "phaps/cacchudetutaptrongcuocsong_dinhHinhTuongLai.ogg" to "Định hình tương lai",
-    "phaps/tutaptrongCS_BuonChan.ogg" to "Buồn chán",
-    "phaps/tutaptrongCS_luaChon.ogg" to "Lựa chọn",
-    "phaps/tutaptrongCS_tamNhinCuocDoi.ogg" to "Tầm nhìn cuộc đời",
-    "phaps/tutaptrongCS_camXuc.ogg" to "Cảm xúc",
-    "phaps/tutaptrongCS_ViecQuanTrong.ogg" to "Việc quan trọng",
-    "phaps/tutaptrongCS_PhatTrienTinhGiacVaTue.ogg" to "Phát triển tỉnh giác và tuệ",
-    "phaps/tutaptrongCS_TimHungThuThucHanh.ogg" to "Tìm hứng thú thực hành",
-    "phaps/tutaptrongCS_DauTuChoTuongLai.ogg" to "Đầu tư cho tương lai",
-    "phaps/tutaptrongCS_XungDangCuocSongLamNguoi.ogg" to "Xứng đáng cuộc sống làm người",
-    "phaps/tutaptrongCS_NguoiChanhNiemLamGi.ogg" to "Người chánh niệm làm gì",
-    "phaps/tutaptrongCS_SuDungChanhNiem.ogg" to "Sử dụng chánh niệm",
-    "phaps/tutaptrongCS_NguoiThuongLuu.ogg" to "Người thượng lưu",
-    "phaps/tutaptrongCS_DayCon.ogg" to "Dạy con",
-    "phaps/tutaptrongCS_ChetKhongHoiTiec.ogg" to "Chết không hối tiếc",
-    "phaps/tutaptrongCS_DeDuoi.ogg" to "Dễ duôi",
-    "phaps/tutaptrongCS_LaoDongGiupChanhNiemRaSao.ogg" to "Lao động giúp chánh niệm ra sao",
-    "phaps/tutaptrongCS_TamDonGian.ogg" to "Tâm đơn giản",
-    "phaps/tutaptrongCS_TietKiemNangLuong.ogg" to "Tiết kiệm năng lượng"
+        "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",
+        "phaps/Vo-Mong.ogg" to "Vỡ mộng",
+        "phaps/Tinh-Tan-fix.ogg" to "Tinh tấn",
+        "phaps/Tran-Trong.ogg" to "Trân trọng",
+        "phaps/Duyen.ogg" to "Nhân, Duyên và kết quả",
+        "phaps/suy-nghi-tich-cuc.ogg" to "Suy nghĩ tích cực",
+        "phaps/cai-nay-chi-ton-tai-trong-suy-nghi.ogg" to "Cái này chỉ tồn tại trong suy nghĩ",
+        "phaps/thuyetphap-ODoiMoiLaMatTran.ogg" to "Ở đời mới là mặt trận",
+        "phaps/thuyetphap-chilacamgiac.ogg" to "Chỉ là một cảm giác",
+        "phaps/thuyetPhap_goiYDinhHuong.ogg" to "Gợi ý định hướng",
+        "phaps/thuyetphap_giaTriGiaTang.ogg" to "Giá trị gia tăng",
+        "phaps/thuyetphap_songTichCuc.ogg" to "Sống tích cực",
+        "phaps/thuyetPhap_cuocSongLaDeSuDung.ogg" to "Cuộc sống là để sử dụng",
+        "phaps/cacchudetutaptrongcuocsong_dinhHinhTuongLai.ogg" to "Định hình tương lai",
+        "phaps/tutaptrongCS_BuonChan.ogg" to "Buồn chán",
+        "phaps/tutaptrongCS_luaChon.ogg" to "Lựa chọn",
+        "phaps/tutaptrongCS_tamNhinCuocDoi.ogg" to "Tầm nhìn cuộc đời",
+        "phaps/tutaptrongCS_camXuc.ogg" to "Cảm xúc",
+        "phaps/tutaptrongCS_ViecQuanTrong.ogg" to "Việc quan trọng",
+        "phaps/tutaptrongCS_PhatTrienTinhGiacVaTue.ogg" to "Phát triển tỉnh giác và tuệ",
+        "phaps/tutaptrongCS_TimHungThuThucHanh.ogg" to "Tìm hứng thú thực hành",
+        "phaps/tutaptrongCS_DauTuChoTuongLai.ogg" to "Đầu tư cho tương lai",
+        "phaps/tutaptrongCS_XungDangCuocSongLamNguoi.ogg" to "Xứng đáng cuộc sống làm người",
+        "phaps/tutaptrongCS_NguoiChanhNiemLamGi.ogg" to "Người chánh niệm làm gì",
+        "phaps/tutaptrongCS_SuDungChanhNiem.ogg" to "Sử dụng chánh niệm",
+        "phaps/tutaptrongCS_NguoiThuongLuu.ogg" to "Người thượng lưu",
+        "phaps/tutaptrongCS_DayCon.ogg" to "Dạy con",
+        "phaps/tutaptrongCS_ChetKhongHoiTiec.ogg" to "Chết không hối tiếc",
+        "phaps/tutaptrongCS_DeDuoi.ogg" to "Dễ duôi",
+        "phaps/tutaptrongCS_LaoDongGiupChanhNiemRaSao.ogg" to "Lao động giúp chánh niệm ra sao",
+        "phaps/tutaptrongCS_TamDonGian.ogg" to "Tâm đơn giản",
+        "phaps/tutaptrongCS_TietKiemNangLuong.ogg" to "Tiết kiệm năng lượng"
 )
