@@ -29,6 +29,7 @@ class AppWidget : AppWidgetProvider() {
             SPEAK_REMINDER_TOGGLE -> {
                 tamedu.reminder.toggle()
                 txt = tamedu.reminder.speakCurrent()
+                if (!tamedu.phap.isPlaying() && txt == null) txt = APP_TITLE 
             }
             NGHE_PHAP -> {
                 txt = tamedu.phap.updatePlayPhap(context)
@@ -75,8 +76,8 @@ fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
     views.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
     views.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
-    if (marqueeTxt != null)
-        views.setTextViewText(R.id.marquee_status, marqueeTxt)
+    if (marqueeTxt != null) views.setTextViewText(R.id.marquee_status, marqueeTxt)
+    views.setViewVisibility(R.id.speak_reminder_toggle_button, tamedu.phap.speakReminderToggleVisibility())
 }
 
 private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {

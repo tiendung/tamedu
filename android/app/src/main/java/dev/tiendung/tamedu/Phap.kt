@@ -6,6 +6,7 @@ import android.net.Uri
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Build
+import android.view.View
 import androidx.annotation.RequiresApi
 
 import java.util.Calendar
@@ -31,6 +32,14 @@ fun thuGianButtonText(context: Context): String {
     if (count != 0) txt = "$txt +$count"
     return txt
 }
+
+fun speakReminderToggleVisibility(): Int {
+    return if (_phapIsPlaying) View.INVISIBLE else View.VISIBLE 
+}
+
+fun isPlaying(): Boolean {
+    return _phapIsPlaying
+} 
 
 private fun getSharedPref(context: Context): SharedPreferences {
     if (_sharedPref == null)
@@ -134,6 +143,8 @@ private fun loadAndPlayPhap(context: Context): String {
         setOnPreparedListener(MediaPlayer.OnPreparedListener { mp ->
             _phapIsLoading = false
             _phapIsPlaying = true
+            tamedu.reminder.finishPlaying()
+            tamedu.reminder.toggle()
             mp.start()
             context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
         })

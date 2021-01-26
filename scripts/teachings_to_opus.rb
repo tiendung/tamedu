@@ -7,7 +7,7 @@ puts teachings
 require "uri"
 # `brew install sox opus-tools`
 teachings.each_with_index do  |q, i|
-	name = "android/app/src/main/assets/teachings/#{i}"
+	name = "assets/teachings/#{i}"
   	next if File.exist?("#{name}.ogg") && File.size("#{name}.ogg") > 0
 	unless File.exist?("#{name}.mp3") && File.size("#{name}.mp3") > 0	 	
 		url = "https://support.readaloud.app/read-aloud/speak/vi/GoogleTranslate%20Vietnamese?q="+URI.escape(q, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))

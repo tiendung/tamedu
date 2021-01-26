@@ -19,27 +19,34 @@ private var _allowToSpeak: Boolean = false
 private var _current: Reminder? = null
 
 fun toggle() {
-    _allowToSpeak = !_allowToSpeak
+    if (tamedu.phap.isPlaying()) _allowToSpeak = false
+    else _allowToSpeak = !_allowToSpeak
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-fun speakCurrent(): String {
+fun speakCurrent(): String? {
     finishPlaying()
     if (_allowToSpeak) {
         speakCurrentAudio()
         return _current!!.text
     }
-    return APP_TITLE
+    return null
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun playBellOrSpeakCurrent(context: Context) {
     finishPlaying()
     if (_allowToSpeak) speakCurrentAudio()
-    else playAudioFile(context.getAssets().openFd(BELL_FILE_NAME))
+    else playBell(context)
 }
 
-private fun finishPlaying() {
+private fun playBell(context: Context) {
+    val file = externalFile(context, BELL_FILE_NAME)
+    if (file.exists()) playAudioFile(null, FileInputStream(file).getFD())
+    else playAudioFile(assetFd(context, BELL_FILE_NAME))
+}
+
+fun finishPlaying() {
     _player.release()
 }
 
