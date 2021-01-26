@@ -53,10 +53,10 @@ fun setThuGianCount(context: Context, v: Int) {
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-fun updatePlayPhap(context: Context): String? {
+fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): String? {
 
     var txt: String? = null
-    if (_isThuGian) return txt
+    if (thuGianButtonPressed && _isThuGian) return txt
 
     if (_phapIsPlaying) {
         _stopPhapClicksCount += 1
@@ -69,11 +69,12 @@ fun updatePlayPhap(context: Context): String? {
     }
     
     if (!_phapIsLoading) { // play new phap or thu gian
-         if (_isThuGian) {
-             _currentPhap = getRandomThuGian(context)
-         } else {
-             _currentPhap = getRandomPhap(context)
-         }
+        if (thuGianButtonPressed) {
+            _isThuGian = true
+            _currentPhap = getRandomThuGian(context)
+        } else {
+            _currentPhap = getRandomPhap(context)
+        }
         toast(context, loadAndPlayPhap(context))
     }
     
@@ -136,8 +137,7 @@ private fun loadAndPlayPhap(context: Context): String {
             context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
         })
         setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
-            if (_isThuGian)
-                setThuGianCount(context, getThuGianCount(context) + 1)
+            if (_isThuGian) setThuGianCount(context, getThuGianCount(context) + 1)
             finishPhap()
             context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
         })

@@ -22,8 +22,8 @@ class AppWidget : AppWidgetProvider() {
         }
     }
 
-    private fun updatePlayPhap(context: Context) {
-        var txt = tamedu.phap.updatePlayPhap(context)
+    private fun updatePlayPhapView(context: Context, thuGianButtonPressed: Boolean = false) {
+        var txt = tamedu.phap.updatePlayPhap(context, thuGianButtonPressed)
         if (txt == null) txt = APP_TITLE
         updateViews(context, { 
             it.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText()) 
@@ -48,11 +48,8 @@ class AppWidget : AppWidgetProvider() {
                 tamedu.reminder.toggle()
                 updateReminderView(context)
             }
-            NGHE_PHAP -> updatePlayPhap(context)
-            THU_GIAN -> {
-                tamedu.phap._isThuGian = true
-                updatePlayPhap(context)
-            }
+            NGHE_PHAP -> updatePlayPhapView(context)
+            THU_GIAN -> updatePlayPhapView(context, true)
             NGHE_PHAP_BEGIN -> {
                 val txt = "Đang nghe pháp \"${tamedu.phap.currentTitle()}\""
                 toast(context, txt)
