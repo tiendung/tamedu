@@ -6,10 +6,13 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import dev.tiendung.tamedu.helpers.*
+import android.view.View
+
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
+
+import dev.tiendung.tamedu.helpers.*
 
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
@@ -38,6 +41,10 @@ fun thuGianButtonText(context: Context): String {
     var txt = "Thư giãn"
     if (count != 0) txt = "$txt $count"
     return txt
+}
+
+fun speakReminderToggleVisibility(): Int {
+    return if (_phapIsPlaying) View.GONE else View.VISIBLE
 }
 
 fun isPlaying(): Boolean {
