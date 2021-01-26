@@ -1,12 +1,10 @@
 package tamedu.phap
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
-import android.view.View
 import androidx.annotation.RequiresApi
 import dev.tiendung.tamedu.helpers.*
 import java.io.File
@@ -22,8 +20,6 @@ private var _stopPhapClicksCount: Int = 0
 private var _isPause = false
 private var _autoPlayed = false
 var _isThuGian = false
-private var _thuGianCount: Int? = null
-private var _sharedPref: SharedPreferences? = null
 
 //private val updateSeekBar: Runnable = object : Runnable {
 //    override fun run() {
@@ -38,39 +34,15 @@ fun thuGianButtonText(context: Context): String {
     if (_phapIsPlaying) {
         return if (_isPause) "Nghe tiếp" else "Tạm dừng"
     }
-    val count = getThuGianCount(context)
+    val count = tamedu.count.getThuGianCount(context)
     var txt = "Thư giãn"
-    if (count != 0) txt = "$txt +$count"
+    if (count != 0) txt = "$txt $count"
     return txt
-}
-
-fun speakReminderToggleVisibility(): Int {
-    return if (_phapIsPlaying) View.INVISIBLE else View.VISIBLE
 }
 
 fun isPlaying(): Boolean {
     return _phapIsPlaying
 } 
-
-private fun getSharedPref(context: Context): SharedPreferences {
-    if (_sharedPref == null)
-        _sharedPref = context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE)
-    return _sharedPref!!
-}
-
-private fun getThuGianCount(context: Context): Int {
-    if (_thuGianCount == null)
-        _thuGianCount = getSharedPref(context).getInt(THU_GIAN_COUNT_KEY, 0)
-    return _thuGianCount!!
-}
-
-fun setThuGianCount(context: Context, v: Int) {
-    _thuGianCount = v
-    with(getSharedPref(context).edit()) {
-        putInt(THU_GIAN_COUNT_KEY, v)
-        apply()
-    }
-}
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): String? {
@@ -142,7 +114,7 @@ fun checkTimeToPlay(context: Context): String {
     val currM = currentTime[Calendar.MINUTE]
     // Reset counter
     if (currH == 1 && currM > 0) {
-        _thuGianCount = 0
+        COUNT_KEYS.forEach { tamedu.count.set(context, it, 0) }
     }
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying &&
         ((currH == 5 && currM > 15) || (currH == 19 && currM > 15)) ) {
@@ -175,7 +147,7 @@ private fun loadAndPlayPhap(context: Context): String {
 
         setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
             if (_isThuGian) {
-                setThuGianCount(context, getThuGianCount(context) + 1)
+                tamedu.count.setThuGianCount(context, tamedu.count.getThuGianCount(context) + 1)
             }
             finishPhap()
             context.broadcastUpdateWidget(NGHE_PHAP_FINISH)

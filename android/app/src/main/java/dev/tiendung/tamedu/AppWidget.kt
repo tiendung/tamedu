@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.widget.RemoteViews
 
 import dev.tiendung.tamedu.helpers.*
@@ -22,10 +23,33 @@ class AppWidget : AppWidgetProvider() {
         }
     }
 
+    private fun countHabit(habitCountKey: String) {
+        _currentCountKey = habitCountKey
+        _currentCountAdded = 0
+        _showHabitsBar = false
+    }
+    private fun countAdd(v: Int) {
+        _currentCountAdded = _currentCountAdded + v
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
         var txt: String? = null
 
         when (intent.action) {
+            TODAY_SQUAT -> countHabit(SQUAT_COUNT_KEY)
+            TODAY_PUSH -> countHabit(PUSH_COUNT_KEY)
+            TODAY_PULL -> countHabit(PULL_COUNT_KEY)
+            TODAY_ABS -> countHabit(ABS_COUNT_KEY)
+
+            COUNT_TOTAL -> {
+                _showHabitsBar = true
+                val v = tamedu.count.get(context, _currentCountKey)
+                tamedu.count.set(context, _currentCountKey, v + _currentCountAdded)
+            }
+            COUNT_5 -> countAdd(5)
+            COUNT_10 -> countAdd(10)
+            COUNT_RESET -> _currentCountAdded = 0
+
             SPEAK_REMINDER_TOGGLE -> {
                 tamedu.reminder.toggle()
                 txt = tamedu.reminder.speakCurrent()
@@ -55,7 +79,7 @@ class AppWidget : AppWidgetProvider() {
             }
         } // when
 
-        // Update view for knowned events only
+        // Update view for known events only
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, AppWidget::class.java))
         for (appWidgetId in ids) {
@@ -74,6 +98,14 @@ class AppWidget : AppWidgetProvider() {
     }
 }
 
+private var _currentCountKey: String = TODAY_SQUAT
+private var _currentCountAdded: Int = 0
+private var _showHabitsBar = true
+private val _habitsCountVisibilities = arrayOf(View.GONE, View.VISIBLE)
+private fun hideOrShow(i: Int): Int {
+    return if (_showHabitsBar) _habitsCountVisibilities[i] else _habitsCountVisibilities[1-i]
+}
+
 fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
@@ -83,6 +115,15 @@ fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setBoolean(R.id.speak_reminder_toggle_button, "setEnabled", !tamedu.phap.isPlaying())
     if (marqueeTxt != null) views.setTextViewText(R.id.marquee_status, marqueeTxt)
     // views.setViewVisibility(R.id.speak_reminder_toggle_button, tamedu.phap.speakReminderToggleVisibility())
+
+    views.setViewVisibility(R.id.habits_bar, hideOrShow(1))
+    views.setViewVisibility(R.id.counts_bar, hideOrShow(0))
+
+    views.setTextViewText(R.id.today_squat_button, "SQUAT ${tamedu.count.get(context, SQUAT_COUNT_KEY)}")
+    views.setTextViewText(R.id.today_push_button, "PUSH ${tamedu.count.get(context, PUSH_COUNT_KEY)}")
+    views.setTextViewText(R.id.today_pull_button, "PULL ${tamedu.count.get(context, PULL_COUNT_KEY)}")
+    views.setTextViewText(R.id.today_abs_button, "ABS ${tamedu.count.get(context, ABS_COUNT_KEY)}")
+    views.setTextViewText(R.id.count_total_button, "${COUNT_KEYS_TO_LABEL.get(_currentCountKey)} + $_currentCountAdded")
 }
 
 private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {
@@ -101,6 +142,16 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, THU_GIAN, R.id.thu_gian_button)
     setupIntent(context, views, SPEAK_REMINDER_TOGGLE, R.id.speak_reminder_toggle_button)
     setupIntent(context, views, NEW_REMINDER, R.id.reminder_area)
+
+    setupIntent(context, views, TODAY_SQUAT, R.id.today_squat_button)
+    setupIntent(context, views, TODAY_PUSH, R.id.today_push_button)
+    setupIntent(context, views, TODAY_PULL, R.id.today_pull_button)
+    setupIntent(context, views, TODAY_ABS, R.id.today_abs_button)
+
+    setupIntent(context, views, COUNT_TOTAL, R.id.count_total_button)
+    setupIntent(context, views, COUNT_5, R.id.count_5_button)
+    setupIntent(context, views, COUNT_10, R.id.count_10_button)
+    setupIntent(context, views, COUNT_RESET, R.id.count_reset_button)
 
     tamedu.reminder.newCurrent(context)
     tamedu.phap.checkTimeToPlay(context)
