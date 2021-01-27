@@ -1,5 +1,3 @@
-# SuTamPhap.com Teachings in Practice
-
 ## Build an Android (iOS) app around the idea of ["Vượt qua dễ duôi"](https://sutamphap.com/hoi-dap-3-vuot-qua-de-duoi/)
 
 ...
