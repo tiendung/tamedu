@@ -115,7 +115,7 @@ fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setTextViewText(R.id.today_push_button, "PUSH ${tamedu.count.get(context, PUSH_COUNT_KEY)}")
     views.setTextViewText(R.id.today_pull_button, "PULL ${tamedu.count.get(context, PULL_COUNT_KEY)}")
     views.setTextViewText(R.id.today_abs_button, "ABS ${tamedu.count.get(context, ABS_COUNT_KEY)}")
-    views.setTextViewText(R.id.count_total_button, "${COUNT_KEY_TO_LABEL.get(_currentCountKey)} + $_currentCountAdded")
+    views.setTextViewText(R.id.count_total_button, "${COUNT_KEY_TO_LABEL[_currentCountKey]} + $_currentCountAdded")
 
     views.setInt(R.id.today_squat_button, "setTextColor", tamedu.count.color(context, SQUAT_COUNT_KEY))
     views.setInt(R.id.today_push_button, "setTextColor", tamedu.count.color(context, PUSH_COUNT_KEY))

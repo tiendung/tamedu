@@ -6,7 +6,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import android.view.View
 
 import java.io.File
 import java.io.FileInputStream
@@ -24,27 +23,14 @@ private var _isPause = false
 private var _autoPlayed = false
 var _isThuGian = false
 
-//private val updateSeekBar: Runnable = object : Runnable {
-//    override fun run() {
-//        val totalDuration: Long = _phapPlayer.getDuration()
-//        val currentDuration: Long = _phapPlayer.getCurrentPosition()
-//        // Call this thread again after 15 milliseconds => ~ 1000/60fps
-//        seekHandler.postDelayed(this, 15)
-//    }
-//}
-
 fun thuGianButtonText(context: Context): String {
     if (_phapIsPlaying) {
         return if (_isPause) "Nghe tiếp" else "Tạm dừng"
     }
-    val count = tamedu.count.getThuGianCount(context)
+    val count = tamedu.count.get(context, THU_GIAN_COUNT_KEY)
     var txt = "Thư giãn"
     if (count != 0) txt = "$txt $count"
     return txt
-}
-
-fun speakReminderToggleVisibility(): Int {
-    return if (_phapIsPlaying) View.GONE else View.VISIBLE
 }
 
 fun isPlaying(): Boolean {
@@ -143,27 +129,27 @@ private fun loadAndPlayPhap(context: Context): String {
                         .build()
         )
 
-        setOnPreparedListener(MediaPlayer.OnPreparedListener { mp ->
+        setOnPreparedListener { mp ->
             _phapIsLoading = false
             _phapIsPlaying = true
             tamedu.reminder.finishPlaying()
             tamedu.reminder.toggle()
             mp.start()
             context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
-        })
+        }
 
-        setOnCompletionListener(MediaPlayer.OnCompletionListener { mp ->
+        setOnCompletionListener {
             if (_isThuGian) {
-                tamedu.count.setThuGianCount(context, tamedu.count.getThuGianCount(context) + 1)
+                tamedu.count.inc(context, THU_GIAN_COUNT_KEY, 1)
             }
             finishPhap()
             context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
-        })
+        }
     }
 
     var txt = phap.audioUrl
     if (phap.audioFile.exists()) {
-        val fd = FileInputStream(phap.audioFile).getFD()
+        val fd = FileInputStream(phap.audioFile).fd
         _phapPlayer.setDataSource(fd)
         txt = "${phap.audioFile}"
     } else _phapPlayer.setDataSource(context, Uri.parse(phap.audioUrl))
@@ -175,12 +161,12 @@ private fun loadAndPlayPhap(context: Context): String {
 data class Phap(val title: String, val audioUrl: String, val audioFile: File)
 
 private fun getRandomThuGian(context: Context): Phap {
-    var (id, title) = THU_GIAN_IDS_TO_TITLES.random()
+    val (id, title) = THU_GIAN_IDS_TO_TITLES.random()
     return initPhap(context, id, title)
 }
 
 private fun getRandomPhap(context: Context): Phap {
-    var (id, title) = PHAP_IDS_TO_TITLES.random()
+    val (id, title) = PHAP_IDS_TO_TITLES.random()
     return initPhap(context, id, title)
 }
 
@@ -196,7 +182,7 @@ private val THU_GIAN_IDS_TO_TITLES = arrayOf(
         "phaps/huongdan_thienNam.ogg" to "Thư giãn 24 phút",
         "phaps/HuongDanRaQuetVaThuGianToanThan.ogg" to "Thư giãn 30 phút",
         "phaps/thien_nam_15_phut_01.ogg" to "Thư giãn 15 phút",
-        "phaps/thien_nam_10_phut.ogg" to "Thư giãn 24 phút"
+        "phaps/thien_nam_10_phut.ogg" to "Thư giãn 10 phút"
 )
 
 private val PHAP_IDS_TO_TITLES = arrayOf(

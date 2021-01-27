@@ -7,16 +7,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="STPiP">
 
-        <service
-            android:name=".PhapService"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="dev.tiendung.tamedu.action.PLAY_RANDOM_PHAP" />
-                <action android:name="dev.tiendung.tamedu.action.FINISH_PHAP" />
-            </intent-filter>
-        </service>
-
         <receiver android:name=".AppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

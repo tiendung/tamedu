@@ -19,8 +19,8 @@ private var _allowToSpeak: Boolean = false
 private var _current: Reminder? = null
 
 fun toggle() {
-    if (tamedu.phap.isPlaying()) _allowToSpeak = false
-    else _allowToSpeak = !_allowToSpeak
+    _allowToSpeak = if (tamedu.phap.isPlaying()) false
+    else !_allowToSpeak
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -42,7 +42,7 @@ fun playBellOrSpeakCurrent(context: Context) {
 
 private fun playBell(context: Context) {
     val file = externalFile(context, BELL_FILE_NAME)
-    if (file.exists()) playAudioFile(null, FileInputStream(file).getFD())
+    if (file.exists()) playAudioFile(null, FileInputStream(file).fd)
     else playAudioFile(assetFd(context, BELL_FILE_NAME))
 }
 
@@ -52,12 +52,11 @@ fun finishPlaying() {
 
 private fun speakCurrentAudio() {
     if (_current!!.audioFile!!.exists())
-        playAudioFile(null, FileInputStream(_current!!.audioFile!!).getFD())
+        playAudioFile(null, FileInputStream(_current!!.audioFile!!).fd)
     else
         playAudioFile(_current!!.audioAssetFd)
 }
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 private fun playAudioFile(assetFd: AssetFileDescriptor?, fd: FileDescriptor? = null) {
     _player = MediaPlayer().apply {
         setAudioAttributes(
@@ -69,9 +68,9 @@ private fun playAudioFile(assetFd: AssetFileDescriptor?, fd: FileDescriptor? = n
     }
 
     if (fd != null)
-        _player.setDataSource(fd!!)
+        _player.setDataSource(fd)
     else
-        _player.setDataSource(assetFd!!)
+        _player.setDataSource(assetFd!!.fileDescriptor, assetFd.startOffset, assetFd.length)
 
     _player.prepare()
     _player.start()
@@ -82,9 +81,9 @@ data class Reminder(val text: String, val audioFile: File?,
     val audioAssetFd: AssetFileDescriptor?, val bgColor: Int)
 
 fun newCurrent(context: Context) {
-    var bgColor = ""; var txt = ""; var fileName = ""
+    val bgColor: String; val txt: String; val fileName: String
     if (Math.random() < 0.5) {
-        val id = (0..(TEACHINGS.size-1)).random()
+        val id = (TEACHINGS.indices).random()
         txt = TEACHINGS[id]
         fileName = "teachings/$id.ogg"
         bgColor = TEACHING_BG_COLORS.random()
@@ -101,9 +100,9 @@ fun newCurrent(context: Context) {
             bgColor = Color.parseColor(bgColor) )
 }
 private fun assetFd(context: Context, fileName: String): AssetFileDescriptor? {
-    val am = context.getAssets()
+    val am = context.assets
     val ls = am.list(fileName)
-    val fileNotExists = (ls == null || ls.size == 0)
+    val fileNotExists = (ls == null || ls.isEmpty())
     return if (fileNotExists) null else am.openFd(fileName)
 }
 private fun externalFile(context: Context, fileName: String): File {

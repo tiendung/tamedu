@@ -6,25 +6,11 @@ import android.graphics.Color
 import dev.tiendung.tamedu.helpers.*
 
 private var _sharedPref: SharedPreferences? = null
-private var _thuGianCount: Int? = null
 
 private fun getSharedPref(context: Context): SharedPreferences {
     if (_sharedPref == null)
         _sharedPref = context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE)
     return _sharedPref!!
-}
-
-fun setThuGianCount(context: Context, v: Int) {
-    _thuGianCount = v
-    with(getSharedPref(context).edit()) {
-        putInt(THU_GIAN_COUNT_KEY, v)
-        apply()
-    }
-}
-fun getThuGianCount(context: Context): Int {
-    if (_thuGianCount == null)
-        _thuGianCount = getSharedPref(context).getInt(THU_GIAN_COUNT_KEY, 0)
-    return _thuGianCount!!
 }
 
 fun set(context: Context, k: String, v: Int) {

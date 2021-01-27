@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 
+const val APP_TITLE = "THOẢI MÁI - TÍCH CỰC - HẾT MÌNH"
+
 private const val PATH = "dev.tiendung.tamedu."
 const val NGHE_PHAP_FINISH = PATH + "action.NGHE_PHAP_FINISH"
 const val NGHE_PHAP_BEGIN = PATH + "action.NGHE_PHAP_BEGIN"
@@ -46,7 +48,6 @@ val COUNT_KEY_TO_GOAL: HashMap<String, Int> = hashMapOf(
 
 val COUNT_KEYS = COUNT_KEY_TO_LABEL.keys
 
-const val APP_TITLE = "SuTamPhap.com in Practice"
 val QUOTE_BG_COLORS = arrayOf("#400D00", "#442F19", "#42275E", "#5C2B29")
 val TEACHING_BG_COLORS = arrayOf("#2D555E", "#1E3A5F")
 

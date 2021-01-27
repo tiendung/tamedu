@@ -185,4 +185,18 @@ fun getBitmapFromView(view: View): Bitmap? {
     view.draw(canvas)
     return bitmap
 }
+
+private val updateSeekBar: Runnable = object : Runnable {
+    override fun run() {
+        val totalDuration: Long = _phapPlayer.getDuration()
+        val currentDuration: Long = _phapPlayer.getCurrentPosition()
+        // Call this thread again after 15 milliseconds => ~ 1000/60fps
+        seekHandler.postDelayed(this, 15)
+    }
+}
+
+fun speakReminderToggleVisibility(): Int {
+    return if (_phapIsPlaying) View.GONE else View.VISIBLE
+}
+
 ```
