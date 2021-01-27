@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.os.Build
 import android.graphics.Color
-import androidx.annotation.RequiresApi
 
 import java.io.File
 import java.io.FileDescriptor
@@ -23,24 +21,22 @@ fun toggle() {
     else !_allowToSpeak
 }
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-fun speakCurrent(): String? {
+fun speakCurrent(must: Boolean = false): String? {
     finishPlaying()
-    if (_allowToSpeak) {
+    if (_allowToSpeak || must) {
         speakCurrentAudio()
         return _current!!.text
     }
     return null
 }
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun playBellOrSpeakCurrent(context: Context) {
     finishPlaying()
     if (_allowToSpeak) speakCurrentAudio()
     else playBell(context)
 }
 
-private fun playBell(context: Context) {
+fun playBell(context: Context) {
     val file = externalFile(context, BELL_FILE_NAME)
     if (file.exists()) playAudioFile(null, FileInputStream(file).fd)
     else playAudioFile(assetFd(context, BELL_FILE_NAME))
@@ -77,13 +73,13 @@ private fun playAudioFile(assetFd: AssetFileDescriptor?, fd: FileDescriptor? = n
 }
 
 // Reminder data including quotes, teachings and practices
-data class Reminder(val text: String, val audioFile: File?, 
+data class Reminder(val text: String, val audioFile: File?,
     val audioAssetFd: AssetFileDescriptor?, val bgColor: Int)
 
-fun newCurrent(context: Context) {
+fun newCurrent(context: Context, teachingId: Int? = null) {
     val bgColor: String; val txt: String; val fileName: String
-    if (Math.random() < 0.5) {
-        val id = (TEACHINGS.indices).random()
+    if (Math.random() < 0.5 || teachingId != null) {
+        val id = teachingId ?: TEACHINGS.indices.random()
         txt = TEACHINGS[id]
         fileName = "teachings/$id.ogg"
         bgColor = TEACHING_BG_COLORS.random()
@@ -114,24 +110,27 @@ fun currentBgColor(): Int { return _current!!.bgColor }
 fun toggleText(): String {
     return when (_allowToSpeak) {
         true  -> "Dừng đọc"
-        false -> "Đọc lời dạy"
+        false -> "Đọc"
     }
 }
 
 private const val BELL_FILE_NAME = "bell.ogg"
+private val SAN_INDEXES = arrayOf(0,1,2)
+private val MIEN_MAN_INDEXES = arrayOf(9,10,11,12)
+private val THOAI_MAI_INDEXES = arrayOf(4,5,6,7)
 private val TEACHINGS = arrayOf(
-"Mỗi lần thấy sân lên thì tránh đi chỗ khác, đừng nói gì thêm hoặc bảo là tớ cần tránh đi 1 tý, chút nói chuyện lại.",
+"Mỗi lần thấy sân lên thì tránh đi chỗ khác, đừng nói gì thêm hoặc bảo là tớ cần tránh đi một tý, chút nói chuyện lại.",
 "Mỗi lần thấy sân hít sâu vào và thở ra hết vài lần, tưởng tượng rằng năng lượng xấu của cơn sân đi ra ngoài theo hơi thở và sự mát lành đi vào theo hơi thở.",
-"Dừng lại 1 chút trước khi nói gì đó, nhất là khi sân, nếu được thì trong vài hơi thở, nếu không thì 1 hơi thở hoặc nửa hơi thở cũng được.",
+"Dừng lại một chút trước khi nói gì đó, nhất là khi sân, nếu được thì trong vài hơi thở, không thì một hơi thở hoặc nửa hơi thở cũng được.",
 "Không ai có trách nhiệm phải làm mình vui, hay phải làm cho mình điều này điều kia. Không ai cả. Mình chịu trách nhiệm với chính mình.",
 "Cần tập thói quen rất quan trọng là thoải mái trong mỗi lúc. Thoải mái trong khi hành thiền cũng như trong cuộc sống.",
 "Hãy làm cho mình thoải mái nhất có thể được. Khi thoải mái, tâm luôn TÍCH CỰC, mọi thứ sẽ luôn TÍCH CỰC.",
 "Khi ngồi hoặc đi, làm việc gì ... cũng tự kiểm tra và tự hỏi xem thế này đã thoải mái chưa? Có thể thoải mái hơn được nữa không?",
 "Hãy luôn cải tiến, kể cả cách suy nghĩ, cách làm việc, cách nói chuyện hay quan hệ ... làm sao để thoải mái hơn nữa. Tìm xem có cách nào để thoải mái hơn tý nữa được không?",
-"Nếu cứ hay để ý đến cảm nhận hay đánh giá của người khác thì sẽ không thoải mái. Vậy lấy thoải mái đặt lên hàng đầu, việc nguời ta hiểu hay không, nghĩ thế nào ... để xuống hạng thứ 2.",
+"Nếu cứ hay để ý đến cảm nhận hay đánh giá của người khác thì sẽ không thoải mái. Vậy lấy thoải mái đặt lên hàng đầu, việc nguời ta hiểu hay không, nghĩ thế nào ... để xuống hạng thứ nhì.",
 "Dòng suy nghĩ quá mạnh, tâm rất mờ và yếu. Muốn ngắt cần có biện pháp mạnh: đang làm gì, nhớ ra thì dừng lại, kiểu như \"đứng hình\" trong vài giây. Cảm nhận ngay tư thế toàn thân đang đứng hình ấy thật rõ rồi mới làm tiếp.", 
 "Đang đi thấy suy nghĩ thì đứng lại, hết dòng suy nghĩ mới đi tiếp. Làm việc gì thất niệm, nhất quyết làm lại từ đầu.",
-"Mọi cử động đều chậm đi, khoảng 1 nửa hoặc 2/3. Bấm đồng hồ đo chính xác, nếu phát hiện vừa làm vừa nghĩ hoặc làm nhanh hơn quy định, nhất định làm lại.",
+"Mọi cử động đều chậm đi, khoảng một nửa hoặc 2/3. Bấm đồng hồ đo chính xác, nếu phát hiện vừa làm vừa nghĩ hoặc làm nhanh hơn quy định, nhất định làm lại.",
 "Nếu ngồi hoặc nằm mà nghĩ miên man, nhất định đứng dậy hoặc đi, hoặc làm việc. Không duy trì một tư thế quá lâu.",
 "Mỗi ngày con nên tự kiểm điểm tính cách tốt hôm nay chiếm bao nhiêu trăm thời gian sống trong ngày. Nó sẽ giúp nhắc nhở con.",
 "Tâm trạng xấu rồi cũng qua. Chẳng cần làm gì nó cũng qua. Đừng coi nó quá quan trọng. Con đừng ghét nó hay coi nó là khó khăn. Chỉ thư giãn và ngồi chờ cho cơn bão đi qua. Chấp nhận nó, đừng phản ứng và chờ đợi thôi con ạ.",

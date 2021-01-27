@@ -4,8 +4,6 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
-import androidx.annotation.RequiresApi
 
 import java.io.File
 import java.io.FileInputStream
@@ -21,7 +19,7 @@ private var _currentPhap: Phap? = null
 private var _stopPhapClicksCount: Int = 0
 private var _isPause = false
 private var _autoPlayed = false
-var _isThuGian = false
+private var _isThuGian = false
 
 fun thuGianButtonText(context: Context): String {
     if (_phapIsPlaying) {
@@ -37,7 +35,6 @@ fun isPlaying(): Boolean {
     return _phapIsPlaying
 } 
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): String? {
 
     var txt: String? = null
@@ -66,7 +63,7 @@ fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): Str
         return txt
     }
     
-    if (!_phapIsLoading) { // play new phap or thu gian
+    if (!_phapIsLoading) { // load new phap or thu gian
         if (thuGianButtonPressed) {
             _isThuGian = true
             _currentPhap = getRandomThuGian(context)
@@ -117,7 +114,6 @@ fun checkTimeToPlay(context: Context): String {
     return "$currH : $currM"
 }
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 private fun loadAndPlayPhap(context: Context): String {
     val phap: Phap = _currentPhap!!
     _phapIsLoading = true
@@ -141,6 +137,8 @@ private fun loadAndPlayPhap(context: Context): String {
         setOnCompletionListener {
             if (_isThuGian) {
                 tamedu.count.inc(context, THU_GIAN_COUNT_KEY, 1)
+            } else {
+                tamedu.count.inc(context, NGHE_PHAP_COUNT_KEY, 1)
             }
             finishPhap()
             context.broadcastUpdateWidget(NGHE_PHAP_FINISH)

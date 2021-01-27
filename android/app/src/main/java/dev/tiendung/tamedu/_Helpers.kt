@@ -23,22 +23,30 @@ const val COUNT_1 = PATH + "action.COUNT_1"
 const val COUNT_10 = PATH + "action.COUNT_10"
 const val COUNT_RESET = PATH + "action.COUNT_RESET"
 
+const val MUC_DO_SAN_VUA = PATH + "action.MUC_DO_SAN_VUA" // 3 vua tinh 1 lan?
+const val MUC_DO_SAN_NANG = PATH + "action.MUC_DO_SAN_NANG"
+const val MUC_DO_SAN_CAP_CUU = PATH + "action.MUC_DO_SAN_CAP_CUU"
+
 const val PREFERENCE_FILE_KEY = PATH + "PREFERENCE_FILE_KEY"
+const val NGHE_PHAP_COUNT_KEY = "nghePhapCount"
 const val THU_GIAN_COUNT_KEY = "thuGianCount"
 const val SQUAT_COUNT_KEY = "squatCount"
 const val PUSH_COUNT_KEY = "pushCount"
 const val PULL_COUNT_KEY = "pullCount"
 const val ABS_COUNT_KEY = "absCount"
+const val SAN_COUNT_KEY = "sanCount"
 
 val COUNT_KEY_TO_LABEL: HashMap<String, String> = hashMapOf(
         SQUAT_COUNT_KEY to "Squat",
         PUSH_COUNT_KEY to "Push",
         PULL_COUNT_KEY to "Pull",
         ABS_COUNT_KEY to "Abs",
-        THU_GIAN_COUNT_KEY to "Thư giãn"
+        THU_GIAN_COUNT_KEY to "Thư giãn",
+        NGHE_PHAP_COUNT_KEY to "Nghe pháp"
 )
 
 val COUNT_KEY_TO_GOAL: HashMap<String, Int> = hashMapOf(
+        NGHE_PHAP_COUNT_KEY to 2,
         THU_GIAN_COUNT_KEY to 3,
         SQUAT_COUNT_KEY to 100,
         PUSH_COUNT_KEY to 150,

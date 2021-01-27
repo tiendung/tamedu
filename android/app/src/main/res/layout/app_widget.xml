@@ -11,28 +11,30 @@
         android:gravity="center_vertical|bottom"
         android:orientation="vertical">
 
-        <TextView android:id="@+id/marquee_status" 
+        <TextView
+            android:id="@+id/marquee_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SuTamPhap.com in Practice"
-            android:singleLine="true" 
+            android:duplicateParentState="true"
             android:ellipsize="marquee"
-            android:marqueeRepeatLimit ="marquee_forever"
-            android:scrollHorizontally="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
             android:padding="5dp"
             android:paddingLeft="50dp"
             android:paddingRight="50dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="SuTamPhap.com in Practice"
             android:textColor="#DDD"
-            android:gravity="center"
             android:textSize="13sp"
-            android:textStyle="italic"
-            android:focusable="true"
-            android:focusableInTouchMode="true" 
-            android:duplicateParentState="true">
-            <requestFocus 
+            android:textStyle="italic">
+
+            <requestFocus
+                android:duplicateParentState="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:duplicateParentState="true" />
+                android:focusableInTouchMode="true" />
         </TextView>
 
         <LinearLayout
@@ -60,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:text="Nghe pháp" />
         </LinearLayout>
-        
+
         <LinearLayout
             android:id="@+id/reminder_area"
             android:layout_width="match_parent"
@@ -77,10 +79,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/appwidget_text"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:paddingRight="6dp"
                 android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="6dp"
                 android:text="Hãy cố quan sát cách tâm đối phó với một hoàn cảnh khó khăn, từ nhiều góc độ khác nhau. Một khi đã hiểu cách làm việc của tâm, trí tuệ bắt đầu hoạt động. Lần sau nó sẽ biết phải làm gì."
                 android:textColor="#E9DA95"
                 android:textSize="19sp"
@@ -93,10 +95,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/appwidget_text"
-                android:paddingTop="2dp"
-                android:paddingBottom="4dp"
-                android:paddingRight="6dp"
                 android:paddingLeft="10dp"
+                android:paddingTop="2dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="4dp"
                 android:text="sutamphap.com"
                 android:textColor="#DDD"
                 android:textSize="13sp"
@@ -116,10 +118,10 @@
                 android:id="@+id/today_squat_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:text="SQUAT 000"
                 android:textAllCaps="false"
                 android:textColor="#442F19"
-                android:text="SQUAT 000" />
+                android:textSize="13sp" />
 
             <Button
                 android:id="@+id/today_push_button"
@@ -134,17 +136,17 @@
                 android:id="@+id/today_pull_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:text="PULL 000"
                 android:textAllCaps="false"
-                android:text="PULL 000" />
+                android:textSize="13sp" />
 
             <Button
                 android:id="@+id/today_abs_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:text="ABS 000"
                 android:textAllCaps="false"
-                android:text="ABS 000" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -159,10 +161,10 @@
                 android:id="@+id/count_total_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:text="000 + 00"
                 android:textAllCaps="false"
                 android:textColor="#442F19"
-                android:text="000 + 00" />
+                android:textSize="13sp" />
 
             <Button
                 android:id="@+id/count_1_button"
@@ -177,18 +179,63 @@
                 android:id="@+id/count_10_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:text="+10"
                 android:textAllCaps="false"
-                android:text="+10" />
+                android:textSize="13sp" />
 
             <Button
                 android:id="@+id/count_reset_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:text="Reset"
                 android:textAllCaps="false"
-                android:text="Reset" />
-
+                android:textSize="13sp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cam_xuc_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center_horizontal|bottom"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/today_san_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SÂN 000"
+                android:textAllCaps="false"
+                android:textColor="#5C2B29"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/san_medium_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vừa vừa"
+                android:textAllCaps="false"
+                android:textColor="#5C2B29"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/san_hard_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nặng!"
+                android:textAllCaps="false"
+                android:textColor="#5C2B29"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/san_cap_cuu_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cấp cứu :'("
+                android:textAllCaps="false"
+                android:textColor="#5C2B29"
+                android:textSize="13sp" />
+        </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>

@@ -45,6 +45,21 @@ class AppWidget : AppWidgetProvider() {
             COUNT_10 -> _currentCountAdded += 10
             COUNT_RESET -> _currentCountAdded = 0
 
+            MUC_DO_SAN_VUA -> {
+                tamedu.reminder.newCurrent(context, 2)
+                tamedu.count.inc(context, SAN_COUNT_KEY, 1)
+            }
+            MUC_DO_SAN_NANG -> {
+                tamedu.reminder.newCurrent(context, 0)
+                txt = tamedu.reminder.speakCurrent(true)
+                tamedu.count.inc(context, SAN_COUNT_KEY, 1)
+            }
+            MUC_DO_SAN_CAP_CUU -> {
+                tamedu.reminder.newCurrent(context, 1)
+                tamedu.reminder.playBell(context)
+                tamedu.count.inc(context, SAN_COUNT_KEY, 1)
+            }
+
             SPEAK_REMINDER_TOGGLE -> {
                 tamedu.reminder.toggle()
                 txt = tamedu.reminder.speakCurrent()
@@ -105,7 +120,6 @@ fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
     views.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
     views.setBoolean(R.id.speak_reminder_toggle_button, "setEnabled", !tamedu.phap.isPlaying())
-    // views.setViewVisibility(R.id.speak_reminder_toggle_button, tamedu.phap.speakReminderToggleVisibility())
     if (marqueeTxt != null) views.setTextViewText(R.id.marquee_status, marqueeTxt)
 
     views.setViewVisibility(R.id.habits_bar, hideOrShow(1))
@@ -122,6 +136,8 @@ fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setInt(R.id.today_pull_button, "setTextColor", tamedu.count.color(context, PULL_COUNT_KEY))
     views.setInt(R.id.today_abs_button, "setTextColor", tamedu.count.color(context, ABS_COUNT_KEY))
     views.setInt(R.id.thu_gian_button, "setTextColor", tamedu.count.color(context, THU_GIAN_COUNT_KEY))
+
+    views.setTextViewText(R.id.today_san_button, "Sân ${tamedu.count.get(context, SAN_COUNT_KEY)}")
 }
 
 private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {
@@ -150,6 +166,10 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, COUNT_1, R.id.count_1_button)
     setupIntent(context, views, COUNT_10, R.id.count_10_button)
     setupIntent(context, views, COUNT_RESET, R.id.count_reset_button)
+
+    setupIntent(context, views, MUC_DO_SAN_VUA, R.id.san_medium_button)
+    setupIntent(context, views, MUC_DO_SAN_NANG, R.id.san_hard_button)
+    setupIntent(context, views, MUC_DO_SAN_CAP_CUU, R.id.san_cap_cuu_button)
 
     tamedu.reminder.newCurrent(context)
     tamedu.phap.checkTimeToPlay(context)
