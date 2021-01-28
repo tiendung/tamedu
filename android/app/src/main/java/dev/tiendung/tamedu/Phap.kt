@@ -52,7 +52,6 @@ fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): Str
         when (_stopPhapClicksCount) {
             1 -> {
                 txt = "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc."
-                toast(context, txt)
             }
             2 -> {
                 finishPhap()

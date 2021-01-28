@@ -84,11 +84,9 @@ class AppWidget : AppWidgetProvider() {
             THU_GIAN -> txt = tamedu.phap.updatePlayPhap(context, true)
             NGHE_PHAP_BEGIN -> {
                 txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
-                toast(context, txt)
             }
             NGHE_PHAP_FINISH -> {
                 txt = APP_TITLE
-                toast(context, "Kết thúc \"${tamedu.phap.currentTitle()}\"")
             }
             else -> {
                 super.onReceive(context, intent)
