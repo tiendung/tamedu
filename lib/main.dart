@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 
+import 'permission_widget.dart';
 import 'helpers/constants.dart';
-import 'helpers/util.dart';
-import 'models/job.dart';
-import 'models/habit.dart';
-import 'models/mine.dart';
+
+// import 'package:hive/hive.dart';
+// import 'package:hive_flutter/hive_flutter.dart';
+// import 'helpers/util.dart';
+// import 'models/job.dart';
+// import 'models/habit.dart';
+// import 'models/mine.dart';
 
 void main() async {
   // await Hive.initFlutter();
@@ -18,7 +21,6 @@ void main() async {
   // Habit.x = await Hive.openBox<Habit>(Habit.BOX_NAME);
   // Job.x = await Hive.openBox<Job>(Job.BOX_NAME);
   // Mine.x = await Hive.openBox(Mine.BOX_NAME);
-
   runApp(Constants(
     child: MyApp(),
   ));
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'sutamphap.com in practice',
+      title: 'SuTamPhap.com in Practice',
       theme: ThemeData(
         // This is the theme of your application.
         primarySwatch: Colors.blueGrey,
@@ -80,15 +82,11 @@ class _MyHomePageState extends State<MyHomePage> {
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Bấm mấy lần rồi hả bạn?',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+          children: [
+                Permission.storage,
+                Permission.ignoreBatteryOptimizations,
+                Permission.mediaLibrary
+              ].map((permission) => PermissionWidget(permission)).toList()
         ),
       ),
       drawer: Drawer(

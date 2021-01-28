@@ -61,3 +61,5 @@ brew install GrandPerspective
 https://mrkaran.dev/posts/
 https://endler.dev/2020/review/
 https://jameslittle.me/
+
+https://pub.dev/packages/permission_handler/example
