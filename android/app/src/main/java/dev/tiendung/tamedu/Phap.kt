@@ -101,7 +101,7 @@ fun checkTimeToPlay(context: Context): String {
     val currH = currentTime[Calendar.HOUR_OF_DAY]
     val currM = currentTime[Calendar.MINUTE]
     // Reset counter
-    if (currH >= 1 && currH < 4) tamedu.count.reset(context, currentTime[Calendar.DAY_OF_MONTH])
+    if (currH >= 1 && currH < 4) tamedu.count.reset(context)
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying &&
         ((currH == 5 && currM > 15) || (currH == 19 && currM > 15)) ) {
         context.broadcastUpdateWidget(NGHE_PHAP)
@@ -120,7 +120,6 @@ private fun loadAndPlayPhap(context: Context): String {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
-
         setOnPreparedListener { mp ->
             _phapIsLoading = false
             _phapIsPlaying = true

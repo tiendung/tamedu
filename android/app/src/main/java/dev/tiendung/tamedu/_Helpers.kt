@@ -3,6 +3,8 @@ package dev.tiendung.tamedu.helpers
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.util.*
 
 const val APP_TITLE = "THOẢI MÁI - TÍCH CỰC - HẾT MÌNH"
 
@@ -69,4 +71,12 @@ fun Context.broadcastUpdateWidget(actionName: String) {
 
 fun toast(context: Context, txt: String) {
     Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
+}
+
+fun dateStr(delta: Int = 0): String {
+    val cal = Calendar.getInstance()
+    if (delta != 0) { 
+        cal.add(Calendar.DATE, delta) 
+    }
+    return SimpleDateFormat("yyyy-MM-dd").format(cal.getTime())
 }
