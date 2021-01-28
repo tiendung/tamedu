@@ -27,6 +27,7 @@ class AppWidget : AppWidgetProvider() {
         _currentCountKey = habitCountKey
         _currentCountAdded = 0
         _showHabitsBar = false
+        _resetPressedCount = 0
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -38,12 +39,21 @@ class AppWidget : AppWidgetProvider() {
             TODAY_PULL -> countHabit(PULL_COUNT_KEY)
             TODAY_ABS -> countHabit(ABS_COUNT_KEY)
             COUNT_TOTAL -> {
-                _showHabitsBar = true
                 tamedu.count.inc(context, _currentCountKey, _currentCountAdded)
+                _showHabitsBar = true
+                _resetPressedCount = 0
             }
-            COUNT_1 -> _currentCountAdded += 1
-            COUNT_10 -> _currentCountAdded += 10
-            COUNT_RESET -> _currentCountAdded = 0
+            COUNT_1 ->  { _currentCountAdded +=  1; _resetPressedCount = 0 }
+            COUNT_10 -> { _currentCountAdded += 10; _resetPressedCount = 0 }
+            COUNT_RESET -> {
+                _resetPressedCount += 1
+                if (_resetPressedCount == 4) toast(context, "Press \"Reset\" one more to reset all counters")
+                if (_resetPressedCount == 5) {
+                    tamedu.count.reset(context, -1)
+                    _showHabitsBar = true
+                }
+                _currentCountAdded = 0
+            }
 
             MUC_DO_SAN_VUA -> {
                 tamedu.reminder.newCurrent(context, 2)
@@ -105,6 +115,7 @@ class AppWidget : AppWidgetProvider() {
     }
 }
 
+private var _resetPressedCount = 0
 private var _currentCountKey: String = TODAY_SQUAT
 private var _currentCountAdded: Int = 0
 private var _showHabitsBar = true

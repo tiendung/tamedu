@@ -4,12 +4,10 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
-
+import dev.tiendung.tamedu.helpers.*
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
-
-import dev.tiendung.tamedu.helpers.*
 
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
@@ -103,9 +101,7 @@ fun checkTimeToPlay(context: Context): String {
     val currH = currentTime[Calendar.HOUR_OF_DAY]
     val currM = currentTime[Calendar.MINUTE]
     // Reset counter
-    if (currH == 1 && currM > 0) {
-        COUNT_KEYS.forEach { tamedu.count.set(context, it, 0) }
-    }
+    if (currH >= 1 && currH < 4) tamedu.count.reset(context, currentTime[Calendar.DAY_OF_MONTH])
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying &&
         ((currH == 5 && currM > 15) || (currH == 19 && currM > 15)) ) {
         context.broadcastUpdateWidget(NGHE_PHAP)
@@ -128,18 +124,13 @@ private fun loadAndPlayPhap(context: Context): String {
         setOnPreparedListener { mp ->
             _phapIsLoading = false
             _phapIsPlaying = true
-            tamedu.reminder.finishPlaying()
-            tamedu.reminder.toggle()
+            tamedu.reminder.stopAndMute()
             mp.start()
             context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
         }
 
         setOnCompletionListener {
-            if (_isThuGian) {
-                tamedu.count.inc(context, THU_GIAN_COUNT_KEY, 1)
-            } else {
-                tamedu.count.inc(context, NGHE_PHAP_COUNT_KEY, 1)
-            }
+            tamedu.count.inc(context, if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY, 1)
             finishPhap()
             context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
         }

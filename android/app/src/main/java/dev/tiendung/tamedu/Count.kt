@@ -4,13 +4,32 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import dev.tiendung.tamedu.helpers.*
+import java.util.*
 
 private var _sharedPref: SharedPreferences? = null
-
+private var _todayReseted: Boolean = false
 private fun getSharedPref(context: Context): SharedPreferences {
     if (_sharedPref == null)
         _sharedPref = context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE)
+
+    if (!_todayReseted) {
+        val todayOfMonth = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
+        if (todayOfMonth == _sharedPref!!.getInt("todayOfMonth", -1)) {
+            reset(context, todayOfMonth)
+            _todayReseted = true
+        }
+    }
     return _sharedPref!!
+}
+
+fun reset(context: Context, todayOfMonth: Int) {
+    val tdom: Int = if (todayOfMonth > 0 || todayOfMonth <= 31) todayOfMonth
+        else Calendar.getInstance()[Calendar.DAY_OF_MONTH]
+    with(getSharedPref(context).edit()) {
+        COUNT_KEYS.forEach { putInt(it, 0) }
+        putInt("todayOfMonth", tdom)
+        commit()
+    }
 }
 
 fun set(context: Context, k: String, v: Int) {

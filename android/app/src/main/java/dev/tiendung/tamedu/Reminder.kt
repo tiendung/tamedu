@@ -16,9 +16,13 @@ private var _player: MediaPlayer = MediaPlayer()
 private var _allowToSpeak: Boolean = false
 private var _current: Reminder? = null
 
+fun stopAndMute() {
+    finishPlaying()
+    _allowToSpeak = false
+}
+
 fun toggle() {
-    _allowToSpeak = if (tamedu.phap.isPlaying()) false
-    else !_allowToSpeak
+    _allowToSpeak = !_allowToSpeak
 }
 
 fun speakCurrent(must: Boolean = false): String? {
