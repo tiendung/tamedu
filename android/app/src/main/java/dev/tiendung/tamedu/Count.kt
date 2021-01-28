@@ -27,13 +27,8 @@ private fun getSharedPref(context: Context): SharedPreferences {
 fun reset() {
     val stats = _sharedPref!!.getAll()
     try {
-
         var dir = File(Environment.getExternalStorageDirectory(), "Documents"); dir.mkdir()
-        dir = File(dir, "tamedu"); dir.mkdir()
-        dir = File(dir, "stats"); dir.mkdir()
-    //    val fileName = "${_sharedPref!!.getString("today", dateStr(-1))}.json"
-    //    File(dir, fileName).writeText(Gson().toJson(stats))
-        File(dir, "_all.json").appendText(",\n${Gson().toJson(stats)}")
+        File(dir, "tamedu_stats.json").appendText(",\n${Gson().toJson(stats)}")
     } catch (e: IOException) {
         Log.w("ExternalStorage", "Error writing stats file", e)
     }
