@@ -4,23 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'permission_widget.dart';
 import 'helpers/constants.dart';
 
-// import 'package:hive/hive.dart';
-// import 'package:hive_flutter/hive_flutter.dart';
-// import 'helpers/util.dart';
-// import 'models/job.dart';
-// import 'models/habit.dart';
-// import 'models/mine.dart';
-
 void main() async {
-  // await Hive.initFlutter();
-  // await Hive.init('db');
-
-  // Hive.registerAdapter(JobAdapter());
-  // Hive.registerAdapter(HabitAdapter());
-
-  // Habit.x = await Hive.openBox<Habit>(Habit.BOX_NAME);
-  // Job.x = await Hive.openBox<Job>(Job.BOX_NAME);
-  // Mine.x = await Hive.openBox(Mine.BOX_NAME);
   runApp(Constants(
     child: MyApp(),
   ));
@@ -46,23 +30,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -132,11 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ),
     );
   }
