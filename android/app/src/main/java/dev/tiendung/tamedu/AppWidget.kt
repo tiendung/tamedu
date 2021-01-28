@@ -49,7 +49,7 @@ class AppWidget : AppWidgetProvider() {
                 _resetPressedCount += 1
                 if (_resetPressedCount == 4) toast(context, "Press \"Reset\" one more to reset all counters")
                 if (_resetPressedCount == 5) {
-                    tamedu.count.reset(context)
+                    tamedu.count.reset()
                     _showHabitsBar = true
                 }
                 _currentCountAdded = 0

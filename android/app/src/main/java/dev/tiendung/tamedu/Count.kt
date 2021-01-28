@@ -4,31 +4,39 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Environment
+import android.util.Log
+import java.io.File
+import java.io.IOException
 import com.google.gson.Gson
 import dev.tiendung.tamedu.helpers.*
-import java.io.File
 
 private var _sharedPref: SharedPreferences? = null
-private var _todayReseted: Boolean = false
+var _todayReseted: Boolean = false
 private fun getSharedPref(context: Context): SharedPreferences {
     if (_sharedPref == null) {
         _sharedPref = context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE)
     }
     if (!_todayReseted) {
         val today = dateStr()
-        if (today != _sharedPref!!.getString("today", "")) { reset(context) }
+        if (today != _sharedPref!!.getString("today", "")) { reset() }
         _todayReseted = true
     }
     return _sharedPref!!
 }
 
-fun reset(context: Context) {
+fun reset() {
     val stats = _sharedPref!!.getAll()
-    val fileName = "${_sharedPref!!.getString("today", dateStr(-1))}.json"
-    var dir = File(Environment.getExternalStorageDirectory(), "Documents"); dir.mkdir()
-    dir = File(dir, "tamedu"); dir.mkdir()
-    dir = File(dir, "stats"); dir.mkdir()
-    File(dir, fileName).writeText(Gson().toJson(stats))
+    try {
+
+        var dir = File(Environment.getExternalStorageDirectory(), "Documents"); dir.mkdir()
+        dir = File(dir, "tamedu"); dir.mkdir()
+        dir = File(dir, "stats"); dir.mkdir()
+    //    val fileName = "${_sharedPref!!.getString("today", dateStr(-1))}.json"
+    //    File(dir, fileName).writeText(Gson().toJson(stats))
+        File(dir, "_all.json").appendText(",\n${Gson().toJson(stats)}")
+    } catch (e: IOException) {
+        Log.w("ExternalStorage", "Error writing stats file", e)
+    }
 
     with(_sharedPref!!.edit()) {
         COUNT_KEYS.forEach { putInt(it, 0) }
