@@ -1,6 +1,7 @@
 package tamedu.phap
 
 import android.content.Context
+import android.os.Environment
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
@@ -64,9 +65,9 @@ fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): Str
     if (!_phapIsLoading) { // load new phap or thu gian
         if (thuGianButtonPressed) {
             _isThuGian = true
-            _currentPhap = getRandomThuGian(context)
+            _currentPhap = getRandomThuGian()
         } else {
-            _currentPhap = getRandomPhap(context)
+            _currentPhap = getRandomPhap()
         }
         toast(context, loadAndPlayPhap(context))
     }
@@ -148,21 +149,21 @@ private fun loadAndPlayPhap(context: Context): String {
 
 data class Phap(val title: String, val audioUrl: String, val audioFile: File)
 
-private fun getRandomThuGian(context: Context): Phap {
+private fun getRandomThuGian(): Phap {
     val (id, title) = THU_GIAN_IDS_TO_TITLES.random()
-    return initPhap(context, id, title)
+    return initPhap(id, title)
 }
 
-private fun getRandomPhap(context: Context): Phap {
+private fun getRandomPhap(): Phap {
     val (id, title) = PHAP_IDS_TO_TITLES.random()
-    return initPhap(context, id, title)
+    return initPhap(id, title)
 }
 
-private fun initPhap(context: Context, id: String, title: String): Phap {
+private fun initPhap(id: String, title: String): Phap {
     return Phap(
             title = title,
             audioUrl = "https://tiendung.github.io/$id",
-            audioFile = File(context.getExternalFilesDir(null), id)
+            audioFile = File(Environment.getExternalStorageDirectory(), "Documents/stp/$id")
     )
 }
 

@@ -5,6 +5,7 @@ import android.content.res.AssetFileDescriptor
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.graphics.Color
+import android.os.Environment
 
 import java.io.File
 import java.io.FileDescriptor
@@ -41,7 +42,7 @@ fun playBellOrSpeakCurrent(context: Context) {
 }
 
 fun playBell(context: Context) {
-    val file = externalFile(context, BELL_FILE_NAME)
+    val file = externalFile(BELL_FILE_NAME)
     if (file.exists()) playAudioFile(null, FileInputStream(file).fd)
     else playAudioFile(assetFd(context, BELL_FILE_NAME))
 }
@@ -96,7 +97,7 @@ fun newCurrent(context: Context, teachingId: Int? = null) {
     _current = Reminder(
             text = txt,
             audioAssetFd = assetFd(context, fileName),
-            audioFile = externalFile(context, fileName),
+            audioFile = externalFile(fileName),
             bgColor = Color.parseColor(bgColor) )
 }
 private fun assetFd(context: Context, fileName: String): AssetFileDescriptor? {
@@ -105,12 +106,13 @@ private fun assetFd(context: Context, fileName: String): AssetFileDescriptor? {
     val fileNotExists = (ls == null || ls.isEmpty())
     return if (fileNotExists) null else am.openFd(fileName)
 }
-private fun externalFile(context: Context, fileName: String): File {
-    return File(context.getExternalFilesDir(null), fileName)
+private fun externalFile(fileName: String): File {
+    return  File(Environment.getExternalStorageDirectory(),
+            "Documents/tamedu/assets/${fileName}")
 }
 
-fun currentText(): String { return _current!!.text }
-fun currentBgColor(): Int { return _current!!.bgColor }
+fun currentText(): String { return if (_current == null) "" else _current!!.text }
+fun currentBgColor(): Int { return if (_current == null)  0 else _current!!.bgColor }
 fun toggleText(): String {
     return when (_allowToSpeak) {
         true  -> "Dừng đọc"

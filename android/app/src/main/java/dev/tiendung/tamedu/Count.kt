@@ -3,9 +3,10 @@ package tamedu.count
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Environment
+import com.google.gson.Gson
 import dev.tiendung.tamedu.helpers.*
 import java.io.File
-import com.google.gson.Gson
 
 private var _sharedPref: SharedPreferences? = null
 private var _todayReseted: Boolean = false
@@ -23,15 +24,14 @@ private fun getSharedPref(context: Context): SharedPreferences {
 
 fun reset(context: Context) {
     val stats = _sharedPref!!.getAll()
-
-    val externalFilesDir = context.getExternalFilesDir(null)
-    File(externalFilesDir, "stats").mkdir()
-    val fileName = "stats/${_sharedPref!!.getString("today", dateStr(-1))}.json"
-    File(externalFilesDir, fileName).writeText(Gson().toJson(stats))
+    val fileName = "${_sharedPref!!.getString("today", dateStr(-1))}.json"
+    var dir = File(Environment.getExternalStorageDirectory(), "Documents"); dir.mkdir()
+    dir = File(dir, "tamedu"); dir.mkdir()
+    dir = File(dir, "stats"); dir.mkdir()
+    File(dir, fileName).writeText(Gson().toJson(stats))
 
     with(_sharedPref!!.edit()) {
         COUNT_KEYS.forEach { putInt(it, 0) }
-        remove("todayOfMonth")
         putString("today", dateStr())
         commit()
     }
