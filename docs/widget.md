@@ -7,8 +7,7 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
 - [x] Change quote every 30 mins with a remind bell
 - [x] Click on the quote image to change to the new one
 
-![1](https://lh3.googleusercontent.com/1VL3QBQ40Dcd2y8qdoEXSSl1vC04cCUHuGUanqvy_4BCG25iUURzNtl52keCUrOoROsPoXn0_mNFAHEoC0WhVAzzDA_XvLOhOLg5LOLAeZyRyI2sPHSvy7qKoX8EduTJoL-Dj06a7jjagO2ODX1Swo-7cOrGjVTMXS_u0qnHg4YLF5y9_heVL82Nk9OUtQFRYm1PQENPfp0i3EQ7dJVCx2et1Qrmc35PNkGdQNq8C0J82acZo1YWweHyrDJE2V_cbYPy8nK-BNzGDssYfEugNY99AJwLMFVbpbm5bRW9519KzV8LLVRN7Zgktpyjxmq0brKXvDkq5-LyH32V9D1nMTcioG1lOeDMewbFEYqpl5QosRlGV-iZZbhm9M5C-Zvb91_ETC3AdfFJ4y4QZxKOBNdxveeOI3rZZ_dTqSRiJDZFt44-yL1due5PxpNowTwQZsdpLPd5wlWOQzR5hehqmIbh_QmAH7a036J-nnKgxvcggLU6BNEQjJImFfQAJHKJxrDSSfOLyJSk4nbCew93wA6yHR6UGOIYrayzu5gD4aU8oGOKtunBFXU2_zvEMVasxZGYgzMnZnJ--4NqqspgobOo8A5MDMh8Ce_TOibze_WZosFlkKfNPIiEU_ujcZUP84fWB5h736xjhJh1k845fBEujMzvxjU2G-uuZa5bQSX9W0FHgUbkK_qQlbU3zQakww_DbC51HmKlRnEZE2U0DIoNs8M7gWEh-8VMa-_4uv7afRbRa-CUOlc=w427-h581-no?authuser=0)
-
+![1](https://raw.githubusercontent.com/tiendung/tamedu/main/docs/Screenshot_20210130-055938_One UI Home.jpg)
 - - -
 
 - [The Android Widget](#the-android-widget)
