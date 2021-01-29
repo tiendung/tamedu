@@ -101,9 +101,9 @@ private fun finishPhap(): String? {
 fun currentTitle(): String { return _currentPhap!!.title }
 fun buttonText(): String {
     return when (_phapIsPlaying) {
-        true -> if (_stopPhapClicksCount == 0) "Dừng nghe" else "Dừng nghe!"
+        true -> "Dừng nghe"
         false -> when (_phapIsLoading) {
-            true -> "Đang tải ..."
+            true -> "Nghe pháp" // "Đang tải ..."
             false -> "Nghe pháp"
         }
     }
@@ -134,13 +134,14 @@ private fun loadAndPlayPhap(context: Context): String {
                         .build()
         )
         setOnPreparedListener { mp ->
-            _phapIsLoading = false
-            _phapIsPlaying = true
-            tamedu.reminder.stopAndMute()
-            mp.start()
-            context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
+            Timer("SettingUp", false).schedule(1200) {
+                _phapIsLoading = false
+                _phapIsPlaying = true
+                tamedu.reminder.stopAndMute()
+                mp.start()
+                context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
+            }
         }
-
         setOnCompletionListener {
             tamedu.count.inc(context, if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY, 1)
             finishPhap()

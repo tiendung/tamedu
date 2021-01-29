@@ -192,6 +192,7 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+
         <LinearLayout
             android:id="@+id/cam_xuc_bar"
             android:layout_width="match_parent"
@@ -237,5 +238,30 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+<!--         <LinearLayout
+            android:id="@+id/timers_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center_horizontal|bottom"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/today_plank_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plank 00.0m"
+                android:textAllCaps="true"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/today_handstand_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Handstand 00.0m"
+                android:textAllCaps="true"
+                android:textSize="13sp" />
+        </LinearLayout>
+ -->
     </LinearLayout>
 </RelativeLayout>
