@@ -81,15 +81,21 @@ private fun playAudioFile(assetFd: AssetFileDescriptor?, fd: FileDescriptor? = n
 data class Reminder(val text: String, val audioFile: File?,
     val audioAssetFd: AssetFileDescriptor?, val bgColor: Int)
 
-fun newCurrent(context: Context, teachingId: Int? = null) {
+fun newCurrent(context: Context, teachingId: Int = -1) {
     val bgColor: String; val txt: String; val fileName: String
-    if (Math.random() < 0.5 || teachingId != null) {
-        val id = teachingId ?: TEACHINGS.indices.random()
+    var id: Int = teachingId
+    if (id < 0 && tamedu.phap.isThuGian()) {
+        id = THOAI_MAI_IDS.random()
+    }
+    if (id < 0 && Math.random() < 0.55) {
+        id = TEACHINGS.indices.random()
+    }
+    if (id >= 0) {
         txt = TEACHINGS[id]
         fileName = "teachings/$id.ogg"
         bgColor = TEACHING_BG_COLORS.random()
     } else {
-        val id = QUOTE_IDS_SORTED_BY_LEN.random()
+        id = QUOTE_IDS_SORTED_BY_LEN.random()
         txt = QUOTES[id]
         fileName = "quotes/$id.ogg"
         bgColor = QUOTE_BG_COLORS.random()
@@ -121,9 +127,9 @@ fun toggleText(): String {
 }
 
 private const val BELL_FILE_NAME = "bell.ogg"
-private val SAN_INDEXES = arrayOf(0,1,2)
-private val MIEN_MAN_INDEXES = arrayOf(9,10,11,12)
-private val THOAI_MAI_INDEXES = arrayOf(4,5,6,7)
+//private val SAN_IDS = arrayOf(0,1,2)
+//private val MIEN_MAN_IDS = arrayOf(9,10,11,12)
+private val THOAI_MAI_IDS = arrayOf(4,5,6,7)
 private val TEACHINGS = arrayOf(
 "Mỗi lần thấy sân lên thì tránh đi chỗ khác, đừng nói gì thêm hoặc bảo là tớ cần tránh đi một tý, chút nói chuyện lại.",
 "Mỗi lần thấy sân hít sâu vào và thở ra hết vài lần, tưởng tượng rằng năng lượng xấu của cơn sân đi ra ngoài theo hơi thở và sự mát lành đi vào theo hơi thở.",
