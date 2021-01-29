@@ -32,7 +32,11 @@ fun thuGianButtonText(context: Context): String {
 
 fun isPlaying(): Boolean {
     return _phapIsPlaying
-} 
+}
+
+fun isThuGian(): Boolean {
+    return _isThuGian
+}
 
 fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): String? {
 
@@ -64,6 +68,7 @@ fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): Str
     if (!_phapIsLoading) { // load new phap or thu gian
         if (thuGianButtonPressed) {
             _isThuGian = true
+            tamedu.reminder.newCurrent(context, 15)
             _currentPhap = getRandomThuGian()
         } else {
             _currentPhap = getRandomPhap()
@@ -198,12 +203,27 @@ private val PHAP_IDS_TO_TITLES = arrayOf(
         "phaps/tutaptrongCS_DauTuChoTuongLai.ogg" to "Đầu tư cho tương lai",
         "phaps/tutaptrongCS_XungDangCuocSongLamNguoi.ogg" to "Xứng đáng cuộc sống làm người",
         "phaps/tutaptrongCS_NguoiChanhNiemLamGi.ogg" to "Người chánh niệm làm gì",
+        "phaps/tutaptrongCS_NoiChuyenVeHanhPhuc.ogg" to "Nói chuyện về hạnh phúc",
         "phaps/tutaptrongCS_SuDungChanhNiem.ogg" to "Sử dụng chánh niệm",
         "phaps/tutaptrongCS_NguoiThuongLuu.ogg" to "Người thượng lưu",
-        "phaps/tutaptrongCS_DayCon.ogg" to "Dạy con",
         "phaps/tutaptrongCS_ChetKhongHoiTiec.ogg" to "Chết không hối tiếc",
         "phaps/tutaptrongCS_DeDuoi.ogg" to "Dễ duôi",
+        "phaps/tutaptrongCS_tuPhanBien.ogg" to "Tự phản biện",
+        "phaps/tutaptrongCS_TheNaoLaQuyetDinhDung.ogg" to "Thế nào là quyết định đúng",
+        "phaps/tutaptrongCS_ChuYVaoSuKhacBiet.ogg" to "Chú ý vào sự khác biệt",
+        "phaps/tutaptrongCS_ThaLongDeCamNhanSauSacHon.ogg" to "Thả lỏng để cảm nhận sâu sắc hơn",
+        "phaps/tutaptrongCS_LyTuongVaThucTe.ogg" to "Lý tưởng và thực tế",
+        "phaps/tutaptrongCS_ThongTinThua.ogg" to "Thông tin thừa",
+        "phaps/tutaptrongCS_DayCon.ogg" to "Dạy con",
+        "phaps/tutaptrongCS_SuGiaCuaSuThat.ogg" to "Sứ giả của sự thật",
+        "phaps/tutaptrongCS_NguoiChanThat.ogg" to "Người chân thật",
         "phaps/tutaptrongCS_LaoDongGiupChanhNiemRaSao.ogg" to "Lao động giúp chánh niệm ra sao",
-        "phaps/tutaptrongCS_TamDonGian.ogg" to "Tâm đơn giản",
-        "phaps/tutaptrongCS_TietKiemNangLuong.ogg" to "Tiết kiệm năng lượng"
+        "phaps/tutaptrongCS_TietKiemNangLuong.ogg" to "Tiết kiệm năng lượng",
+        "phaps/buocdautapthien_TaiSaoPhaiThuGian.ogg" to "Tại sao phải thư giãn",
+        "phaps/buocdautapthien_ThaiDoDung.ogg" to "Thái độ đúng",
+        "phaps/buocdautapthien_CongThucThien.ogg" to "Công thức thiền",
+        "phaps/buocdautapthien_thucHanhDonGian.ogg" to "Thực hành đơn giản ",
+        "phaps/buocdautapthien_raSoatCamNhanThaLong.ogg" to "Rà soát - Cảm nhận - Thả lỏng",
+        "phaps/buocdautapthien_ThoaiMaiThuGianBietMinh.ogg" to "Thoải mái – Thư giãn – Biết mình",
+        "phaps/thuyetphap_013SongThuanPhap.ogg" to "Sống thuận Pháp"
 )
