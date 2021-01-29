@@ -7,7 +7,7 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
 - [x] Change quote every 30 mins with a remind bell
 - [x] Click on the quote image to change to the new one
 
-![1](https://raw.githubusercontent.com/tiendung/tamedu/main/docs/Screenshot_20210130-055938_One UI Home.jpg)
+![1](https://raw.githubusercontent.com/tiendung/tamedu/main/docs/Screenshot_20210130.jpg)
 - - -
 
 - [The Android Widget](#the-android-widget)
