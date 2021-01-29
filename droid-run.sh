@@ -7,4 +7,4 @@ else
 	./scripts/apk-build.sh
 	./scripts/apk-install.sh
 fi
-rm $apk
+rm $apkFile
