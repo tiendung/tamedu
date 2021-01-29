@@ -9,6 +9,8 @@ import dev.tiendung.tamedu.helpers.*
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
@@ -55,7 +57,13 @@ fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): Str
         _stopPhapClicksCount += 1
         when (_stopPhapClicksCount) {
             1 -> {
-                txt = "Đang nghe \"${currentTitle()}\"'. Nhấn \"Dừng nghe\" lần nữa để kết thúc."
+                txt = "Đang nghe \"${currentTitle()}\". Nhấn \"Dừng nghe\" lần nữa để kết thúc."
+                Timer("SettingUp", false).schedule(2500) {
+                    if (_phapIsPlaying) {
+                        _stopPhapClicksCount = 0
+                        context.broadcastUpdateWidget(REFRESH)
+                    }
+                }
             }
             2 -> {
                 finishPhap()
@@ -141,6 +149,7 @@ private fun loadAndPlayPhap(context: Context): String {
     }
 
     var txt = phap.audioUrl
+
     if (phap.audioFile.exists()) {
         val fd = FileInputStream(phap.audioFile).fd
         _phapPlayer.setDataSource(fd)
@@ -172,8 +181,8 @@ private fun initPhap(id: String, title: String): Phap {
 }
 
 private val THU_GIAN_IDS_TO_TITLES = arrayOf(
-        "phaps/huongdan_thienNam.ogg" to "Thư giãn 24 phút",
         "phaps/HuongDanRaQuetVaThuGianToanThan.ogg" to "Thư giãn 30 phút",
+        "phaps/huongdan_thienNam.ogg" to "Thư giãn 24 phút",
         "phaps/thien_nam_15_phut_01.ogg" to "Thư giãn 15 phút",
         "phaps/thien_nam_10_phut.ogg" to "Thư giãn 10 phút"
 )

@@ -9,6 +9,7 @@ import java.util.*
 const val APP_TITLE = "THOẢI MÁI - TÍCH CỰC - HẾT MÌNH"
 
 private const val PATH = "dev.tiendung.tamedu."
+const val REFRESH = PATH + "action.REFRESH"
 const val NGHE_PHAP_FINISH = PATH + "action.NGHE_PHAP_FINISH"
 const val NGHE_PHAP_BEGIN = PATH + "action.NGHE_PHAP_BEGIN"
 const val NGHE_PHAP = PATH + "action.NGHE_PHAP"

@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.RemoteViews
 
 import dev.tiendung.tamedu.helpers.*
+import tamedu.phap.currentTitle
 
 /**
  * Implementation of App Widget
@@ -87,6 +88,9 @@ class AppWidget : AppWidgetProvider() {
             }
             NGHE_PHAP_FINISH -> {
                 txt = APP_TITLE
+            }
+            REFRESH -> {
+                txt = "Đang nghe \"${currentTitle()}\""
             }
             else -> {
                 super.onReceive(context, intent)
