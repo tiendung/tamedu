@@ -21,8 +21,8 @@ const val TODAY_SQUAT = PATH + "action.TODAY_SQUAT"
 const val TODAY_PUSH = PATH + "action.TODAY_PUSH"
 const val TODAY_PULL = PATH + "action.TODAY_PULL"
 const val TODAY_ABS = PATH + "action.TODAY_ABS"
-const val TODAY_PLANK = PATH + "action.TODAY_PLANK"
-const val TODAY_HANDSTAND = PATH + "action.TODAY_HANDSTAND"
+//const val TODAY_PLANK = PATH + "action.TODAY_PLANK"
+//const val TODAY_HANDSTAND = PATH + "action.TODAY_HANDSTAND"
 
 const val COUNT_TOTAL = PATH + "action.COUNT_TOTAL"
 const val COUNT_1 = PATH + "action.COUNT_1"
@@ -89,8 +89,4 @@ fun dateStr(delta: Int = 0): String {
         cal.add(Calendar.DATE, delta) 
     }
     return SimpleDateFormat("yyyy-MM-dd").format(cal.getTime())
-}
-
-fun countToTimer(c: Int) {
-    
 }
