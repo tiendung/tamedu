@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.RemoteViews
 
 import dev.tiendung.tamedu.helpers.*
-import tamedu.phap.currentTitle
 
 /**
  * Implementation of App Widget
@@ -70,7 +69,6 @@ class AppWidget : AppWidgetProvider() {
                 tamedu.reminder.playBell(context)
                 tamedu.count.inc(context, SAN_COUNT_KEY, 1)
             }
-
             SPEAK_REMINDER_TOGGLE -> {
                 tamedu.reminder.toggle()
                 txt = tamedu.reminder.speakCurrent()
@@ -83,15 +81,10 @@ class AppWidget : AppWidgetProvider() {
 
             NGHE_PHAP -> txt = tamedu.phap.updatePlayPhap(context)
             THU_GIAN -> txt = tamedu.phap.updatePlayPhap(context, true)
-            NGHE_PHAP_BEGIN -> {
-                txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
-            }
-            NGHE_PHAP_FINISH -> {
-                txt = APP_TITLE
-            }
-            REFRESH -> {
-                txt = "Đang nghe \"${currentTitle()}\""
-            }
+            NGHE_PHAP_BEGIN -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
+            NGHE_PHAP_FINISH -> txt = APP_TITLE
+            REFRESH -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
+
             else -> {
                 super.onReceive(context, intent)
                 return
@@ -184,12 +177,13 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, MUC_DO_SAN_NANG, R.id.san_hard_button)
     setupIntent(context, views, MUC_DO_SAN_CAP_CUU, R.id.san_cap_cuu_button)
 
-    tamedu.reminder.newCurrent(context)
-    tamedu.phap.checkTimeToPlay(context)
+    if (!tamedu.phap.isPlaying()) {
+        updateViews(context, views, APP_TITLE)
+        tamedu.reminder.newCurrent(context)
+        tamedu.phap.checkTimeToPlay(context)
+        tamedu.reminder.playBellOrSpeakCurrent(context)
+    }
 
-    updateViews(context, views, APP_TITLE)
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
-
-    tamedu.reminder.playBellOrSpeakCurrent(context)
  }
