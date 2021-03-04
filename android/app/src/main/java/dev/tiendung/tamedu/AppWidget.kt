@@ -178,10 +178,10 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, MUC_DO_SAN_CAP_CUU, R.id.san_cap_cuu_button)
 
     if (!tamedu.phap.isPlaying()) {
-        updateViews(context, views, APP_TITLE)
         tamedu.reminder.newCurrent(context)
         tamedu.phap.checkTimeToPlay(context)
         tamedu.reminder.playBellOrSpeakCurrent(context)
+        updateViews(context, views, APP_TITLE)
     }
 
     // Instruct the widget manager to update the widget
