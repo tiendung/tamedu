@@ -43,7 +43,7 @@ class AppWidget : AppWidgetProvider() {
                 _showHabitsBar = true
                 _resetPressedCount = 0
             }
-            COUNT_1 ->  { _currentCountAdded +=  1; _resetPressedCount = 0 }
+            COUNT_1 ->  { _currentCountAdded +=  5; _resetPressedCount = 0 }
             COUNT_10 -> { _currentCountAdded += 10; _resetPressedCount = 0 }
             COUNT_RESET -> {
                 _resetPressedCount += 1
@@ -143,7 +143,7 @@ fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setInt(R.id.today_abs_button, "setTextColor", tamedu.count.color(context, ABS_COUNT_KEY))
     views.setInt(R.id.thu_gian_button, "setTextColor", tamedu.count.color(context, THU_GIAN_COUNT_KEY))
 
-    views.setTextViewText(R.id.today_san_button, "Sân ${tamedu.count.get(context, SAN_COUNT_KEY)}")
+    // views.setTextViewText(R.id.today_san_button, "Sân ${tamedu.count.get(context, SAN_COUNT_KEY)}")
 }
 
 private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {
@@ -173,9 +173,9 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, COUNT_10, R.id.count_10_button)
     setupIntent(context, views, COUNT_RESET, R.id.count_reset_button)
 
-    setupIntent(context, views, MUC_DO_SAN_VUA, R.id.san_medium_button)
-    setupIntent(context, views, MUC_DO_SAN_NANG, R.id.san_hard_button)
-    setupIntent(context, views, MUC_DO_SAN_CAP_CUU, R.id.san_cap_cuu_button)
+    // setupIntent(context, views, MUC_DO_SAN_VUA, R.id.san_medium_button)
+    // setupIntent(context, views, MUC_DO_SAN_NANG, R.id.san_hard_button)
+    // setupIntent(context, views, MUC_DO_SAN_CAP_CUU, R.id.san_cap_cuu_button)
 
     if (!tamedu.phap.isPlaying()) {
         tamedu.reminder.newCurrent(context)
