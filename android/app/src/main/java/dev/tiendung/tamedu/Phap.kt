@@ -116,7 +116,7 @@ fun checkTimeToPlay(context: Context): String {
     // Reset counter
     if (currH >= 1 && currH <= 3) tamedu.count._todayReseted = false
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying &&
-        ((currH == 4 && currM > 35) || (currH == 18 && currM > 35)) ) {
+        ((currH == 4 && currM > 15) || (currH == 22 && currM > 15)) ) {
         context.broadcastUpdateWidget(NGHE_PHAP)
         _autoPlayed = true
     }
