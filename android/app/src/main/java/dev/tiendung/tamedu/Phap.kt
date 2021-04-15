@@ -19,7 +19,6 @@ private var _phapPlayer: MediaPlayer = MediaPlayer()
 private var _phapIsLoading: Boolean = false
 private var _phapIsPlaying: Boolean = false
 private var _currentPhap: Phap? = null
-private var _stopPhapClicksCount: Int = 0
 private var _isPause = false
 private var _autoPlayed = false
 private var _isThuGian = false
@@ -65,23 +64,8 @@ fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): Str
     }
 
     if (_phapIsPlaying) {
-        _stopPhapClicksCount += 1
-        when (_stopPhapClicksCount) {
-            1 -> {
-                txt = "Đang nghe \"${currentTitle()}\". Nhấn \"Dừng nghe\" lần nữa để kết thúc."
-                Timer("SettingUp", false).schedule(2500) {
-                    if (_phapIsPlaying) {
-                        _stopPhapClicksCount = 0
-                        context.broadcastUpdateWidget(REFRESH)
-                    }
-                }
-            }
-            2 -> {
-                finishPhap()
-                txt = APP_TITLE
-            }
-        }
-        return txt
+        finishPhap()
+        return APP_TITLE
     }
     
     if (!_phapIsLoading) { // load new phap or thu gian
@@ -105,7 +89,6 @@ private fun finishPhap(): String? {
     _phapIsPlaying = false
     _phapIsLoading = false
     _autoPlayed = false
-    _stopPhapClicksCount = 0
     _currentPhapPosition = 0
     _isThuGian = false
     return null
@@ -130,8 +113,8 @@ fun checkTimeToPlay(context: Context): String {
     if (currH >= 1 && currH <= 3) tamedu.count._todayReseted = false
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying && (
                     (currH == 11 && currM > 15) || (currH == 12 && currM > 15) ||
-                    (currH == 18 && currM > 15) || (currH == 19 && currM > 15) ||
-                    (currH == 20 && currM > 15) || (currH == 21 && currM > 15) ||
+//                    (currH == 18 && currM > 15) || (currH == 19 && currM > 15) ||
+//                    (currH == 20 && currM > 15) || (currH == 21 && currM > 15) ||
                     (currH == 22 && currM > 15) || (currH == 23 && currM > 15) ||
                     (currH ==  0 && currM > 15) || (currH ==  1 && currM > 15) ||
                     (currH ==  2 && currM > 15) || (currH ==  3 && currM > 15) ||
