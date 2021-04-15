@@ -12,6 +12,7 @@ private const val PATH = "dev.tiendung.tamedu."
 const val REFRESH = PATH + "action.REFRESH"
 const val NGHE_PHAP_FINISH = PATH + "action.NGHE_PHAP_FINISH"
 const val NGHE_PHAP_BEGIN = PATH + "action.NGHE_PHAP_BEGIN"
+const val NGHE_PHAP_PROGRESS = PATH + "action.NGHE_PHAP_PROGRESS"
 const val NGHE_PHAP = PATH + "action.NGHE_PHAP"
 const val THU_GIAN = PATH + "action.THU_GIAN"
 const val SPEAK_REMINDER_TOGGLE = PATH + "action.SPEAK_REMINDER_TOGGLE"
@@ -45,15 +46,15 @@ const val PLANK_COUNT_KEY = "plankCount"
 const val HANDSTAND_COUNT_KEY = "handstandCount"
 
 val COUNT_KEY_TO_LABEL: HashMap<String, String> = hashMapOf(
-        SQUAT_COUNT_KEY to "Squat",
-        PUSH_COUNT_KEY to "Push",
-        PULL_COUNT_KEY to "Pull",
-        ABS_COUNT_KEY to "Abs",
+        SQUAT_COUNT_KEY to "Chân",
+        PUSH_COUNT_KEY to "Đẩy",
+        PULL_COUNT_KEY to "Kéo",
+        ABS_COUNT_KEY to "Bụng",
         THU_GIAN_COUNT_KEY to "Thư giãn",
         NGHE_PHAP_COUNT_KEY to "Nghe pháp",
         SAN_COUNT_KEY to "Sân",
         PLANK_COUNT_KEY to "Plank",
-        HANDSTAND_COUNT_KEY to "handstand"
+        HANDSTAND_COUNT_KEY to "andstand"
 )
 
 val COUNT_KEY_TO_GOAL: HashMap<String, Int> = hashMapOf(

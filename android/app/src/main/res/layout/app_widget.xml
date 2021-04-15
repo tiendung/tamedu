@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="0dp"
+    android:background="@drawable/transparent_rounded_shape"
     android:padding="0dp"
     android:theme="@style/ThemeOverlay.Android.AppWidgetContainer">
 
@@ -68,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:layout_marginTop="6dp"
-            android:background="#400D00"
+            android:background="@drawable/rounded_shape"
             android:gravity="center_vertical|left"
             android:orientation="vertical">
 
@@ -79,9 +80,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/appwidget_text"
-                android:paddingLeft="10dp"
+                android:paddingLeft="20dp"
                 android:paddingTop="6dp"
-                android:paddingRight="6dp"
+                android:paddingRight="12dp"
                 android:paddingBottom="6dp"
                 android:text="Hãy cố quan sát cách tâm đối phó với một hoàn cảnh khó khăn, từ nhiều góc độ khác nhau. Một khi đã hiểu cách làm việc của tâm, trí tuệ bắt đầu hoạt động. Lần sau nó sẽ biết phải làm gì."
                 android:textColor="#E9DA95"
@@ -95,9 +96,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/appwidget_text"
-                android:paddingLeft="10dp"
+                android:paddingLeft="20dp"
                 android:paddingTop="2dp"
-                android:paddingRight="6dp"
+                android:paddingRight="12dp"
                 android:paddingBottom="4dp"
                 android:text="sutamphap.com"
                 android:textColor="#DDD"
@@ -119,7 +120,7 @@
                 android:id="@+id/today_squat_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SQUAT 000"
+                android:text="Squat 000"
                 android:textAllCaps="false"
                 android:textColor="#442F19"
                 android:textSize="13sp" />
@@ -128,7 +129,7 @@
                 android:id="@+id/today_push_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PUSH 000"
+                android:text="Push 000"
                 android:textAllCaps="false"
                 android:textColor="#42275E"
                 android:textSize="13sp" />
@@ -137,7 +138,7 @@
                 android:id="@+id/today_pull_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PULL 000"
+                android:text="Pull 000"
                 android:textAllCaps="false"
                 android:textSize="13sp" />
 
@@ -145,7 +146,7 @@
                 android:id="@+id/today_abs_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ABS 000"
+                android:text="Abs 000"
                 android:textAllCaps="false"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -240,7 +241,7 @@
                 android:textSize="13sp" />
         </LinearLayout> -->
 
-<!--         <LinearLayout
+        <!--         <LinearLayout
             android:id="@+id/timers_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

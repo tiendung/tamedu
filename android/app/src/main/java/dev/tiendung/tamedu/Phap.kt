@@ -1,16 +1,16 @@
 package tamedu.phap
 
 import android.content.Context
-import android.os.Environment
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Environment
 import dev.tiendung.tamedu.helpers.*
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
-import java.util.Timer
 import kotlin.concurrent.schedule
+import kotlin.math.absoluteValue
 
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
@@ -21,6 +21,15 @@ private var _stopPhapClicksCount: Int = 0
 private var _isPause = false
 private var _autoPlayed = false
 private var _isThuGian = false
+private var _currentPhapPosition: Int = 0
+private var _phapPlayerTimer: Timer = Timer("CheckNghePhapProgress", false)
+
+fun getCurrentPhapPosition():String {
+    var s = _currentPhapPosition / 1000
+    val m = s / 60
+    s %= 60
+    return "%02d:%02d".format(m, s.absoluteValue)
+}
 
 fun thuGianButtonText(context: Context): String {
     if (_phapIsPlaying) {
@@ -88,12 +97,14 @@ fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): Str
     return txt
 }
 
-private fun finishPhap(): String? { 
-    _phapPlayer.release() 
+private fun finishPhap(): String? {
+    _phapPlayerTimer.cancel()
+    _phapPlayer.release()
     _phapIsPlaying = false
     _phapIsLoading = false
     _autoPlayed = false
     _stopPhapClicksCount = 0
+    _currentPhapPosition = 0
     _isThuGian = false
     return null
 }
@@ -115,8 +126,13 @@ fun checkTimeToPlay(context: Context): String {
     val currM = currentTime[Calendar.MINUTE]
     // Reset counter
     if (currH >= 1 && currH <= 3) tamedu.count._todayReseted = false
-    if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying &&
-        ((currH == 4 && currM > 15) || (currH == 22 && currM > 15)) ) {
+    if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying && (
+        (currH == 12 && currM > 15) ||
+        (currH == 22 && currM > 15) || (currH == 23 && currM > 15) ||
+        (currH ==  0 && currM > 15) || (currH ==  1 && currM > 15) ||
+        (currH ==  2 && currM > 15) || (currH ==  3 && currM > 15) ||
+        (currH ==  4 && currM > 15) || (currH ==  5 && currM >  5)
+    )) {
         context.broadcastUpdateWidget(NGHE_PHAP)
         _autoPlayed = true
     }
@@ -133,13 +149,27 @@ private fun loadAndPlayPhap(context: Context): String {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
+        // Delay 1.2 second
         setOnPreparedListener { mp ->
-            Timer("SettingUp", false).schedule(1200) {
+            Timer("SettingUpNghePhap", false).schedule(1200) {
                 _phapIsLoading = false
                 _phapIsPlaying = true
                 tamedu.reminder.stopAndMute()
+                if (!_isThuGian) {
+                    val z = mp.getDuration()/60000 - 10;
+                    var x = arrayOf(20, 30, 40, 50, 60).random()
+                    x = x + Random().nextInt(10)
+                    if (x > z - 10) x = z - 10
+                    mp.seekTo(x.toLong() * 60000, MediaPlayer.SEEK_NEXT_SYNC)
+                }
                 mp.start()
                 context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
+            }
+            // Every minute, check progress
+            _phapPlayerTimer = Timer("CheckNghePhapProgress", false)
+            _phapPlayerTimer.schedule(2200, 1000) {
+                _currentPhapPosition = mp.getDuration() - mp.getCurrentPosition()
+                context.broadcastUpdateWidget(NGHE_PHAP_PROGRESS)
             }
         }
         setOnCompletionListener {

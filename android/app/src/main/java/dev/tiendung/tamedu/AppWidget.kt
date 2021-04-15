@@ -83,6 +83,7 @@ class AppWidget : AppWidgetProvider() {
             THU_GIAN -> txt = tamedu.phap.updatePlayPhap(context, true)
             NGHE_PHAP_BEGIN -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
             NGHE_PHAP_FINISH -> txt = APP_TITLE
+            NGHE_PHAP_PROGRESS -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\" ${tamedu.phap.getCurrentPhapPosition()}"
             REFRESH -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
 
             else -> {
@@ -124,17 +125,18 @@ fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
     views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
     views.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
-    views.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
+//    views.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
+//    views.setInt(R.id.quote_background, "setColor", tamedu.reminder.currentBgColor())
     views.setBoolean(R.id.speak_reminder_toggle_button, "setEnabled", !tamedu.phap.isPlaying())
     if (marqueeTxt != null) views.setTextViewText(R.id.marquee_status, marqueeTxt)
 
     views.setViewVisibility(R.id.habits_bar, hideOrShow(1))
     views.setViewVisibility(R.id.counts_bar, hideOrShow(0))
 
-    views.setTextViewText(R.id.today_squat_button, "SQUAT ${tamedu.count.get(context, SQUAT_COUNT_KEY)}")
-    views.setTextViewText(R.id.today_push_button, "PUSH ${tamedu.count.get(context, PUSH_COUNT_KEY)}")
-    views.setTextViewText(R.id.today_pull_button, "PULL ${tamedu.count.get(context, PULL_COUNT_KEY)}")
-    views.setTextViewText(R.id.today_abs_button, "ABS ${tamedu.count.get(context, ABS_COUNT_KEY)}")
+    views.setTextViewText(R.id.today_squat_button, "Chân ${tamedu.count.get(context, SQUAT_COUNT_KEY)}")
+    views.setTextViewText(R.id.today_push_button, "Đẩy ${tamedu.count.get(context, PUSH_COUNT_KEY)}")
+    views.setTextViewText(R.id.today_pull_button, "Kéo ${tamedu.count.get(context, PULL_COUNT_KEY)}")
+    views.setTextViewText(R.id.today_abs_button, "Bụng ${tamedu.count.get(context, ABS_COUNT_KEY)}")
     views.setTextViewText(R.id.count_total_button, "${COUNT_KEY_TO_LABEL[_currentCountKey]} + $_currentCountAdded")
 
     views.setInt(R.id.today_squat_button, "setTextColor", tamedu.count.color(context, SQUAT_COUNT_KEY))
