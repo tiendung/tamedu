@@ -11,6 +11,8 @@ import java.io.FileInputStream
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
@@ -127,11 +129,13 @@ fun checkTimeToPlay(context: Context): String {
     // Reset counter
     if (currH >= 1 && currH <= 3) tamedu.count._todayReseted = false
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying && (
-        (currH == 12 && currM > 15) ||
-        (currH == 22 && currM > 15) || (currH == 23 && currM > 15) ||
-        (currH ==  0 && currM > 15) || (currH ==  1 && currM > 15) ||
-        (currH ==  2 && currM > 15) || (currH ==  3 && currM > 15) ||
-        (currH ==  4 && currM > 15) || (currH ==  5 && currM >  5)
+                    (currH == 11 && currM > 15) || (currH == 12 && currM > 15) ||
+                    (currH == 18 && currM > 15) || (currH == 19 && currM > 15) ||
+                    (currH == 20 && currM > 15) || (currH == 21 && currM > 15) ||
+                    (currH == 22 && currM > 15) || (currH == 23 && currM > 15) ||
+                    (currH ==  0 && currM > 15) || (currH ==  1 && currM > 15) ||
+                    (currH ==  2 && currM > 15) || (currH ==  3 && currM > 15) ||
+                    (currH ==  4 && currM > 15) || (currH ==  5 && currM >  5)
     )) {
         context.broadcastUpdateWidget(NGHE_PHAP)
         _autoPlayed = true
@@ -156,11 +160,10 @@ private fun loadAndPlayPhap(context: Context): String {
                 _phapIsPlaying = true
                 tamedu.reminder.stopAndMute()
                 if (!_isThuGian) {
-                    val z = mp.getDuration()/60000 - 10;
-                    var x = arrayOf(20, 30, 40, 50, 60).random()
-                    x = x + Random().nextInt(10)
-                    if (x > z - 10) x = z - 10
-                    mp.seekTo(x.toLong() * 60000, MediaPlayer.SEEK_NEXT_SYNC)
+                    val z = mp.getDuration()
+                    var x = arrayOf(3.0,3.5,4.0,4.5,5.0).random()
+                    x = z * (x - 0.3 - 0.5*Random().nextDouble()) / x
+                    mp.seekTo(x.roundToLong(), MediaPlayer.SEEK_NEXT_SYNC)
                 }
                 mp.start()
                 context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)

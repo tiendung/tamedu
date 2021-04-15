@@ -6,7 +6,7 @@ import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.*
 
-const val APP_TITLE = "THOẢI MÁI - TÍCH CỰC - HẾT MÌNH"
+const val APP_TITLE = "Thoải mái  -  Tích cực  -  Hết mình"
 
 private const val PATH = "dev.tiendung.tamedu."
 const val REFRESH = PATH + "action.REFRESH"
