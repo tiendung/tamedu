@@ -83,7 +83,7 @@ class AppWidget : AppWidgetProvider() {
             THU_GIAN -> txt = tamedu.phap.updatePlayPhap(context, true)
             NGHE_PHAP_BEGIN -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
             NGHE_PHAP_FINISH -> txt = APP_TITLE
-            NGHE_PHAP_PROGRESS -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\" ${tamedu.phap.getCurrentPhapPosition()}"
+            NGHE_PHAP_PROGRESS -> txt = "\"${tamedu.phap.currentTitle()}\" ${tamedu.phap.getCurrentPhapPosition()}"
             REFRESH -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
 
             else -> {

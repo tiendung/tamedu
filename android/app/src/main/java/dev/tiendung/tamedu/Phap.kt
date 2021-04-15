@@ -160,9 +160,7 @@ private fun loadAndPlayPhap(context: Context): String {
                 _phapIsPlaying = true
                 tamedu.reminder.stopAndMute()
                 if (!_isThuGian) {
-                    val z = mp.getDuration()
-                    var x = arrayOf(3.0,3.5,4.0,4.5,5.0).random()
-                    x = z * (x - 0.3 - 0.5*Random().nextDouble()) / x
+                    var x = mp.getDuration() * (0.5+0.3*Random().nextDouble())
                     mp.seekTo(x.roundToLong(), MediaPlayer.SEEK_NEXT_SYNC)
                 }
                 mp.start()
