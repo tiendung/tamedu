@@ -19,11 +19,10 @@ private var _phapPlayer: MediaPlayer = MediaPlayer()
 private var _phapIsLoading: Boolean = false
 private var _phapIsPlaying: Boolean = false
 private var _currentPhap: Phap? = null
-private var _isPause = false
 private var _autoPlayed = false
 private var _isThuGian = false
 private var _currentPhapPosition: Int = 0
-private var _phapPlayerTimer: Timer = Timer("CheckNghePhapProgress", false)
+private var _phapPlayerTimer: Timer = Timer()
 
 fun getCurrentPhapPosition():String {
     var s = _currentPhapPosition / 1000
@@ -32,10 +31,11 @@ fun getCurrentPhapPosition():String {
     return "%02d:%02d".format(m, s.absoluteValue)
 }
 
+fun docButtonText(): String {
+    return if (_phapIsPlaying) "Dừng" else "Đọc"
+}
+
 fun thuGianButtonText(context: Context): String {
-    if (_phapIsPlaying) {
-        return if (_isPause) "Nghe tiếp" else "Tạm dừng"
-    }
     val count = tamedu.count.get(context, THU_GIAN_COUNT_KEY)
     var txt = "Thư giãn"
     if (count != 0) txt = "$txt $count"
@@ -50,19 +50,7 @@ fun isThuGian(): Boolean {
     return _isThuGian
 }
 
-fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): String? {
-
-    var txt: String? = null
-    if (thuGianButtonPressed && _phapIsPlaying) {
-        _isPause = !_isPause
-        if (_isPause) {
-            _phapPlayer.pause()
-        } else {
-            _phapPlayer.start()
-        }
-        return txt
-    }
-
+fun updatePlayPhap(context: Context): String? {
     if (_phapIsPlaying) {
         finishPhap()
         return APP_TITLE
@@ -78,9 +66,8 @@ fun updatePlayPhap(context: Context, thuGianButtonPressed: Boolean = false): Str
         }
         toast(context, loadAndPlayPhap(context))
     }
-    
-    txt = "Đang tải \"${currentTitle()}\" ..."
-    return txt
+
+    return "Đang tải \"${currentTitle()}\" ..."
 }
 
 private fun finishPhap(): String? {
@@ -95,15 +82,6 @@ private fun finishPhap(): String? {
 }
 
 fun currentTitle(): String { return _currentPhap!!.title }
-fun buttonText(): String {
-    return when (_phapIsPlaying) {
-        true -> "Dừng nghe"
-        false -> when (_phapIsLoading) {
-            true -> "Nghe pháp" // "Đang tải ..."
-            false -> "Nghe pháp"
-        }
-    }
-}
 
 fun checkTimeToPlay(context: Context): String {
     val currentTime = Calendar.getInstance()
@@ -113,8 +91,6 @@ fun checkTimeToPlay(context: Context): String {
     if (currH >= 1 && currH <= 3) tamedu.count._todayReseted = false
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying && (
                     (currH == 11 && currM > 15) || (currH == 12 && currM > 15) ||
-//                    (currH == 18 && currM > 15) || (currH == 19 && currM > 15) ||
-//                    (currH == 20 && currM > 15) || (currH == 21 && currM > 15) ||
                     (currH == 22 && currM > 15) || (currH == 23 && currM > 15) ||
                     (currH ==  0 && currM > 15) || (currH ==  1 && currM > 15) ||
                     (currH ==  2 && currM > 15) || (currH ==  3 && currM > 15) ||
@@ -136,7 +112,8 @@ private fun loadAndPlayPhap(context: Context): String {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
-        // Delay 1.2 second
+
+        // Delay 0.6 second
         setOnPreparedListener { mp ->
             Timer("SettingUpNghePhap", false).schedule(600) {
                 _phapIsLoading = false
@@ -149,13 +126,14 @@ private fun loadAndPlayPhap(context: Context): String {
                 mp.start()
                 context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
             }
-            // Every minute, check progress
+            // Every second, check progress
             _phapPlayerTimer = Timer("CheckNghePhapProgress", false)
             _phapPlayerTimer.schedule(2200, 1000) {
                 _currentPhapPosition = mp.getDuration() - mp.getCurrentPosition()
                 context.broadcastUpdateWidget(NGHE_PHAP_PROGRESS)
             }
         }
+
         setOnCompletionListener {
             tamedu.count.inc(context, if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY, 1)
             finishPhap()
