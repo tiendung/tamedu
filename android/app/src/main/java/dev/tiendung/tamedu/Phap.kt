@@ -52,6 +52,7 @@ fun isThuGian(): Boolean {
 
 fun startPlayThuGian(context: Context): String? {
     if (!_phapIsLoading) { // load new phap or thu gian
+        finishPhap()
         _isThuGian = true
         tamedu.reminder.newCurrent(context, 15)
         _currentPhap = getRandomThuGian()
@@ -62,6 +63,7 @@ fun startPlayThuGian(context: Context): String? {
 
 fun startPlayPhap(context: Context): String? {
     if (!_phapIsLoading) { // load new phap or thu gian
+        finishPhap()
         _currentPhap = getRandomPhap()
         toast(context, loadAndPlayPhap(context))
     }
@@ -87,6 +89,7 @@ fun checkTimeToPlay(context: Context): String {
     val currM = currentTime[Calendar.MINUTE]
     // Reset counter
     if (currH >= 1 && currH <= 3) tamedu.count._todayReseted = false
+    // Auto play Phap
     if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying && (
                     (currH == 11 && currM > 15) || (currH == 12 && currM > 15) ||
                     (currH == 22 && currM > 15) || (currH == 23 && currM > 15) ||
@@ -133,7 +136,8 @@ private fun loadAndPlayPhap(context: Context): String {
         }
 
         setOnCompletionListener {
-            tamedu.count.inc(context, if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY, 1)
+            val k = if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY
+            tamedu.count.inc(context, k, 1)
             finishPhap()
             context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
         }
