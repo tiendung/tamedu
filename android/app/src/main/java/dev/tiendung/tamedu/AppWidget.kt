@@ -55,25 +55,12 @@ class AppWidget : AppWidgetProvider() {
                 _currentCountAdded = 0
             }
 
-            MUC_DO_SAN_VUA -> {
-                tamedu.reminder.newCurrent(context, 2)
-                tamedu.count.inc(context, SAN_COUNT_KEY, 1)
-            }
-            MUC_DO_SAN_NANG -> {
-                tamedu.reminder.newCurrent(context, 0)
-                txt = tamedu.reminder.speakCurrent(true)
-                tamedu.count.inc(context, SAN_COUNT_KEY, 1)
-            }
-            MUC_DO_SAN_CAP_CUU -> {
-                tamedu.reminder.newCurrent(context, 1)
-                tamedu.reminder.playBell(context)
-                tamedu.count.inc(context, SAN_COUNT_KEY, 1)
-            }
             SPEAK_REMINDER_TOGGLE -> {
                 tamedu.reminder.toggle()
                 txt = tamedu.reminder.speakCurrent()
                 if (!tamedu.phap.isPlaying() && txt == null) txt = APP_TITLE 
             }
+
             NEW_REMINDER -> {
                 tamedu.reminder.newCurrent(context)
                 txt = tamedu.reminder.speakCurrent()
@@ -84,7 +71,6 @@ class AppWidget : AppWidgetProvider() {
             NGHE_PHAP_BEGIN -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
             NGHE_PHAP_FINISH -> txt = APP_TITLE
             NGHE_PHAP_PROGRESS -> txt = "\"${tamedu.phap.currentTitle()}\" ${tamedu.phap.getCurrentPhapPosition()}"
-            REFRESH -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
 
             else -> {
                 super.onReceive(context, intent)

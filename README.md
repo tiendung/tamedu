@@ -52,3 +52,6 @@ https://github.com/tiendung/tiendung.github.io/archive/refs/heads/main.zip
 
 https://heartbeat.fritz.ai/10-tips-to-speed-up-android-gradle-build-times-c0ec665fc800
 
+- - -
+
+https://stackoverflow.com/questions/59823810/calling-a-function-and-passing-arguments-from-kotlin-to-flutter

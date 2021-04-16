@@ -138,7 +138,7 @@ private fun loadAndPlayPhap(context: Context): String {
         )
         // Delay 1.2 second
         setOnPreparedListener { mp ->
-            Timer("SettingUpNghePhap", false).schedule(1200) {
+            Timer("SettingUpNghePhap", false).schedule(600) {
                 _phapIsLoading = false
                 _phapIsPlaying = true
                 tamedu.reminder.stopAndMute()
@@ -168,7 +168,7 @@ private fun loadAndPlayPhap(context: Context): String {
     if (phap.audioFile.exists()) {
         val fd = FileInputStream(phap.audioFile).fd
         _phapPlayer.setDataSource(fd)
-        txt = "${phap.audioFile}"
+        txt = "${phap.audioFile}".replace("/storage/emulated/0/","")
     } else _phapPlayer.setDataSource(context, Uri.parse(phap.audioUrl))
     _phapPlayer.prepareAsync()
 
