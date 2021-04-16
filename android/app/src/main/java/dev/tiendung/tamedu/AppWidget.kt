@@ -56,9 +56,13 @@ class AppWidget : AppWidgetProvider() {
             }
 
             SPEAK_REMINDER_TOGGLE -> {
-                tamedu.reminder.toggle()
-                txt = tamedu.reminder.speakCurrent()
-                if (!tamedu.phap.isPlaying() && txt == null) txt = APP_TITLE 
+                if (tamedu.phap.isPlaying()) {
+                    txt = tamedu.phap.finishPhap()
+                } else {
+                    tamedu.reminder.toggle()
+                    txt = tamedu.reminder.speakCurrent()
+                }
+                if (txt == null) txt = APP_TITLE
             }
 
             NEW_REMINDER -> {
@@ -66,8 +70,8 @@ class AppWidget : AppWidgetProvider() {
                 txt = tamedu.reminder.speakCurrent()
             }
 
-            NGHE_PHAP -> txt = tamedu.phap.updatePlayPhap(context)
-            THU_GIAN -> txt = tamedu.phap.updatePlayPhap(context, true)
+            NGHE_PHAP -> txt = tamedu.phap.startPlayPhap(context)
+            THU_GIAN -> txt = tamedu.phap.startPlayPhap(context)
             NGHE_PHAP_BEGIN -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
             NGHE_PHAP_FINISH -> txt = APP_TITLE
             NGHE_PHAP_PROGRESS -> txt = "\"${tamedu.phap.currentTitle()}\" ${tamedu.phap.getCurrentPhapPosition()}"
@@ -107,13 +111,9 @@ private fun hideOrShow(i: Int): Int {
 }
 
 fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
-    views.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.reminder.toggleText())
-    views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.buttonText())
     views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
     views.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
-//    views.setInt(R.id.reminder_area, "setBackgroundColor", tamedu.reminder.currentBgColor())
-//    views.setInt(R.id.quote_background, "setColor", tamedu.reminder.currentBgColor())
-    views.setBoolean(R.id.speak_reminder_toggle_button, "setEnabled", !tamedu.phap.isPlaying())
+    views.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.phap.docButtonText())
     if (marqueeTxt != null) views.setTextViewText(R.id.marquee_status, marqueeTxt)
 
     views.setViewVisibility(R.id.habits_bar, hideOrShow(1))
@@ -130,8 +130,6 @@ fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setInt(R.id.today_pull_button, "setTextColor", tamedu.count.color(context, PULL_COUNT_KEY))
     views.setInt(R.id.today_abs_button, "setTextColor", tamedu.count.color(context, ABS_COUNT_KEY))
     views.setInt(R.id.thu_gian_button, "setTextColor", tamedu.count.color(context, THU_GIAN_COUNT_KEY))
-
-    // views.setTextViewText(R.id.today_san_button, "Sân ${tamedu.count.get(context, SAN_COUNT_KEY)}")
 }
 
 private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {
@@ -160,10 +158,6 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, COUNT_1, R.id.count_1_button)
     setupIntent(context, views, COUNT_10, R.id.count_10_button)
     setupIntent(context, views, COUNT_RESET, R.id.count_reset_button)
-
-    // setupIntent(context, views, MUC_DO_SAN_VUA, R.id.san_medium_button)
-    // setupIntent(context, views, MUC_DO_SAN_NANG, R.id.san_hard_button)
-    // setupIntent(context, views, MUC_DO_SAN_CAP_CUU, R.id.san_cap_cuu_button)
 
     if (!tamedu.phap.isPlaying()) {
         tamedu.reminder.newCurrent(context)

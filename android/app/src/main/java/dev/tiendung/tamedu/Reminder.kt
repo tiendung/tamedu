@@ -121,7 +121,7 @@ fun currentText(): String { return if (_current == null) "" else _current!!.text
 fun currentBgColor(): Int { return if (_current == null)  0 else _current!!.bgColor }
 fun toggleText(): String {
     return when (_allowToSpeak) {
-        true  -> "Dừng đọc"
+        true  -> "Dừng"
         false -> "Đọc"
     }
 }

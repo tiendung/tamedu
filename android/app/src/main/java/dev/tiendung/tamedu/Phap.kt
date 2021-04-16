@@ -32,7 +32,7 @@ fun getCurrentPhapPosition():String {
 }
 
 fun docButtonText(): String {
-    return if (_phapIsPlaying) "Dừng" else "Đọc"
+    return if (_phapIsPlaying) "Dừng" else tamedu.reminder.toggleText()
 }
 
 fun thuGianButtonText(context: Context): String {
@@ -50,27 +50,25 @@ fun isThuGian(): Boolean {
     return _isThuGian
 }
 
-fun updatePlayPhap(context: Context): String? {
-    if (_phapIsPlaying) {
-        finishPhap()
-        return APP_TITLE
-    }
-    
+fun startPlayThuGian(context: Context): String? {
     if (!_phapIsLoading) { // load new phap or thu gian
-        if (thuGianButtonPressed) {
-            _isThuGian = true
-            tamedu.reminder.newCurrent(context, 15)
-            _currentPhap = getRandomThuGian()
-        } else {
-            _currentPhap = getRandomPhap()
-        }
+        _isThuGian = true
+        tamedu.reminder.newCurrent(context, 15)
+        _currentPhap = getRandomThuGian()
         toast(context, loadAndPlayPhap(context))
     }
-
     return "Đang tải \"${currentTitle()}\" ..."
 }
 
-private fun finishPhap(): String? {
+fun startPlayPhap(context: Context): String? {
+    if (!_phapIsLoading) { // load new phap or thu gian
+        _currentPhap = getRandomPhap()
+        toast(context, loadAndPlayPhap(context))
+    }
+    return "Đang tải \"${currentTitle()}\" ..."
+}
+
+fun finishPhap(): String? {
     _phapPlayerTimer.cancel()
     _phapPlayer.release()
     _phapIsPlaying = false
