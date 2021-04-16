@@ -5,6 +5,7 @@ import android.content.Intent
 import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.*
+import java.io.IOException
 
 const val APP_TITLE = "Thoải mái  -  Tích cực  -  Hết mình"
 
@@ -74,4 +75,15 @@ fun dateStr(delta: Int = 0): String {
         cal.add(Calendar.DATE, delta) 
     }
     return SimpleDateFormat("yyyy-MM-dd").format(cal.getTime())
+}
+
+fun getJsonDataFromAsset(context: Context, fileName: String): String? {
+    val jsonString: String
+    try {
+        jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
+    } catch (ioException: IOException) {
+        ioException.printStackTrace()
+        return null
+    }
+    return jsonString
 }
