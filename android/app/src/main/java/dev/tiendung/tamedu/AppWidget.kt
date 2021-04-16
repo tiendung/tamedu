@@ -47,8 +47,8 @@ class AppWidget : AppWidgetProvider() {
             COUNT_10 -> { _currentCountAdded += 10; _resetPressedCount = 0 }
             COUNT_RESET -> {
                 _resetPressedCount += 1
-                if (_resetPressedCount == 4) toast(context, "Press \"Reset\" one more to reset all counters")
-                if (_resetPressedCount == 5) {
+                if (_resetPressedCount == 3) toast(context, "Press \"Reset\" one more to reset all counters")
+                if (_resetPressedCount  > 3) {
                     tamedu.count.reset()
                     _showHabitsBar = true
                 }
