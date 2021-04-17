@@ -1,4 +1,5 @@
 package tamedu.count
+import dev.tiendung.tamedu.helpers.*
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,7 +9,7 @@ import android.util.Log
 import java.io.File
 import java.io.IOException
 import com.google.gson.Gson
-import dev.tiendung.tamedu.helpers.*
+import android.view.View
 
 private var _sharedPref: SharedPreferences? = null
 var _todayReseted: Boolean = false
@@ -65,4 +66,46 @@ fun color(context: Context, k: String): Int {
     if (v >= g!!) return G
     if (v > 0) return Y
     return B
+}
+
+private var _resetPressedCount = 0
+private var _currentCountKey: String = TODAY_SQUAT
+private var _currentCountAdded: Int = 0
+private var _showHabitsBar = true
+private val _habitsCountVisibilities = arrayOf(View.GONE, View.VISIBLE)
+
+fun hideOrShow(i: Int): Int {
+    return if (_showHabitsBar) _habitsCountVisibilities[i] else _habitsCountVisibilities[1-i]
+}
+
+fun countHabit(habitCountKey: String) {
+    _currentCountKey = habitCountKey
+    _currentCountAdded = 0
+    _showHabitsBar = false
+    _resetPressedCount = 0
+}
+
+fun countUpdateTotal(context: Context) {
+    tamedu.count.inc(context, _currentCountKey, _currentCountAdded)
+    _showHabitsBar = true
+    _resetPressedCount = 0
+}
+
+fun countReset(context: Context) {
+    _resetPressedCount += 1
+    if (_resetPressedCount == 3) toast(context, "Press \"Reset\" one more to reset all counters")
+    if (_resetPressedCount  > 3) {
+        tamedu.count.reset()
+        _showHabitsBar = true
+    }
+    _currentCountAdded = 0
+}
+
+fun addCurrentCount(x: Int) { 
+    _currentCountAdded +=  x; 
+    _resetPressedCount = 0 
+}
+
+fun currentCountLabel(): String {
+    return "${COUNT_KEY_TO_LABEL[_currentCountKey]} + $_currentCountAdded"
 }

@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import android.widget.RemoteViews
 
 import dev.tiendung.tamedu.helpers.*
@@ -14,6 +13,7 @@ import dev.tiendung.tamedu.helpers.*
 /**
  * Implementation of App Widget
  */
+
 class AppWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
 
@@ -23,37 +23,18 @@ class AppWidget : AppWidgetProvider() {
         }
     }
 
-    private fun countHabit(habitCountKey: String) {
-        _currentCountKey = habitCountKey
-        _currentCountAdded = 0
-        _showHabitsBar = false
-        _resetPressedCount = 0
-    }
-
     override fun onReceive(context: Context, intent: Intent) {
         var txt: String? = null
 
         when (intent.action) {
-            TODAY_SQUAT -> countHabit(SQUAT_COUNT_KEY)
-            TODAY_PUSH -> countHabit(PUSH_COUNT_KEY)
-            TODAY_PULL -> countHabit(PULL_COUNT_KEY)
-            TODAY_ABS -> countHabit(ABS_COUNT_KEY)
-            COUNT_TOTAL -> {
-                tamedu.count.inc(context, _currentCountKey, _currentCountAdded)
-                _showHabitsBar = true
-                _resetPressedCount = 0
-            }
-            COUNT_1 ->  { _currentCountAdded +=  5; _resetPressedCount = 0 }
-            COUNT_10 -> { _currentCountAdded += 10; _resetPressedCount = 0 }
-            COUNT_RESET -> {
-                _resetPressedCount += 1
-                if (_resetPressedCount == 3) toast(context, "Press \"Reset\" one more to reset all counters")
-                if (_resetPressedCount  > 3) {
-                    tamedu.count.reset()
-                    _showHabitsBar = true
-                }
-                _currentCountAdded = 0
-            }
+            TODAY_SQUAT -> tamedu.count.countHabit(SQUAT_COUNT_KEY)
+            TODAY_PUSH -> tamedu.count.countHabit(PUSH_COUNT_KEY)
+            TODAY_PULL -> tamedu.count.countHabit(PULL_COUNT_KEY)
+            TODAY_ABS -> tamedu.count.countHabit(ABS_COUNT_KEY)
+            COUNT_TOTAL -> tamedu.count.countUpdateTotal(context)
+            COUNT_5 ->  tamedu.count.addCurrentCount(5)
+            COUNT_10 -> tamedu.count.addCurrentCount(10)
+            COUNT_RESET -> tamedu.count.countReset(context)
 
             SPEAK_REMINDER_TOGGLE -> {
                 if (tamedu.phap.isPlaying()) {
@@ -101,29 +82,20 @@ class AppWidget : AppWidgetProvider() {
     }
 }
 
-private var _resetPressedCount = 0
-private var _currentCountKey: String = TODAY_SQUAT
-private var _currentCountAdded: Int = 0
-private var _showHabitsBar = true
-private val _habitsCountVisibilities = arrayOf(View.GONE, View.VISIBLE)
-private fun hideOrShow(i: Int): Int {
-    return if (_showHabitsBar) _habitsCountVisibilities[i] else _habitsCountVisibilities[1-i]
-}
-
-fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
+private fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
     views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
     views.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
     views.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.phap.docButtonText())
     if (marqueeTxt != null) views.setTextViewText(R.id.marquee_status, marqueeTxt)
 
-    views.setViewVisibility(R.id.habits_bar, hideOrShow(1))
-    views.setViewVisibility(R.id.counts_bar, hideOrShow(0))
+    views.setViewVisibility(R.id.habits_bar, tamedu.count.hideOrShow(1))
+    views.setViewVisibility(R.id.counts_bar, tamedu.count.hideOrShow(0))
 
     views.setTextViewText(R.id.today_squat_button, "Chân ${tamedu.count.get(context, SQUAT_COUNT_KEY)}")
     views.setTextViewText(R.id.today_push_button, "Đẩy ${tamedu.count.get(context, PUSH_COUNT_KEY)}")
     views.setTextViewText(R.id.today_pull_button, "Kéo ${tamedu.count.get(context, PULL_COUNT_KEY)}")
     views.setTextViewText(R.id.today_abs_button, "Bụng ${tamedu.count.get(context, ABS_COUNT_KEY)}")
-    views.setTextViewText(R.id.count_total_button, "${COUNT_KEY_TO_LABEL[_currentCountKey]} + $_currentCountAdded")
+    views.setTextViewText(R.id.count_total_button, tamedu.count.currentCountLabel())
 
     views.setInt(R.id.today_squat_button, "setTextColor", tamedu.count.color(context, SQUAT_COUNT_KEY))
     views.setInt(R.id.today_push_button, "setTextColor", tamedu.count.color(context, PUSH_COUNT_KEY))
@@ -155,7 +127,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     setupIntent(context, views, TODAY_ABS, R.id.today_abs_button)
 
     setupIntent(context, views, COUNT_TOTAL, R.id.count_total_button)
-    setupIntent(context, views, COUNT_1, R.id.count_1_button)
+    setupIntent(context, views, COUNT_5, R.id.count_5_button)
     setupIntent(context, views, COUNT_10, R.id.count_10_button)
     setupIntent(context, views, COUNT_RESET, R.id.count_reset_button)
 

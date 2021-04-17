@@ -169,7 +169,7 @@
                 android:textSize="13sp" />
 
             <Button
-                android:id="@+id/count_1_button"
+                android:id="@+id/count_5_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+5"
