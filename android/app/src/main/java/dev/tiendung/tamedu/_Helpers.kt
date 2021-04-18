@@ -45,7 +45,7 @@ val COUNT_KEY_TO_LABEL: HashMap<String, String> = hashMapOf(
 )
 
 val COUNT_KEY_TO_GOAL: HashMap<String, Int> = hashMapOf(
-        NGHE_PHAP_COUNT_KEY to 10,
+        NGHE_PHAP_COUNT_KEY to 20,
         THU_GIAN_COUNT_KEY to 3,
         SQUAT_COUNT_KEY to 150,
         PUSH_COUNT_KEY to 150,

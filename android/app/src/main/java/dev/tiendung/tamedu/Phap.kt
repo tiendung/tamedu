@@ -21,6 +21,7 @@ private var _currentPhap: Phap? = null
 private var _autoPlayed = false
 private var _isThuGian = false
 private var _currentPhapPosition: Int = 0
+private var _currentPhapLimitPosition: Int = 0
 private var _phapPlayerTimer: Timer = Timer()
 
 fun getCurrentPhapPosition():String {
@@ -41,8 +42,16 @@ fun thuGianButtonText(context: Context): String {
     return txt
 }
 
+fun nghePhapButtonText(context: Context): String {
+    val count = tamedu.count.get(context, NGHE_PHAP_COUNT_KEY)
+    var txt = "Nghe pháp"
+    if (count != 0) txt = "$txt $count"
+    return txt
+}
+
 fun isPlaying(): Boolean {
-    return _phapPlayer.isPlaying()
+    return try { _phapPlayer.isPlaying() }
+    catch (e: java.lang.IllegalStateException) { false }
 }
 
 fun isThuGian(): Boolean {
@@ -102,7 +111,6 @@ fun checkTimeToPlay(context: Context): String {
 }
 
 private fun loadAndPlayPhap(context: Context): String {
-    val phap: Phap = _currentPhap!!
     _phapIsLoading = true
     _phapPlayer = MediaPlayer().apply {
         setAudioAttributes(
@@ -111,33 +119,48 @@ private fun loadAndPlayPhap(context: Context): String {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         )
+        setOnPreparedListener   { mp -> __startPlay(mp, context) }
+        setOnCompletionListener { __finishPlay(context) }
+    }
 
-        setOnPreparedListener { mp ->
-            _phapIsLoading = false
-            tamedu.reminder.stopAndMute()
-            if (!_isThuGian) {
-                var x = mp.getDuration() * (0.5+0.3*Random().nextDouble())
-                mp.seekTo(x.roundToLong(), MediaPlayer.SEEK_NEXT_SYNC)
-            }
-            mp.start()
-            context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
-
-            // Every second, check progress
-            _phapPlayerTimer = Timer("CheckNghePhapProgress", false)
-            _phapPlayerTimer.schedule(1000, 1000) {
-                _currentPhapPosition = mp.getDuration() - mp.getCurrentPosition()
-                context.broadcastUpdateWidget(NGHE_PHAP_PROGRESS)
-            }
-        }
-
-        setOnCompletionListener {
-            val k = if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY
-            tamedu.count.inc(context, k, 1)
-            finishPhap()
-            context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
+    // Every second, check progress
+    _phapPlayerTimer = Timer("CheckNghePhapProgress", false)
+    _phapPlayerTimer.schedule(1000, 1000) {
+        val currPos = _phapPlayer.getCurrentPosition()
+        if (currPos >= _currentPhapLimitPosition) {
+            __finishPlay(context)
+        } else {
+            _currentPhapPosition = _phapPlayer.getDuration() - currPos
+            context.broadcastUpdateWidget(NGHE_PHAP_PROGRESS)
         }
     }
 
+    return __preparePhapMedia(_currentPhap!!, context)
+}
+
+
+private fun __startPlay(mp: MediaPlayer, context: Context) {
+    _phapIsLoading = false
+    tamedu.reminder.stopAndMute()
+    if (!_isThuGian) {
+        // var x = mp.getDuration() * (0.5+0.3*Random().nextDouble()) // second haft
+        var x = (mp.getDuration() - 300000) * Random().nextDouble() // any pos except 5 last min
+        _currentPhapLimitPosition = x.roundToInt() + 600000 // listen for 10 mins
+
+        mp.seekTo(x.roundToLong(), MediaPlayer.SEEK_NEXT_SYNC)
+    }
+    mp.start()
+    context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
+}
+
+private fun __finishPlay(context: Context) {
+    val k = if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY
+    tamedu.count.inc(context, k, 1)
+    finishPhap()
+    context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
+}
+
+private fun __preparePhapMedia(phap: Phap, context: Context): String {
     val txt: String
     if (phap.audioFile.exists()) {
         val fd = FileInputStream(phap.audioFile).fd
@@ -148,6 +171,5 @@ private fun loadAndPlayPhap(context: Context): String {
         txt = phap.audioUrl
     }
     _phapPlayer.prepareAsync()
-
     return txt
 }
