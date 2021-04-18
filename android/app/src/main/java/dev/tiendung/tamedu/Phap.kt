@@ -17,7 +17,6 @@ import java.io.FileInputStream
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
 private var _phapIsLoading: Boolean = false
-private var _phapIsPlaying: Boolean = false
 private var _currentPhap: Phap? = null
 private var _autoPlayed = false
 private var _isThuGian = false
@@ -32,7 +31,7 @@ fun getCurrentPhapPosition():String {
 }
 
 fun docButtonText(): String {
-    return if (_phapIsPlaying) "Dừng" else tamedu.reminder.toggleText()
+    return if (isPlaying()) "Dừng" else tamedu.reminder.toggleText()
 }
 
 fun thuGianButtonText(context: Context): String {
@@ -43,7 +42,7 @@ fun thuGianButtonText(context: Context): String {
 }
 
 fun isPlaying(): Boolean {
-    return _phapIsPlaying
+    return _phapPlayer.isPlaying()
 }
 
 fun isThuGian(): Boolean {
@@ -73,7 +72,6 @@ fun startPlayPhap(context: Context): String? {
 fun finishPhap(): String? {
     _phapPlayerTimer.cancel()
     _phapPlayer.release()
-    _phapIsPlaying = false
     _phapIsLoading = false
     _autoPlayed = false
     _currentPhapPosition = 0
@@ -90,7 +88,7 @@ fun checkTimeToPlay(context: Context): String {
     // Reset counter
     if (currH >= 1 && currH <= 3) tamedu.count._todayReseted = false
     // Auto play Phap
-    if (!_autoPlayed && !_phapIsLoading && !_phapIsPlaying && (
+    if (!_autoPlayed && !_phapIsLoading && !isPlaying() && (
                     (currH == 11 && currM > 15) || (currH == 12 && currM > 15) ||
                     (currH == 22 && currM > 15) || (currH == 23 && currM > 15) ||
                     (currH ==  0 && currM > 15) || (currH ==  1 && currM > 15) ||
@@ -116,7 +114,6 @@ private fun loadAndPlayPhap(context: Context): String {
 
         setOnPreparedListener { mp ->
             _phapIsLoading = false
-            _phapIsPlaying = true
             tamedu.reminder.stopAndMute()
             if (!_isThuGian) {
                 var x = mp.getDuration() * (0.5+0.3*Random().nextDouble())
