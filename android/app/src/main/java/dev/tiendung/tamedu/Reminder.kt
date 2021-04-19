@@ -26,9 +26,7 @@ fun toggle() {
     _allowToSpeak = !_allowToSpeak
 }
 
-fun initCurrentIfNeeded(context: Context) {
-    if (_current == null) _current = newCurrent(context)
-}
+fun initCurrentIfNeeded(context: Context) { if (_current == null) newCurrent(context) }
 
 fun speakCurrent(context: Context, must: Boolean = false): String? {
     finishPlaying()
@@ -56,8 +54,8 @@ fun finishPlaying() {
     _player.release()
 }
 
-private fun speakCurrentAudio() {
-    initCurrentIfNeeded()
+private fun speakCurrentAudio(context: Context) {
+    initCurrentIfNeeded(context)
     if (_current!!.audioFile!!.exists())
         playAudioFile(null, FileInputStream(_current!!.audioFile!!).fd)
     else
