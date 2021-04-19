@@ -68,18 +68,27 @@ private fun playAudioFile(assetFd: AssetFileDescriptor?, fd: FileDescriptor? = n
         )
     }
 
-    if (fd != null)
+    if (fd != null) {
         _player.setDataSource(fd)
-    else
-        _player.setDataSource(assetFd!!.fileDescriptor, assetFd.startOffset, assetFd.length)
+    } else 
+        try {
+            _player.setDataSource(assetFd!!.fileDescriptor, assetFd.startOffset, assetFd.length)
+        } catch (e: kotlin.KotlinNullPointerException) {
+            // toast("AudioFile not found")
+            return
+        }
 
     _player.prepare()
     _player.start()
 }
 
 // Reminder data including quotes, teachings and practices
-data class Reminder(val text: String, val audioFile: File?,
-    val audioAssetFd: AssetFileDescriptor?, val bgColor: Int)
+data class Reminder(
+    val text: String, 
+    val audioFile: File?,
+    val audioAssetFd: AssetFileDescriptor?, 
+    val bgColor: Int
+)
 
 fun newCurrent(context: Context, teachingId: Int = -1) {
     val bgColor: String; val txt: String; val fileName: String

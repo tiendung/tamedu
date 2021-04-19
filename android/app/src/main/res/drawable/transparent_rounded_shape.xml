@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Background color (can also be <gradient>) -->
-    <solid android:color="#60000000"/>
+    <solid android:color="#68000000"/>
     <!-- Radius for the corners -->
     <corners android:radius="16dp" />
 </shape>
