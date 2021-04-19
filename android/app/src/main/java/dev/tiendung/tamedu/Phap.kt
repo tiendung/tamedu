@@ -129,6 +129,7 @@ private fun loadAndPlayPhap(context: Context): String {
         val currPos = _phapPlayer.getCurrentPosition()
         if (currPos >= _currentPhapLimitPosition) {
             __finishPlay(context)
+            tamedu.reminder.playBell(context)
         } else {
             _currentPhapPosition = _phapPlayer.getDuration() - currPos
             context.broadcastUpdateWidget(NGHE_PHAP_PROGRESS)
