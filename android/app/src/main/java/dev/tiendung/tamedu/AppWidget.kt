@@ -41,14 +41,14 @@ class AppWidget : AppWidgetProvider() {
                     txt = tamedu.phap.finishPhap()
                 } else {
                     tamedu.reminder.toggle()
-                    txt = tamedu.reminder.speakCurrent()
+                    txt = tamedu.reminder.speakCurrent(context)
                 }
                 if (txt == null) txt = APP_TITLE
             }
 
             NEW_REMINDER -> {
                 tamedu.reminder.newCurrent(context)
-                txt = tamedu.reminder.speakCurrent()
+                txt = tamedu.reminder.speakCurrent(context)
             }
 
             NGHE_PHAP -> txt = tamedu.phap.startPlayPhap(context)

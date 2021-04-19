@@ -26,10 +26,15 @@ fun toggle() {
     _allowToSpeak = !_allowToSpeak
 }
 
-fun speakCurrent(must: Boolean = false): String? {
+fun initCurrentIfNeeded(context: Context) {
+    if (_current == null) _current = newCurrent(context)
+}
+
+fun speakCurrent(context: Context, must: Boolean = false): String? {
     finishPlaying()
     if (_allowToSpeak || must) {
-        speakCurrentAudio()
+        initCurrentIfNeeded(context)
+        speakCurrentAudio(context)
         return _current!!.text
     }
     return null
@@ -37,7 +42,7 @@ fun speakCurrent(must: Boolean = false): String? {
 
 fun playBellOrSpeakCurrent(context: Context) {
     finishPlaying()
-    if (_allowToSpeak) speakCurrentAudio()
+    if (_allowToSpeak) speakCurrentAudio(context)
     else playBell(context)
 }
 
@@ -52,6 +57,7 @@ fun finishPlaying() {
 }
 
 private fun speakCurrentAudio() {
+    initCurrentIfNeeded()
     if (_current!!.audioFile!!.exists())
         playAudioFile(null, FileInputStream(_current!!.audioFile!!).fd)
     else
