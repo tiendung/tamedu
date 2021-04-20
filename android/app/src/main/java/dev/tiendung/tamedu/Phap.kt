@@ -58,7 +58,7 @@ fun isThuGian(): Boolean {
 }
 
 fun startPlayThuGian(context: Context): String? {
-    if (!_phapIsLoading) { // load new phap or thu gian
+    if (!_phapIsLoading) { // load new thu gian
         finishPhap()
         _isThuGian = true
         tamedu.reminder.newCurrent(context, 15)
@@ -69,20 +69,28 @@ fun startPlayThuGian(context: Context): String? {
 }
 
 fun startPlayPhap(context: Context): String? {
-    if (!_phapIsLoading) { // load new phap or thu gian
-        finishPhap()
-        _currentPhap = getRandomPhap()
+    if (!_phapIsLoading) { // load new phap
+        if (_isThuGian || isPlaying() || _currentPhapPosition <= 5000) {
+            finishPhap()
+            _currentPhap = getRandomPhap()
+        }
         loadAndPlayPhap(context)
+        return "Đang tải \"${currentTitle()}\""
     }
-    return "Đang tải \"${currentTitle()}\""
+    return null
 }
 
-fun finishPhap(): String? {
+fun pausePhap(): String? {
     _phapPlayerTimer.cancel()
     _phapPlayer.release()
     _phapIsLoading = false
-    _currentPhapPosition = 0
+    return null
+}
+
+private fun finishPhap(): String? {
+    pausePhap()
     _isThuGian = false
+    _currentPhapPosition = 0
     return null
 }
 
@@ -107,7 +115,7 @@ private fun loadAndPlayPhap(context: Context): String {
                         .build()
         )
         setOnPreparedListener   { mp -> __startPlay(mp, context) }
-        setOnCompletionListener { __finishPlay(context) }
+        setOnCompletionListener { __finishPlay(context); finishPhap() }
     }
 
     // Every second, check progress
@@ -116,6 +124,7 @@ private fun loadAndPlayPhap(context: Context): String {
         val currPos = _phapPlayer.getCurrentPosition()
         if (currPos >= _currentPhapLimitPosition) {
             __finishPlay(context)
+            pausePhap()
             tamedu.reminder.playBell(context)
         } else {
             _currentPhapPosition = _phapPlayer.getDuration() - currPos
@@ -130,11 +139,15 @@ private fun loadAndPlayPhap(context: Context): String {
 private fun __startPlay(mp: MediaPlayer, context: Context) {
     _phapIsLoading = false
     tamedu.reminder.stopAndMute()
+    _currentPhapLimitPosition = mp.getDuration() // listen til the end
     if (!_isThuGian) {
-        // var x = mp.getDuration() * (0.5+0.3*Random().nextDouble()) // second haft
-        var x = (mp.getDuration() - 300000) * Random().nextDouble() // any pos except 5 last min
-        _currentPhapLimitPosition = x.roundToInt() + 600000 // listen for 10 mins
-
+        val x: Double
+        if (_currentPhapPosition <= 5000) {
+            x = (mp.getDuration() - 300000) * Random().nextDouble() // any pos except 5 last min
+            _currentPhapLimitPosition = x.roundToInt() + 600000 // listen for 10 mins
+        } else  {
+            x = (mp.getDuration() - _currentPhapPosition).toDouble()
+        }
         mp.seekTo(x.roundToLong(), MediaPlayer.SEEK_NEXT_SYNC)
     }
     mp.start()
@@ -143,8 +156,7 @@ private fun __startPlay(mp: MediaPlayer, context: Context) {
 
 private fun __finishPlay(context: Context) {
     val k = if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY
-    tamedu.count.inc(context, k, 1)
-    finishPhap()
+    tamedu.count.inc(context, k, 1)    
     context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
 }
 

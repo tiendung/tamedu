@@ -26,7 +26,9 @@ fun toggle() {
     _allowToSpeak = !_allowToSpeak
 }
 
-fun initCurrentIfNeeded(context: Context) { if (_current == null) newCurrent(context) }
+fun initCurrentIfNeeded(context: Context) { 
+    if (_current == null || _current!!.text.replace(" ","").length == 0) newCurrent(context)
+}
 
 fun speakCurrent(context: Context, must: Boolean = false): String? {
     finishPlaying()

@@ -38,22 +38,24 @@ class AppWidget : AppWidgetProvider() {
 
             SPEAK_REMINDER_TOGGLE -> {
                 if (tamedu.phap.isPlaying()) {
-                    txt = tamedu.phap.finishPhap()
+                    txt = tamedu.phap.pausePhap()
                 } else {
                     tamedu.reminder.toggle()
-                    txt = tamedu.reminder.speakCurrent(context)
+                    // txt = tamedu.reminder.speakCurrent(context)
+                    // if (txt == null) txt = APP_TITLE
+                    tamedu.reminder.speakCurrent(context)
                 }
-                if (txt == null) txt = APP_TITLE
             }
 
             NEW_REMINDER -> {
                 tamedu.reminder.newCurrent(context)
-                txt = tamedu.reminder.speakCurrent(context)
+                // txt = tamedu.reminder.speakCurrent(context)
+                tamedu.reminder.speakCurrent(context)
             }
 
             NGHE_PHAP -> txt = tamedu.phap.startPlayPhap(context)
             THU_GIAN -> txt = tamedu.phap.startPlayThuGian(context)
-            NGHE_PHAP_BEGIN -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
+            // NGHE_PHAP_BEGIN -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
             NGHE_PHAP_FINISH -> txt = APP_TITLE
             NGHE_PHAP_PROGRESS -> txt = "\"${tamedu.phap.currentTitle()}\" ${tamedu.phap.getCurrentPhapPosition()}"
 
