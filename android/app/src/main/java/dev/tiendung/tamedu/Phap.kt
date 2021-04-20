@@ -73,9 +73,10 @@ fun startPlayPhap(context: Context): String? {
         if (_isThuGian || isPlaying() || _currentPhapPosition <= 5000) {
             finishPhap()
             _currentPhap = getRandomPhap()
+            loadAndPlayPhap(context)
+            return "Đang tải \"${currentTitle()}\""
         }
         loadAndPlayPhap(context)
-        return "Đang tải \"${currentTitle()}\""
     }
     return null
 }
@@ -87,11 +88,11 @@ fun pausePhap(): String? {
     return null
 }
 
-private fun finishPhap(): String? {
+fun finishPhap(): String? {
     pausePhap()
     _isThuGian = false
     _currentPhapPosition = 0
-    return null
+    return APP_TITLE
 }
 
 fun currentTitle(): String { return _currentPhap!!.title }

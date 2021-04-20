@@ -38,7 +38,7 @@ class AppWidget : AppWidgetProvider() {
 
             SPEAK_REMINDER_TOGGLE -> {
                 if (tamedu.phap.isPlaying()) {
-                    txt = tamedu.phap.pausePhap()
+                    txt = if (tamedu.phap.isThuGian()) tamedu.phap.finishPhap() else tamedu.phap.pausePhap()
                 } else {
                     tamedu.reminder.toggle()
                     // txt = tamedu.reminder.speakCurrent(context)
