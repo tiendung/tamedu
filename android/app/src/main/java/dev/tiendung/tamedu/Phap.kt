@@ -103,7 +103,10 @@ fun checkAndRunTasks(context: Context, currH: Int) {
     if ((currH >= 21) ||
         (currH >=  0 && currH <=  5) ||
         (currH >= 10 && currH <= 13)) 
-    { context.broadcastUpdateWidget(NGHE_PHAP) }
+    { 
+        _currentPhapPosition = 0
+        context.broadcastUpdateWidget(NGHE_PHAP)
+    }
 }
 
 private fun loadAndPlayPhap(context: Context): String {
@@ -116,7 +119,10 @@ private fun loadAndPlayPhap(context: Context): String {
                         .build()
         )
         setOnPreparedListener   { mp -> __startPlay(mp, context) }
-        setOnCompletionListener { __finishPlay(context); finishPhap() }
+        setOnCompletionListener { 
+            __finishPlay(context); finishPhap();
+            context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
+        }
     }
 
     // Every second, check progress
@@ -158,7 +164,6 @@ private fun __startPlay(mp: MediaPlayer, context: Context) {
 private fun __finishPlay(context: Context) {
     val k = if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY
     tamedu.count.inc(context, k, 1)    
-    context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
 }
 
 private fun __preparePhapMedia(phap: Phap, context: Context): String {
