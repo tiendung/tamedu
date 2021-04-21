@@ -27,13 +27,16 @@ fun toggle() {
 }
 
 fun initCurrentIfNeeded(context: Context) { 
-    if (_current == null || _current!!.text.replace(" ","").length == 0) newCurrent(context)
+    if (_current == null) newCurrent(context)
+    while (_current!!.text.replace(" ","").length == 0) {
+        toast(context, "${_current!!.id}")
+        newCurrent(context)
+    }
 }
 
 fun speakCurrent(context: Context, must: Boolean = false): String? {
     finishPlaying()
     if (_allowToSpeak || must) {
-        initCurrentIfNeeded(context)
         speakCurrentAudio(context)
         return _current!!.text
     }
@@ -90,6 +93,7 @@ private fun playAudioFile(assetFd: AssetFileDescriptor?, fd: FileDescriptor? = n
 
 // Reminder data including quotes, teachings and practices
 data class Reminder(
+    val id: Int,
     val text: String, 
     val audioFile: File?,
     val audioAssetFd: AssetFileDescriptor?, 
@@ -116,6 +120,7 @@ fun newCurrent(context: Context, teachingId: Int = -1) {
         bgColor = QUOTE_BG_COLORS.random()
     }
     _current = Reminder(
+            id = id,
             text = txt,
             audioAssetFd = assetFd(context, fileName),
             audioFile = externalFile(fileName),

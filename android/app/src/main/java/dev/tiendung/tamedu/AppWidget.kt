@@ -105,6 +105,7 @@ private fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String
     views.setInt(R.id.today_pull_button, "setTextColor", tamedu.count.color(context, PULL_COUNT_KEY))
     views.setInt(R.id.today_abs_button, "setTextColor", tamedu.count.color(context, ABS_COUNT_KEY))
     views.setInt(R.id.thu_gian_button, "setTextColor", tamedu.count.color(context, THU_GIAN_COUNT_KEY))
+    views.setInt(R.id.nghe_phap_button, "setTextColor", tamedu.count.color(context, NGHE_PHAP_COUNT_KEY))
 }
 
 private fun setupIntent(context: Context, views: RemoteViews, action: String, id: Int) {
