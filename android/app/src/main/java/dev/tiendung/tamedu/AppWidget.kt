@@ -82,7 +82,7 @@ class AppWidget : AppWidgetProvider() {
 }
 
 private fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String?) {
-    views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText())
+    views.setTextViewText(R.id.reminder_text, tamedu.reminder.currentText(context))
     views.setTextViewText(R.id.thu_gian_button, tamedu.phap.thuGianButtonText(context))
     views.setTextViewText(R.id.nghe_phap_button, tamedu.phap.nghePhapButtonText(context))
     views.setTextViewText(R.id.speak_reminder_toggle_button, tamedu.phap.docButtonText())
