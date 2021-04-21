@@ -80,13 +80,8 @@ private fun playAudioFile(assetFd: AssetFileDescriptor?, fd: FileDescriptor? = n
     if (fd != null) {
         _player.setDataSource(fd)
     } else 
-        try {
-            _player.setDataSource(assetFd!!.fileDescriptor, assetFd.startOffset, assetFd.length)
-        } catch (e: kotlin.KotlinNullPointerException) {
-            // toast(context, "AudioFile not found")
-            playBell(context)
-            return
-        }
+        try { _player.setDataSource(assetFd!!.fileDescriptor, assetFd.startOffset, assetFd.length)
+        } catch (e: kotlin.KotlinNullPointerException) { return }
 
     _player.prepare()
     _player.start()

@@ -106,6 +106,10 @@ fun addCurrentCount(x: Int) {
     _resetPressedCount = 0 
 }
 
+fun countLabel(context: Context, countKey: String): String {
+    return "${COUNT_KEY_TO_LABEL[countKey]} + ${get(context, countKey)}"
+}
+
 fun currentCountLabel(): String {
     return "${COUNT_KEY_TO_LABEL[_currentCountKey]} + $_currentCountAdded"
 }

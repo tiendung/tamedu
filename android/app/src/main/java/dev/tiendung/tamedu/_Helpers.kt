@@ -39,7 +39,7 @@ val COUNT_KEY_TO_LABEL: HashMap<String, String> = hashMapOf(
         SQUAT_COUNT_KEY to "Chân",
         PUSH_COUNT_KEY to "Đẩy",
         PULL_COUNT_KEY to "Kéo",
-        ABS_COUNT_KEY to "Bụng",
+        ABS_COUNT_KEY to "Lõi",
         THU_GIAN_COUNT_KEY to "Thư giãn",
         NGHE_PHAP_COUNT_KEY to "Nghe pháp"
 )

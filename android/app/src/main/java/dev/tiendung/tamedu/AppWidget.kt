@@ -91,10 +91,10 @@ private fun updateViews(context: Context, views: RemoteViews, marqueeTxt: String
     views.setViewVisibility(R.id.habits_bar, tamedu.count.hideOrShow(1))
     views.setViewVisibility(R.id.counts_bar, tamedu.count.hideOrShow(0))
 
-    views.setTextViewText(R.id.today_squat_button, "Chân ${tamedu.count.get(context, SQUAT_COUNT_KEY)}")
-    views.setTextViewText(R.id.today_push_button, "Đẩy ${tamedu.count.get(context, PUSH_COUNT_KEY)}")
-    views.setTextViewText(R.id.today_pull_button, "Kéo ${tamedu.count.get(context, PULL_COUNT_KEY)}")
-    views.setTextViewText(R.id.today_abs_button, "Bụng ${tamedu.count.get(context, ABS_COUNT_KEY)}")
+    views.setTextViewText(R.id.today_squat_button, tamedu.count.countLabel(context, SQUAT_COUNT_KEY))
+    views.setTextViewText(R.id.today_push_button,  tamedu.count.countLabel(context, PUSH_COUNT_KEY))
+    views.setTextViewText(R.id.today_pull_button,  tamedu.count.countLabel(context, PULL_COUNT_KEY))
+    views.setTextViewText(R.id.today_abs_button,   tamedu.count.countLabel(context, ABS_COUNT_KEY))
     views.setTextViewText(R.id.count_total_button, tamedu.count.currentCountLabel())
 
     views.setInt(R.id.today_squat_button, "setTextColor", tamedu.count.color(context, SQUAT_COUNT_KEY))
