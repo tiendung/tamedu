@@ -49,6 +49,8 @@ fun nghePhapButtonText(context: Context): String {
     return txt
 }
 
+fun isPause(): Boolean { return _currentPhapPosition > 5000 }
+
 fun isPlaying(): Boolean {
     return try { _phapPlayer.isPlaying() }
     catch (e: java.lang.IllegalStateException) { false }
@@ -71,7 +73,7 @@ fun startPlayThuGian(context: Context): String? {
 
 fun startPlayPhap(context: Context): String? {
     if (!_phapIsLoading) { // load new phap
-        if (_isThuGian || isPlaying() || _currentPhapPosition <= 5000) {
+        if (_isThuGian || isPlaying() || !isPause()) {
             finishPhap()
             _currentPhap = getRandomPhap()
             loadAndPlayPhap(context)
@@ -151,7 +153,7 @@ private fun __startPlay(mp: MediaPlayer, context: Context) {
 
     if (!_isThuGian) {
         val seekToPos: Double
-        if (_currentPhapPosition <= 5000) {
+        if (!isPause()) {
             seekToPos = (_currentPhapDuration - 300000) * Random().nextDouble() // any pos except 5 last min
             _currentPhapLimitPosition = _currentPhapDuration - seekToPos.roundToInt() - 600000 // listen for 10 mins
         } else  {

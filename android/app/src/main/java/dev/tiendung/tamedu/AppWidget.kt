@@ -134,7 +134,8 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 
     tamedu.reminder.newCurrent(context)
     tamedu.tasks.checkAndRun(context)
-    updateViews(context, views, APP_TITLE)
+    if (!tamedu.phap.isPause())
+        updateViews(context, views, APP_TITLE)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
