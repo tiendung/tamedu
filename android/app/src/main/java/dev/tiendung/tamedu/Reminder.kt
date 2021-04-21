@@ -83,7 +83,8 @@ private fun playAudioFile(assetFd: AssetFileDescriptor?, fd: FileDescriptor? = n
         try {
             _player.setDataSource(assetFd!!.fileDescriptor, assetFd.startOffset, assetFd.length)
         } catch (e: kotlin.KotlinNullPointerException) {
-            // toast("AudioFile not found")
+            // toast(context, "AudioFile not found")
+            playBell(context)
             return
         }
 
@@ -137,7 +138,7 @@ private fun externalFile(fileName: String): File {
             "Documents/tamedu/assets/${fileName}")
 }
 
-fun currentText(): String { return if (_current == null) "" else _current!!.text }
+fun currentText(): String { initCurrentIfNeeded(); return _current!!.text }
 fun currentBgColor(): Int { return if (_current == null)  0 else _current!!.bgColor }
 fun toggleText(): String {
     return when (_allowToSpeak) {

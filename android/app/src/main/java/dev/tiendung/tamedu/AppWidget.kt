@@ -41,15 +41,12 @@ class AppWidget : AppWidgetProvider() {
                     txt = if (tamedu.phap.isThuGian()) tamedu.phap.finishPhap() else tamedu.phap.pausePhap()
                 } else {
                     tamedu.reminder.toggle()
-                    // txt = tamedu.reminder.speakCurrent(context)
-                    // if (txt == null) txt = APP_TITLE
                     tamedu.reminder.speakCurrent(context)
                 }
             }
 
             NEW_REMINDER -> {
                 tamedu.reminder.newCurrent(context)
-                // txt = tamedu.reminder.speakCurrent(context)
                 tamedu.reminder.speakCurrent(context)
             }
 
