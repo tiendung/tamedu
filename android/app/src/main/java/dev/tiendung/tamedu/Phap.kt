@@ -20,6 +20,7 @@ private var _phapIsLoading: Boolean = false
 private var _currentPhap: Phap? = null
 private var _isThuGian = false
 private var _currentPhapPosition: Int = 0
+private var _currentPhapDuration: Int = 0
 private var _currentPhapLimitPosition: Int = 0
 private var _phapPlayerTimer: Timer = Timer()
 
@@ -120,7 +121,8 @@ private fun loadAndPlayPhap(context: Context): String {
         )
         setOnPreparedListener   { mp -> __startPlay(mp, context) }
         setOnCompletionListener { 
-            __finishPlay(context); finishPhap();
+            __finishPlay(context);
+            finishPhap();
             context.broadcastUpdateWidget(NGHE_PHAP_FINISH)
         }
     }
@@ -128,14 +130,12 @@ private fun loadAndPlayPhap(context: Context): String {
     // Every second, check progress
     _phapPlayerTimer = Timer("CheckNghePhapProgress", false)
     _phapPlayerTimer.schedule(1000, 1000) {
-        val currPos = _phapPlayer.getCurrentPosition()
-        if (currPos >= _currentPhapLimitPosition) {
-            __finishPlay(context)
-            pausePhap()
+        _currentPhapPosition = _currentPhapDuration - _phapPlayer.getCurrentPosition()
+        context.broadcastUpdateWidget(NGHE_PHAP_PROGRESS)
+        if (_currentPhapLimitPosition > 1000 
+                && _currentPhapLimitPosition > _currentPhapPosition){
+            pausePhap() // pause to continue later
             tamedu.reminder.playBell(context)
-        } else {
-            _currentPhapPosition = _phapPlayer.getDuration() - currPos
-            context.broadcastUpdateWidget(NGHE_PHAP_PROGRESS)
         }
     }
 
@@ -146,17 +146,20 @@ private fun loadAndPlayPhap(context: Context): String {
 private fun __startPlay(mp: MediaPlayer, context: Context) {
     _phapIsLoading = false
     tamedu.reminder.stopAndMute()
-    _currentPhapLimitPosition = mp.getDuration() // listen til the end
+    _currentPhapLimitPosition = 0 // listen til the end
+    _currentPhapDuration = mp.getDuration()
+
     if (!_isThuGian) {
-        val x: Double
+        val seekToPos: Double
         if (_currentPhapPosition <= 5000) {
-            x = (mp.getDuration() - 300000) * Random().nextDouble() // any pos except 5 last min
-            _currentPhapLimitPosition = x.roundToInt() + 600000 // listen for 10 mins
+            seekToPos = (_currentPhapDuration - 300000) * Random().nextDouble() // any pos except 5 last min
+            _currentPhapLimitPosition = _currentPhapDuration - seekToPos.roundToInt() - 600000 // listen for 10 mins
         } else  {
-            x = (mp.getDuration() - _currentPhapPosition).toDouble()
+            seekToPos = (_currentPhapDuration - _currentPhapPosition).toDouble()
         }
-        mp.seekTo(x.roundToLong(), MediaPlayer.SEEK_NEXT_SYNC)
+        mp.seekTo(seekToPos.roundToLong(), MediaPlayer.SEEK_NEXT_SYNC)
     }
+
     mp.start()
     context.broadcastUpdateWidget(NGHE_PHAP_BEGIN)
 }
