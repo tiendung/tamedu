@@ -13,17 +13,26 @@ import java.io.File
 import java.io.FileDescriptor
 import java.io.FileInputStream
 
+import java.util.*
+import kotlin.concurrent.schedule
+
 private var _player: MediaPlayer = MediaPlayer()
 private var _allowToSpeak: Boolean = false
 private var _current: Reminder? = null
+private var _reminderTimer: Timer = Timer()
 
 fun stopAndMute() {
     finishPlaying()
+    _reminderTimer.cancel()
     _allowToSpeak = false
 }
 
-fun toggle() {
+fun toggle(context: Context) {
     _allowToSpeak = !_allowToSpeak
+    if (_allowToSpeak) {
+        _reminderTimer = Timer("ListenReminderAfter5m", false)
+        _reminderTimer.schedule(300000, 300000) { context.broadcastUpdateWidget(NEW_REMINDER) }
+    } else stopAndMute()
 }
 
 fun initCurrentIfNeeded(context: Context) { 
@@ -102,7 +111,7 @@ fun newCurrent(context: Context, teachingId: Int = -1) {
     if (id < 0 && tamedu.phap.isThuGian()) {
         id = THOAI_MAI_IDS.random()
     }
-    if (id < 0 && Math.random() < 0.55) {
+    if (id < 0 && Math.random() < 0.35) {
         id = TEACHINGS.indices.random()
     }
     if (id >= 0) {

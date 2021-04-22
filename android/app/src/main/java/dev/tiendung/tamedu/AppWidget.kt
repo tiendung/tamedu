@@ -40,7 +40,7 @@ class AppWidget : AppWidgetProvider() {
                 if (tamedu.phap.isPlaying()) {
                     txt = if (tamedu.phap.isThuGian()) tamedu.phap.finishPhap() else tamedu.phap.pausePhap()
                 } else {
-                    tamedu.reminder.toggle()
+                    tamedu.reminder.toggle(context)
                     tamedu.reminder.speakCurrent(context)
                 }
             }
