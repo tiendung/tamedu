@@ -110,8 +110,8 @@ fun newCurrent(context: Context, teachingId: Int = -1) {
         fileName = "teachings/$id.ogg"
         bgColor = TEACHING_BG_COLORS.random()
     } else {
-        id = QUOTE_IDS_SORTED_BY_LEN.random()
-        txt = QUOTES[id]
+        id = QUOTES_BY_LEN_DESC.indices.random()
+        txt = QUOTES_BY_LEN_DESC[id]
         fileName = "quotes/$id.ogg"
         bgColor = QUOTE_BG_COLORS.random()
     }
