@@ -107,7 +107,7 @@ fun addCurrentCount(x: Int) {
 }
 
 fun countLabel(context: Context, countKey: String): String {
-    return "${COUNT_KEY_TO_LABEL[countKey]} + ${get(context, countKey)}"
+    return "${COUNT_KEY_TO_LABEL[countKey]} ${get(context, countKey)}"
 }
 
 fun currentCountLabel(): String {
