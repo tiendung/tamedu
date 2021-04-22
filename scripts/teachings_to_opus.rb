@@ -6,13 +6,11 @@ teachings = txt.gsub(/\/\/.+?\n/,"").split(/",\s*\n?\s*"/).map{ |x| x.sub(/^\s*"
 
 require "uri"
 # `brew install sox opus-tools`
-v = false
-# v = "Những người thành đạt trong một sự nghiệp, ở thời điểm vinh quang, thường tự giăng bẫy chính mình bằng cách cho rằng mình đã phát hiện ra một chân lý hay bí quyết nào đó đúng trong mọi trường hợp."
 teachings.each_with_index do  |q, i|
 	name = "assets/#{audio_dir}/#{i}"
-	next if v && q != v
-  	next if !v && File.exist?("#{name}.ogg") && File.size("#{name}.ogg") > 0
+  	next if File.exist?("#{name}.ogg") && File.size("#{name}.ogg") > 0
 	unless File.exist?("#{name}.mp3") && File.size("#{name}.mp3") > 0
+		# Skip small explanation e.g (.....) since it hard to speak
 		t = q; q = t.gsub(/\(.+?\)/){ |m| m.length > 15 ? "- #{m[1...-1]} -" : "" }
 		puts "#{t} => " if (t != q)
 		url = "https://support.readaloud.app/read-aloud/speak/vi/GoogleTranslate%20Vietnamese?q="+
@@ -24,5 +22,5 @@ teachings.each_with_index do  |q, i|
 end
 end
 
-# tto("val TEACHINGS = arrayOf(", "teachings")
+tto("val TEACHINGS = arrayOf(", "teachings")
 tto("val QUOTES_BY_LEN_DESC = arrayOf(", "quotes")
