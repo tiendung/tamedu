@@ -84,18 +84,25 @@ fun startPlayPhap(context: Context): String? {
     return null
 }
 
-fun pausePhap(): String? {
-    _phapPlayerTimer.cancel()
-    _phapPlayer.release()
-    _phapIsLoading = false
+fun pausePhap(context: Context): String? {
+    __releaseCommonResources()
+    Timer("ContinuePhapAfter15mins", false).schedule(900000, 0) {
+        context.broadcastUpdateWidget(NGHE_PHAP)
+    }
     return null
 }
 
 fun finishPhap(): String? {
-    pausePhap()
+    __releaseCommonResources()
     _isThuGian = false
     _currentPhapPosition = 0
     return APP_TITLE
+}
+
+private fun __releaseCommonResources() {
+    _phapPlayerTimer.cancel()
+    _phapPlayer.release()
+    _phapIsLoading = false
 }
 
 fun currentTitle(): String { return _currentPhap!!.title }
@@ -107,7 +114,7 @@ fun checkAndRunTasks(context: Context, currH: Int) {
         (currH >=  3 && currH <=  5) ||
         (currH >= 10 && currH <= 12)) 
     { 
-        _currentPhapPosition = 0
+        finishPhap()
         context.broadcastUpdateWidget(NGHE_PHAP)
     }
 }
@@ -136,7 +143,7 @@ private fun loadAndPlayPhap(context: Context): String {
         context.broadcastUpdateWidget(NGHE_PHAP_PROGRESS)
         if (_currentPhapLimitPosition > 1000 
                 && _currentPhapLimitPosition > _currentPhapPosition){
-            pausePhap() // pause to continue later
+            pausePhap(context) // pause to continue later
             tamedu.reminder.playBell(context)
         }
     }
