@@ -37,9 +37,13 @@ fun toggle(context: Context) {
 
 fun initCurrentIfNeeded(context: Context) { 
     if (_current == null) newCurrent(context)
-    while (_current!!.text.replace(" ","").length == 0) {
-        toast(context, "${_current!!.id}")
-        newCurrent(context)
+    if (_allowToSpeak) {
+        // Skip poem like quotes since they are hard to speak
+        val regex = Regex(",\\s+[A-Z]")
+        while (regex.findAll(_current!!.text).count() >= 3) {
+            // toast(context, "${_current!!.id}: ${_current!!.text}")
+            newCurrent(context)
+        }
     }
 }
 
