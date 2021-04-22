@@ -104,8 +104,8 @@ fun checkAndRunTasks(context: Context, currH: Int) {
     if (_phapIsLoading || isPlaying()) { return }
     // Auto play Phap
     if ((currH >= 21) ||
-        (currH >=  0 && currH <=  5) ||
-        (currH >= 10 && currH <= 13)) 
+        (currH >=  3 && currH <=  5) ||
+        (currH >= 10 && currH <= 12)) 
     { 
         _currentPhapPosition = 0
         context.broadcastUpdateWidget(NGHE_PHAP)
