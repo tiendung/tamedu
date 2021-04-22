@@ -14,5 +14,5 @@ teachings.each_with_index do  |q, i|
 		puts url, name
 		`curl -o #{name}.mp3 #{url}`
 	 end 
-   	`sox #{name}.mp3 -t s16 --rate 44100 -c 1 - | opusenc --downmix-mono --bitrate 12 --raw-rate 44100 --raw-bits 16 --raw-chan 1 - #{name}.ogg`
+   	`sox #{name}.mp3 -t s16 --rate 44100 -c 1 - | opusenc --downmix-mono --bitrate 16 --raw-rate 44100 --raw-bits 16 --raw-chan 1 - #{name}.ogg`
 end
