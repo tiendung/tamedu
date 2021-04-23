@@ -5,14 +5,15 @@ import dev.tiendung.tamedu.helpers.*
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import java.util.*
-import kotlin.concurrent.schedule
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 import android.net.Uri
 import java.io.FileInputStream
+
+import java.util.*
+import kotlin.concurrent.schedule
 
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
@@ -86,7 +87,7 @@ fun startPlayPhap(context: Context): String? {
 
 fun pausePhap(context: Context): String? {
     __releaseCommonResources()
-    Timer("ContinuePhapAfter15mins", false).schedule(900000, 0) {
+    Timer("ContinuePhapAfter15mins", false).schedule(900000) {
         context.broadcastUpdateWidget(NGHE_PHAP)
     }
     return null
