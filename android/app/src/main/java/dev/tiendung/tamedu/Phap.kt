@@ -88,6 +88,7 @@ fun startPlayPhap(context: Context): String? {
 fun pausePhap(context: Context): String? {
     __releaseCommonResources()
     Timer("ContinuePhapAfter15mins", false).schedule(900000) {
+        _currentPhapLimitPosition = _currentPhapPosition - 600000 // listen for 10 mins
         context.broadcastUpdateWidget(NGHE_PHAP)
     }
     return null
@@ -101,6 +102,7 @@ fun finishPhap(): String? {
 }
 
 private fun __releaseCommonResources() {
+    _currentPhapLimitPosition = 0 // listen til the end
     _phapPlayerTimer.cancel()
     _phapPlayer.release()
     _phapIsLoading = false
@@ -156,7 +158,6 @@ private fun loadAndPlayPhap(context: Context): String {
 private fun __startPlay(mp: MediaPlayer, context: Context) {
     _phapIsLoading = false
     tamedu.reminder.stopAndMute()
-    _currentPhapLimitPosition = 0 // listen til the end
     _currentPhapDuration = mp.getDuration()
 
     if (!_isThuGian) {
