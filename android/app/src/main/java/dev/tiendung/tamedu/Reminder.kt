@@ -31,7 +31,8 @@ fun toggle(context: Context) {
     _allowToSpeak = !_allowToSpeak
     if (_allowToSpeak) {
         _reminderTimer = Timer("ListenReminderAfter5m", false)
-        _reminderTimer.schedule(300000, 300000) { context.broadcastUpdateWidget(NEW_REMINDER) }
+        // _reminderTimer.schedule(300000, 300000) { context.broadcastUpdateWidget(NEW_REMINDER) }
+        _reminderTimer.schedule(600000, 60000) { context.broadcastUpdateWidget(NEW_REMINDER) }
     } else stopAndMute()
 }
 
@@ -146,7 +147,11 @@ private fun externalFile(fileName: String): File {
             "Documents/tamedu/assets/${fileName}")
 }
 
-fun currentText(context: Context): String { initCurrentIfNeeded(context); return _current!!.text }
+fun currentText(context: Context): String { 
+    initCurrentIfNeeded(context)
+    val txt = _current!!.text    
+    return if (txt.length <= 269) txt else txt.take(266)+"..."
+}
 fun currentBgColor(): Int { return if (_current == null)  0 else _current!!.bgColor }
 fun toggleText(): String {
     return when (_allowToSpeak) {
