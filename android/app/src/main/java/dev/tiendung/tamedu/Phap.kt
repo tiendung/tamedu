@@ -15,11 +15,15 @@ import java.io.FileInputStream
 import java.util.*
 import kotlin.concurrent.schedule
 
+import android.os.Environment
+import java.io.File
+
 // Init a mediaPlayer to play phap
 private var _phapPlayer: MediaPlayer = MediaPlayer()
 private var _phapIsLoading: Boolean = false
 private var _currentPhap: Phap? = null
 private var _isThuGian = false
+private var _isThuNoi: Boolean = false
 private var _currentPhapPosition: Int = 0
 private var _currentPhapDuration: Int = 0
 private var _currentPhapLimitPosition: Int = 0
@@ -38,8 +42,8 @@ fun docButtonText(): String {
 
 fun thuGianButtonText(context: Context): String {
     val count = tamedu.count.get(context, THU_GIAN_COUNT_KEY)
-    var txt = "Thư giãn"
-    if (count != 0) txt = "$txt $count"
+    var txt = if (!_isThuNoi) "Thư giãn" else "Thư nói"
+    if (!_isThuNoi && count != 0) txt = "$txt $count"
     return txt
 }
 
@@ -176,8 +180,9 @@ private fun __startPlay(mp: MediaPlayer, context: Context) {
 }
 
 private fun __finishPlay(context: Context) {
+    if (_isThuGian && _isThuNoi) return
     val k = if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY
-    tamedu.count.inc(context, k, 1)    
+    tamedu.count.inc(context, k, 1)
 }
 
 private fun __preparePhapMedia(phap: Phap, context: Context): String {
@@ -192,4 +197,24 @@ private fun __preparePhapMedia(phap: Phap, context: Context): String {
     }
     _phapPlayer.prepareAsync()
     return txt
+}
+
+
+fun getRandomThuGian(): Phap {
+    val (id, title) =  if (_isThuNoi) NOI_IDS_TO_TITLES.random() else THU_GIAN_IDS_TO_TITLES.random()
+    _isThuNoi = !_isThuNoi
+    return initPhap(id, title)
+}
+
+fun getRandomPhap(): Phap {
+    val (id, title) = PHAP_IDS_TO_TITLES.random()
+    return initPhap(id, title)
+}
+
+private fun initPhap(id: String, title: String): Phap {
+    return Phap(
+            title = title,
+            audioUrl = "https://tiendung.github.io/$id",
+            audioFile = File(Environment.getExternalStorageDirectory(), "Documents/stp/$id")
+    )
 }

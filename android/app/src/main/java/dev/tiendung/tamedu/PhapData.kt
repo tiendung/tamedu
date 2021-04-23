@@ -26,32 +26,71 @@ fun getPhapsFromJsonFile(context: Context): List<Phap> {
 
 data class Phap(val title: String, val audioUrl: String, val audioFile: File)
 
-
-fun getRandomThuGian(): Phap {
-    val (id, title) = THU_GIAN_IDS_TO_TITLES.random()
-    return initPhap(id, title)
-}
-
-fun getRandomPhap(): Phap {
-    val (id, title) = PHAP_IDS_TO_TITLES.random()
-    return initPhap(id, title)
-}
-
-private fun initPhap(id: String, title: String): Phap {
-    return Phap(
-            title = title,
-            audioUrl = "https://tiendung.github.io/$id",
-            audioFile = File(Environment.getExternalStorageDirectory(), "Documents/stp/$id")
-    )
-}
-private val THU_GIAN_IDS_TO_TITLES = arrayOf(
-        "phaps/HuongDanRaQuetVaThuGianToanThan.ogg" to "Thư giãn 30 phút",
-        "phaps/huongdan_thienNam.ogg" to "Thư giãn 24 phút",
-        "phaps/thien_nam_15_phut_01.ogg" to "Thư giãn 15 phút",
-        "phaps/thien_nam_10_phut.ogg" to "Thư giãn 10 phút"
+val THU_GIAN_IDS_TO_TITLES = arrayOf(
+"phaps/HuongDanRaQuetVaThuGianToanThan.ogg" to "Thư giãn 30 phút",
+"phaps/huongdan_thienNam.ogg" to "Thư giãn 24 phút",
+"phaps/thien_nam_15_phut_01.ogg" to "Thư giãn 15 phút",
+"phaps/thien_nam_10_phut.ogg" to "Thư giãn 10 phút"
 )
-
-private val PHAP_IDS_TO_TITLES = arrayOf(
+val NOI_IDS_TO_TITLES = arrayOf(
+"nois/Giai-doan-tu-tap-kho-khan.ogg" to "Giai đoạn tu tập khó khăn (Hải Yến)",
+"nois/Sao-kho-chiu-chang-chiu-di.ogg" to "Sao khó chịu chẳng chịu đi (Hải Yến)",
+"nois/Mot-so-nguyen-ly-thien.ogg" to "Một số nguyên lý thiền (Ngọc Bảo)",
+"nois/Lo-Lang.ogg" to "Lo lắng (Hải Yến)",
+"nois/Vo-cam.ogg" to "Vô cảm (Ngọc Bảo)",
+"nois/Cach-thuc-hanh-thien-chanh-niem.ogg" to "Cách thực hành thiền chánh niệm (Hải Yến)",
+"nois/Tu-o-chua-va-o-doi.ogg" to "Tu ở chùa và ở đời (Hải Yến)",
+"nois/San-va-cach-vuot-qua.ogg" to "Sân và cách vượt qua (Ngọc Bảo)",
+"nois/Goc-khuat-xau-xi.ogg" to "Góc khuất xấu xí (Hải Yến)",
+"nois/Ban-chat-cua-cuoc-song.ogg" to "Bản chất của cuộc sống (Ngọc bảo)",
+"nois/Tam-rong-mo.ogg" to "Tâm rộng mở (Hải Yến)",
+"nois/Cho-tat-ca-hoc-tro-den-tu-hoc-voi-thay.ogg" to "Cho tất cả các học trò đến tu học với Thầy (Ngọc Bảo)",
+"nois/Xuat-gia-hay-tron-doi.ogg" to "Xuất gia hay trốn đời (Hải Yến)",
+"nois/Sao-chang-het-san.ogg" to "Sao chẳng hết sân (Ngọc Bảo)",
+"nois/Vuot-qua-de-duoi.ogg" to "Vượt qua dễ duôi (Hải Yến)",
+"nois/May-loi-chia-se-cho-nguoi-muon-xuat-gia.ogg" to "Mấy lời chia sẻ cho người muốn xuất gia (Ngọc Bảo)",
+"nois/Su-that-ve-kho.ogg" to "Sự thật về khổ (Hải Yến)",
+"nois/Mot-ngay-mai-chua-he-biet.ogg" to "Một ngày mai chưa hề biết (Ngọc Bảo)",
+"nois/Niem-gi.ogg" to "Niệm gì (Hải Yến)",
+"nois/Dung-voi-vang.ogg" to "Đừng vội vàng (Hải Yến)",
+"nois/Biet-va-thay-mix.ogg" to "Biết và thấy (Ngọc Bảo)",
+"nois/Vo-cam.ogg" to "Vô cảm (Hải Yến)",
+"nois/Hay-cuoi-vui-len.ogg" to "Hãy cười vui lên (Giọng đọc Hải Yến)",
+"nois/Chanh-niem-kho-qua-mix.ogg" to "Chánh niệm khó quá (Hải Yến)",
+"nois/Chi-ton-tai-trong-suy-nghi-mix.ogg" to "Chỉ tồn tại trong suy nghĩ (Hải Yến)",
+"nois/Tam-va-phap-mix.ogg" to "Tâm và pháp  (Ngọc Bảo)",
+"nois/Chanh-niem-chi-la-phuong-tien-ghep.ogg" to "Chánh niệm chỉ là phương tiện (Hải Yến)",
+"nois/CaiNghien-ThuNoi-HaiYen.ogg" to "Cai nghiện (Hải Yến)",
+"nois/SOTHAYDOI.ogg" to "Sợ thay đổi (Ngọc Bảo)",
+"nois/CHUYENANUONGDUNG.ogg" to "Chuyện ăn uống đúng (Giọng đọc Ngọc Bảo)",
+"nois/DINHVITUONGLAI.ogg" to "Định vị tương lai (Ngọc Bảo)",
+"nois/SONGTHUANPHAPNHUTHENAO.ogg" to "Sống thuận Pháp như thế nào (Ngọc Bảo)",
+"nois/DAUTRANHVOICUOCSONG.ogg" to "Đấu tranh với cuộc sống (Ngọc Bảo)",
+"nois/Chanh-niem-thanh-loc-than-tam.ogg" to "Chánh niệm thanh lọc thân tâm (Ngọc Bảo)",
+"nois/Ban-khoan-cuoc-song.ogg" to "Băn khoăn cuộc sống (Ngọc Bảo)",
+"nois/Bo-Vo-v2a.ogg" to "Bơ vơ (Tố Anh)",
+"nois/Buc-thu-khong-muon-gui.ogg" to "Bức thư không muốn gửi (Ngọc Bảo)",
+"nois/Tai-Sao-Kho-Chiu-Chang-Chiu-Di-v2a.ogg" to "Tại sao khó chịu chẳng chịu đi (Tố Anh)",
+"nois/Tinh-Duyen.ogg" to "Tình duyên",
+"nois/Dinh-Nghia-Chanh-Niem-v2a.ogg" to "Định nghĩa chánh niệm (Tố Anh)",
+"nois/CuocDoiBiDanhCap.ogg" to "Cuộc đời bị đánh cắp (Ngọc Bảo)",
+"nois/Goc-Khuat-Xau-Xi-v2a.ogg" to "Góc khuất xấu xí (Tố Anh)",
+"nois/NhatKyChanhNiem.ogg" to "Nhật ký chánh niệm",
+"nois/YeuVaDauKho.ogg" to "Yêu và đau khổ",
+"nois/Hoi-Nhom-Phat-Tu.ogg" to "Bạn đạo và hội nhóm Phật tử",
+"nois/Cach-Thuc-Hanh-Thien-Chanh-Niem.ogg" to "Cách thực hành thiền Chánh niệm",
+"nois/Tu-O-Chua-Va-O-Doi.ogg" to "Tu ở chùa và ở đời (Tố Anh)",
+"nois/Nua-Dao-Nua-Doi-v2a.ogg" to "Nửa đạo nửa đời",
+"nois/Mot-so-nguyen-ly-thien.ogg" to "Một số nguyên lý thiền (Tố Anh)",
+"nois/Vo-cam.ogg" to "Vô cảm (Tố Anh)",
+"nois/Su-that-ve-kho.ogg" to "Sự thật về Khổ (Tố Anh)",
+"nois/Buong-bo-phien-nao.ogg" to "Buông bỏ phiền não (Tố Anh)",
+"nois/Hay-cuoi-vui-len.ogg" to "Hãy cười vui lên (Tố Anh)",
+"nois/Niem-gi.ogg" to "Niệm gì (Tố Anh)",
+"nois/Dung-Voi-Vang.ogg" to "Đừng vội vàng (Tố Anh)",
+"nois/Vuot-qua-de-duoi.ogg" to "Vượt qua dễ duôi (Tố Anh)"
+)
+val PHAP_IDS_TO_TITLES = arrayOf(
 "phaps/an-uong-dung.ogg" to "Ăn uống đúng",
 "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",
 "phaps/Tinh-Tan-fix.ogg" to "Tinh tấn",
@@ -198,9 +237,8 @@ private val PHAP_IDS_TO_TITLES = arrayOf(
 "phaps/thuyetphap_denVoiDao.ogg" to "Đến với Đạo",
 "phaps/tutaptrongCS_DoiDienVoiChinhMinh.ogg" to "Đối diện chính mình"
 )
-
 /* Seleted Phaps
-private val PHAP_IDS_TO_TITLES = arrayOf(
+val PHAP_IDS_TO_TITLES = arrayOf(
 "phaps/Tu-Tap-Khong-Phai-Chi-La-Thien.ogg" to "Tu tập ko phải chỉ là thiền",
 "phaps/Vo-Mong.ogg" to "Vỡ mộng",
 "phaps/Tinh-Tan-fix.ogg" to "Tinh tấn",
