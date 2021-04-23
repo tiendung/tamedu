@@ -19,15 +19,15 @@ import android.os.Environment
 import java.io.File
 
 // Init a mediaPlayer to play phap
-private var _phapPlayer: MediaPlayer = MediaPlayer()
-private var _phapIsLoading: Boolean = false
+private var _phapPlayer = MediaPlayer()
+private var _phapIsLoading = false
 private var _currentPhap: Phap? = null
 private var _isThuGian = false
-private var _isThuNoi: Boolean = false
+private var _isThuNoi = true
 private var _currentPhapPosition: Int = 0
 private var _currentPhapDuration: Int = 0
 private var _currentPhapLimitPosition: Int = 0
-private var _phapPlayerTimer: Timer = Timer()
+private var _phapPlayerTimer = Timer()
 
 fun getCurrentPhapPosition():String {
     var s = _currentPhapPosition / 1000
@@ -42,8 +42,8 @@ fun docButtonText(): String {
 
 fun thuGianButtonText(context: Context): String {
     val count = tamedu.count.get(context, THU_GIAN_COUNT_KEY)
-    var txt = if (!_isThuNoi) "Thư giãn" else "Thư nói"
-    if (!_isThuNoi && count != 0) txt = "$txt $count"
+    var txt = if (_isThuNoi) "Thư giãn" else "Thư nói"
+    if (_isThuNoi && count != 0) txt = "$txt $count"
     return txt
 }
 
@@ -78,7 +78,7 @@ fun startPlayThuGian(context: Context): String? {
 
 fun startPlayPhap(context: Context): String? {
     if (!_phapIsLoading) { // load new phap
-        if (_isThuGian || isPlaying() || !isPause()) {
+        if (isPlaying() || !isPause()) {
             finishPhap()
             _currentPhap = getRandomPhap()
             loadAndPlayPhap(context)
@@ -149,7 +149,7 @@ private fun loadAndPlayPhap(context: Context): String {
         _currentPhapPosition = _currentPhapDuration - _phapPlayer.getCurrentPosition()
         context.broadcastUpdateWidget(NGHE_PHAP_PROGRESS)
         if (_currentPhapLimitPosition > 1000 
-                && _currentPhapLimitPosition > _currentPhapPosition){
+                && _currentPhapLimitPosition > _currentPhapPosition) {
             pausePhap(context) // pause to continue later
             tamedu.reminder.playBell(context)
         }
@@ -201,8 +201,8 @@ private fun __preparePhapMedia(phap: Phap, context: Context): String {
 
 
 fun getRandomThuGian(): Phap {
-    val (id, title) =  if (_isThuNoi) NOI_IDS_TO_TITLES.random() else THU_GIAN_IDS_TO_TITLES.random()
     _isThuNoi = !_isThuNoi
+    val (id, title) =  if (_isThuNoi) NOI_IDS_TO_TITLES.random() else THU_GIAN_IDS_TO_TITLES.random()
     return initPhap(id, title)
 }
 
