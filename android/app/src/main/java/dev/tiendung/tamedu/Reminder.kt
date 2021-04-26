@@ -147,6 +147,7 @@ private fun externalFile(fileName: String): File {
             "Documents/tamedu/assets/${fileName}")
 }
 
+fun currentId(): Int { return _current!!.id }
 fun currentText(context: Context): String { 
     initCurrentIfNeeded(context)
     val txt = _current!!.text    

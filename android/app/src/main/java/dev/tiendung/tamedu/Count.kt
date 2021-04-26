@@ -11,6 +11,9 @@ import java.io.IOException
 import com.google.gson.Gson
 import android.view.View
 
+import android.content.Intent
+import android.net.Uri
+
 private var _sharedPref: SharedPreferences? = null
 var _todayReseted: Boolean = false
 private fun getSharedPref(context: Context): SharedPreferences {
@@ -92,6 +95,13 @@ fun countUpdateTotal(context: Context) {
 }
 
 fun countReset(context: Context) {
+    if (_currentCountAdded == 0) {
+        val openURL = Intent(Intent.ACTION_VIEW)
+        openURL.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        openURL.data = Uri.parse("https://tiendung.github.io/?save#${tamedu.reminder.currentId()}")
+        context.startActivity(openURL)
+    }
+
     _resetPressedCount += 1
     if (_resetPressedCount == 3) toast(context, "Press \"Reset\" one more to reset all counters")
     if (_resetPressedCount  > 3) {
