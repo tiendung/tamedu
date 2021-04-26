@@ -88,21 +88,29 @@ fun countHabit(habitCountKey: String) {
     _resetPressedCount = 0
 }
 
+private fun openUrl(context: Context, url: String) {
+    val openURL = Intent(Intent.ACTION_VIEW)
+    openURL.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    openURL.data = Uri.parse(url)
+    context.startActivity(openURL)
+}
+
 fun countUpdateTotal(context: Context) {
+    if (_currentCountAdded == 0 && _resetPressedCount == 0) {
+        openUrl(context, "https://tiendung.github.io/quotes/${tamedu.reminder.currentId()}.png")
+    }
     tamedu.count.inc(context, _currentCountKey, _currentCountAdded)
     _showHabitsBar = true
     _resetPressedCount = 0
 }
 
 fun countReset(context: Context) {
-    if (_currentCountAdded == 0) {
-        val openURL = Intent(Intent.ACTION_VIEW)
-        openURL.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        openURL.data = Uri.parse("https://tiendung.github.io/?save#${tamedu.reminder.currentId()}")
-        context.startActivity(openURL)
-        context.broadcastUpdateWidget(COUNT_TOTAL)
+    if (_currentCountAdded == 0 && _resetPressedCount == 0) {
+        openUrl(context, "https://tiendung.github.io/?save#${tamedu.reminder.currentId()}")
+        _showHabitsBar = true
+        _resetPressedCount = 0
+        return
     }
-
     _resetPressedCount += 1
     if (_resetPressedCount == 3) toast(context, "Press \"Reset\" one more to reset all counters")
     if (_resetPressedCount  > 3) {
