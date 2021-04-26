@@ -100,6 +100,7 @@ fun countReset(context: Context) {
         openURL.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         openURL.data = Uri.parse("https://tiendung.github.io/?save#${tamedu.reminder.currentId()}")
         context.startActivity(openURL)
+        context.broadcastUpdateWidget(COUNT_TOTAL)
     }
 
     _resetPressedCount += 1
