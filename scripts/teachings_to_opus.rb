@@ -5,9 +5,11 @@ txt = %{
 }
 txt = txt.split(splitter)[1]
 txt = txt.split(")\n")[0]
-teachings = txt.gsub(/\/\/.+?\n/,"").split(/",\s*\n?\s*"/).map{ |x| x.sub(/^\s*"\s*|\s*"\s*$/,"").strip }.sort_by{|x| x.length }
-teachings.shift
-puts teachings[1399..-1].join("\",\n\"")
+teachings = txt.gsub(/\/\/.+?\n/,"").split(/",\s*\n?\s*"/).map{ |x| x.sub(/^\s*"\s*|\s*"\s*$/,"").strip }
+ids_quotes = teachings.each_with_index.map{ |x, i| [i, x] }
+ids_quotes.sort_by!{ |x| x[1].length }
+puts ids_quotes.map{ |x| x[0] }.join(',')
+
 require "uri"
 # `brew install sox opus-tools`
 # teachings.each_with_index do  |q, i|
