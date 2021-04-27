@@ -72,7 +72,7 @@ fun color(context: Context, k: String): Int {
 }
 
 private var _resetPressedCount = 0
-private var _currentCountKey: String = TODAY_SQUAT
+private var _currentCountKey: String = ""
 private var _currentCountAdded: Int = 0
 private var _showHabitsBar = true
 private val _habitsCountVisibilities = arrayOf(View.GONE, View.VISIBLE)
@@ -96,8 +96,8 @@ private fun openUrl(context: Context, url: String) {
 }
 
 fun countUpdateTotal(context: Context) {
-    if (_currentCountAdded == 0 && _resetPressedCount == 0) {
-        openUrl(context, "https://tiendung.github.io/quotes/${tamedu.reminder.currentId()}.png")
+    if (_currentCountAdded == 0 && _resetPressedCount == 0 && _currentCountKey == PULL_COUNT_KEY) {
+        context.broadcastUpdateWidget(NGHE_VQDD)
     }
     tamedu.count.inc(context, _currentCountKey, _currentCountAdded)
     _showHabitsBar = true
@@ -105,7 +105,7 @@ fun countUpdateTotal(context: Context) {
 }
 
 fun countReset(context: Context) {
-    if (_currentCountAdded == 0 && _resetPressedCount == 0) {
+    if (_currentCountAdded == 0 && _resetPressedCount == 0 && _currentCountKey == ABS_COUNT_KEY) {
         openUrl(context, "https://tiendung.github.io/?save#${tamedu.reminder.currentId()}")
         _showHabitsBar = true
         _resetPressedCount = 0

@@ -89,6 +89,15 @@ fun startPlayPhap(context: Context): String? {
     return null
 }
 
+fun ngheVqdd(context: Context): String? {
+    if (_phapIsLoading) { return null }
+    finishPhap()
+    _isThuGian = true
+    _currentPhap = initPhap("nois/Vuot-qua-de-duoi.ogg", "Vượt qua dễ duôi (Hải Yến)")
+    loadAndPlayPhap(context)
+    return "Đang tải \"${currentTitle()}\""
+}
+
 fun pausePhap(context: Context): String? {
     __releaseCommonResources()
     Timer("ContinuePhapAfter15mins", false).schedule(900000) {

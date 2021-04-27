@@ -50,6 +50,7 @@ class AppWidget : AppWidgetProvider() {
             }
 
             NGHE_PHAP -> txt = tamedu.phap.startPlayPhap(context)
+            NGHE_VQDD -> txt = tamedu.phap.ngheVqdd(context)
             THU_GIAN -> txt = tamedu.phap.startPlayThuGian(context)
             // NGHE_PHAP_BEGIN -> txt = "Đang nghe \"${tamedu.phap.currentTitle()}\""
             NGHE_PHAP_FINISH -> txt = APP_TITLE
