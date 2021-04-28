@@ -100,8 +100,11 @@ fun ngheVqdd(context: Context): String? {
 
 fun pausePhap(context: Context): String? {
     __releaseCommonResources()
-    Timer("ContinuePhapAfter15mins", false).schedule(900000) {
-        _currentPhapLimitPosition = _currentPhapPosition - 600000 // listen for 10 mins
+    Timer("ContinuePhapAfter12.5mins", false).schedule(750000) {
+        if (_currentPhapPosition < 750000*2)
+             _currentPhapLimitPosition = _currentPhapPosition / 2
+        else _currentPhapLimitPosition = _currentPhapPosition - 750000 // listen for 12.5 mins
+        if (_currentPhapLimitPosition <= 300000) { _currentPhapLimitPosition = 0 }
         context.broadcastUpdateWidget(NGHE_PHAP)
     }
     return null
@@ -109,7 +112,10 @@ fun pausePhap(context: Context): String? {
 
 fun finishPhap(): String? {
     __releaseCommonResources()
-    _isThuGian = false
+    if (_isThuGian) {
+        _isThuGian = false
+        _isThuNoi = !_isThuNoi
+    }
     _currentPhapPosition = 0
     return APP_TITLE
 }
@@ -176,8 +182,8 @@ private fun __startPlay(mp: MediaPlayer, context: Context) {
     if (!_isThuGian) {
         val seekToPos: Double
         if (!isPause()) {
-            seekToPos = (_currentPhapDuration - 300000) * Random().nextDouble() // any pos except 5 last min
-            _currentPhapLimitPosition = _currentPhapDuration - seekToPos.roundToInt() - 600000 // listen for 10 mins
+            seekToPos = (_currentPhapDuration - 600000) * Random().nextDouble() // any pos except 10 last min
+            _currentPhapLimitPosition = _currentPhapDuration - seekToPos.roundToInt() - 750000 // listen for 12.5 mins
         } else  {
             seekToPos = (_currentPhapDuration - _currentPhapPosition).toDouble()
         }
