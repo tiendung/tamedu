@@ -132,11 +132,10 @@ fun currentTitle(): String { return _currentPhap!!.title }
 fun checkAndRunTasks(context: Context, currH: Int) {
     if (_phapIsLoading || isPlaying()) { return }
     // Auto play Phap
-    if ((currH >= 21) ||
+    if ((currH >= 21 && currH <= 22) ||
         (currH >=  3 && currH <=  5) ||
         (currH >= 10 && currH <= 12)) 
     { 
-        finishPhap()
         context.broadcastUpdateWidget(NGHE_PHAP)
     }
 }
