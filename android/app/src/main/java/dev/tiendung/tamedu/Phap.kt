@@ -23,11 +23,11 @@ private var _phapPlayer = MediaPlayer()
 private var _phapIsLoading = false
 private var _currentPhap: Phap? = null
 private var _isThuGian = false
-private var _isThuNoi = true
 private var _currentPhapPosition: Int = 0
 private var _currentPhapDuration: Int = 0
 private var _currentPhapLimitPosition: Int = 0
 private var _phapPlayerTimer = Timer()
+var skipAutoPlay = false
 
 fun getCurrentPhapPosition():String {
     var s = _currentPhapPosition / 1000
@@ -42,8 +42,8 @@ fun docButtonText(): String {
 
 fun thuGianButtonText(context: Context): String {
     val count = tamedu.count.get(context, THU_GIAN_COUNT_KEY)
-    var txt = if (_isThuNoi) "Thư giãn" else "Thư nói"
-    if (_isThuNoi && count != 0) txt = "$txt $count"
+    var txt = "Thư giãn"
+    if (count != 0) txt = "$txt $count"
     return txt
 }
 
@@ -98,6 +98,15 @@ fun ngheVqdd(context: Context): String? {
     return "Đang tải \"${currentTitle()}\""
 }
 
+fun ngheThuNoi(context: Context): String? {
+    if (_phapIsLoading) { return null }
+    finishPhap()
+    _isThuGian = true
+    _currentPhap = getRandomThuNoi()
+    loadAndPlayPhap(context)
+    return "Đang tải \"${currentTitle()}\""
+}
+
 fun pausePhap(context: Context): String? {
     __releaseCommonResources()
     Timer("ContinuePhapAfter12.5mins", false).schedule(750000) {
@@ -112,10 +121,7 @@ fun pausePhap(context: Context): String? {
 
 fun finishPhap(): String? {
     __releaseCommonResources()
-    if (_isThuGian) {
-        _isThuGian = false
-        _isThuNoi = !_isThuNoi
-    }
+    _isThuGian = false
     _currentPhapPosition = 0
     return APP_TITLE
 }
@@ -130,7 +136,7 @@ private fun __releaseCommonResources() {
 fun currentTitle(): String { return _currentPhap!!.title }
 
 fun checkAndRunTasks(context: Context, currH: Int) {
-    if (_phapIsLoading || isPlaying()) { return }
+    if (skipAutoPlay || _phapIsLoading || isPlaying()) { return }
     // Auto play Phap
     if ((currH >= 21 && currH <= 22) ||
         (currH >=  3 && currH <=  5) ||
@@ -194,7 +200,6 @@ private fun __startPlay(mp: MediaPlayer, context: Context) {
 }
 
 private fun __finishPlay(context: Context) {
-    if (_isThuGian && _isThuNoi) return
     val k = if (_isThuGian) THU_GIAN_COUNT_KEY else NGHE_PHAP_COUNT_KEY
     tamedu.count.inc(context, k, 1)
 }
@@ -213,10 +218,13 @@ private fun __preparePhapMedia(phap: Phap, context: Context): String {
     return txt
 }
 
+fun getRandomThuNoi(): Phap {
+    val (id, title) = NOI_IDS_TO_TITLES.random()
+    return initPhap(id, title)
+}
 
 fun getRandomThuGian(): Phap {
-    _isThuNoi = !_isThuNoi
-    val (id, title) =  if (_isThuNoi) NOI_IDS_TO_TITLES.random() else THU_GIAN_IDS_TO_TITLES.random()
+    val (id, title) = THU_GIAN_IDS_TO_TITLES.random()
     return initPhap(id, title)
 }
 

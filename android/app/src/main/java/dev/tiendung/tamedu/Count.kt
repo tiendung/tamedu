@@ -96,8 +96,12 @@ private fun openUrl(context: Context, url: String) {
 }
 
 fun countUpdateTotal(context: Context) {
-    if (_currentCountAdded == 0 && _resetPressedCount == 0 && _currentCountKey == PULL_COUNT_KEY) {
-        context.broadcastUpdateWidget(NGHE_VQDD)
+    if (_currentCountAdded == 0 && _resetPressedCount == 0) {
+        if (_currentCountKey == PULL_COUNT_KEY) { context.broadcastUpdateWidget(NGHE_VQDD) }
+        if (_currentCountKey == ABS_COUNT_KEY) {
+            tamedu.phap.skipAutoPlay = !tamedu.phap.skipAutoPlay
+            toast(context, "Auto play is ${if (!tamedu.phap.skipAutoPlay) "on" else "off"}")
+        }
     }
     tamedu.count.inc(context, _currentCountKey, _currentCountAdded)
     _showHabitsBar = true
@@ -105,12 +109,17 @@ fun countUpdateTotal(context: Context) {
 }
 
 fun countReset(context: Context) {
-    if (_currentCountAdded == 0 && _resetPressedCount == 0 && _currentCountKey == ABS_COUNT_KEY) {
-        openUrl(context, "https://tiendung.github.io/?save#${tamedu.reminder.currentId()}")
+    if (_currentCountAdded == 0 && _resetPressedCount == 0) {
+        if (_currentCountKey == ABS_COUNT_KEY) {
+            openUrl(context, "https://tiendung.github.io/?save#${tamedu.reminder.currentId()}")
+        }
+        if (_currentCountKey == PULL_COUNT_KEY) { context.broadcastUpdateWidget(THU_NOI) }
+
         _showHabitsBar = true
         _resetPressedCount = 0
         return
     }
+
     _resetPressedCount += 1
     if (_resetPressedCount == 3) toast(context, "Press \"Reset\" one more to reset all counters")
     if (_resetPressedCount  > 3) {
