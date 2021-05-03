@@ -38,14 +38,14 @@ fun toggle(context: Context) {
 
 fun initCurrentIfNeeded(context: Context) { 
     if (_current == null) newCurrent(context)
-    if (_allowToSpeak) {
-        // Skip poem like quotes since they are hard to speak
-        val regex = Regex(",\\s+[A-Z]")
-        while (regex.findAll(_current!!.text).count() >= 3) {
-            // toast(context, "${_current!!.id}: ${_current!!.text}")
-            newCurrent(context)
-        }
-    }
+    // if (_allowToSpeak) {
+    //     // Skip poem like quotes since they are hard to speak
+    //     val regex = Regex(",\\s+[A-ZĐÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌƠỚỜỞỠỢÔỐỒỔỖỘÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ]")
+    //     while (regex.findAll(_current!!.text).count() >= 3) {
+    //         // toast(context, "${_current!!.id}: ${_current!!.text}")
+    //         newCurrent(context)
+    //     }
+    // }
 }
 
 fun speakCurrent(context: Context, must: Boolean = false): String? {
@@ -116,7 +116,7 @@ fun newCurrent(context: Context, teachingId: Int = -1) {
     if (id < 0 && tamedu.phap.isThuGian()) {
         id = THOAI_MAI_IDS.random()
     }
-    if (id < 0 && Math.random() < 0.35) {
+    if (id < 0 && Math.random() < 0.2) {
         id = TEACHINGS.indices.random()
     }
     if (id >= 0) {

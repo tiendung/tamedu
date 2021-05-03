@@ -100,6 +100,7 @@ fun countUpdateTotal(context: Context) {
         if (_currentCountKey == PULL_COUNT_KEY) { context.broadcastUpdateWidget(NGHE_VQDD) }
         if (_currentCountKey == ABS_COUNT_KEY) {
             tamedu.phap.skipAutoPlay = !tamedu.phap.skipAutoPlay
+            if (tamedu.phap.skipAutoPlay) { tamedu.phap.finishPhap() }
             toast(context, "Auto play is ${if (!tamedu.phap.skipAutoPlay) "on" else "off"}")
         }
     }
