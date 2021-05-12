@@ -151,7 +151,7 @@ fun currentId(): Int { return _current!!.id }
 fun currentText(context: Context): String { 
     initCurrentIfNeeded(context)
     val txt = _current!!.text    
-    return if (txt.length <= 269) txt else txt.take(266)+"..."
+    return if (txt.length <= MAX_REMINDER_LEN) txt else txt.take(MAX_REMINDER_LEN-2)+".."
 }
 fun currentBgColor(): Int { return if (_current == null)  0 else _current!!.bgColor }
 fun toggleText(): String {

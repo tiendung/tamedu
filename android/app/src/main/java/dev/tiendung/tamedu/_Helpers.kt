@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 const val APP_TITLE = "Thoải mái  -  Tích cực  -  Hết mình"
+const val MAX_REMINDER_LEN = 210
 
 private const val PATH = "dev.tiendung.tamedu."
 const val NGHE_PHAP_FINISH = PATH + "action.NGHE_PHAP_FINISH"
