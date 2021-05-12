@@ -1,3 +1,39 @@
+## Install
+
+https://gist.github.com/agrcrobles/165ac477a9ee51198f4a870c723cd441
+https://gist.github.com/HugoMatilla/f92682b06068b06a6f2a
+
+```sh
+mkdir ~/tools
+cd ~/tools
+wget https://storage.googleapis.com/flutter_infra/releases/stable/macos/flutter_macos_2.0.6-stable.zip
+
+brew install adoptopenjdk/openjdk/adoptopenjdk8
+brew install gradle android-sdk
+# brew install android-ndk
+```
+<!-- ~/.bash_profile -->
+```sh
+export PATH="$PATH:$HOME/tools/cmdline-tools/bin"
+export PATH="$PATH:$HOME/tools/flutter/bin:$HOME/Library/Android/sdk/platform-tools"
+export PATH="$PATH:/usr/local/opt/openjdk/bin"
+
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+export CPPFLAGS="-I/usr/local/opt/openjdk/include"
+```
+
+```sh
+touch ~/.android/repositories.cfg
+yes | sdkmanager --licenses
+
+sdkmanager --update
+# sdkmanager "platform-tools" "platforms;android-28"
+sdkmanager --no_https --install platform-tools
+sdkmanager --no_https --install 'platforms;android-29'
+sdkmanager --no_https --install 'build-tools;28.0.3'
+# sdkmanager --list | grep 29
+```
+
 ## Build an Android (iOS) app around the idea of ["Vượt qua dễ duôi"](https://sutamphap.com/hoi-dap-3-vuot-qua-de-duoi/)
 
 ...
