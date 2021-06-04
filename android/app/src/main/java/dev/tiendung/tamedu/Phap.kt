@@ -236,7 +236,7 @@ fun getRandomPhap(): Phap {
 private fun initPhap(id: String, title: String): Phap {
     return Phap(
             title = title,
-            audioUrl = "https://tiendung.github.io/$id",
+            audioUrl = "https://thaytamphap.github.io/$id",
             audioFile = File(Environment.getExternalStorageDirectory(), "Documents/stp/$id")
     )
 }

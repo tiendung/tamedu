@@ -82,10 +82,6 @@ Tập thói quen năng động, sử dụng tối đa thời gian, không bao gi
 
 - - - 
 
-https://github.com/tiendung/tiendung.github.io/archive/refs/heads/main.zip
-
-- - - 
-
 https://heartbeat.fritz.ai/10-tips-to-speed-up-android-gradle-build-times-c0ec665fc800
 
 - - -

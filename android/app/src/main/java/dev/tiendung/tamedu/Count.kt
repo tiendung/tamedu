@@ -112,7 +112,7 @@ fun countUpdateTotal(context: Context) {
 fun countReset(context: Context) {
     if (_currentCountAdded == 0 && _resetPressedCount == 0) {
         if (_currentCountKey == ABS_COUNT_KEY) {
-            openUrl(context, "https://tiendung.github.io/?save#${tamedu.reminder.currentId()}")
+            openUrl(context, "https://thaytamphap.github.io/?save#${tamedu.reminder.currentId()}")
         }
         if (_currentCountKey == PULL_COUNT_KEY) { context.broadcastUpdateWidget(THU_NOI) }
 

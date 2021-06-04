@@ -27,9 +27,9 @@ Add a widget to android homescreen that show sutamphap.com's quotes:
 
 ### Resources
 
-1675 quotes https://tiendung.github.io/quotes.js (50mb images + audios)
-* image at https://tiendung.github.io/quotes/650x/i.png (20mb total, 12k avg)
-* audio at https://tiendung.github.io/quotes/opus/i.ogg (30mb total, 18k avg)
+1675 quotes https://thaytamphap.github.io/quotes.js (50mb images + audios)
+* image at https://thaytamphap.github.io/quotes/650x/i.png (20mb total, 12k avg)
+* audio at https://thaytamphap.github.io/quotes/opus/i.ogg (30mb total, 18k avg)
 
 999 shortest quotes (21mb images + audios)
 * image at ./quotes/650x/i.png ( 9mb, total,  9k avg)
