@@ -109,6 +109,7 @@ fun ngheThuNoi(context: Context): String? {
 
 fun pausePhap(context: Context): String? {
     __releaseCommonResources()
+    if (skipAutoPlay) { return null }
     Timer("ContinuePhapAfter12.5mins", false).schedule(750000) {
         if (_currentPhapPosition < 750000*2)
              _currentPhapLimitPosition = _currentPhapPosition / 2
